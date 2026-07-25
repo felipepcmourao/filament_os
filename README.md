@@ -1,17 +1,12 @@
 # filament_os
 
-A new Flutter project.
+Um app para ajudar na organização, manutenção, controle de impressões 3d e seus mantimentos.
 
-## Getting Started
+## Lista de tecnologias usadas
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Flutter/Dart
+- Riverpod (Gerenciamento de Estado)
+- Firebase (Autenticação, Banco de Dados)
+- Hive (Banco de Dados noSQL local)
+- intl (internacionalização)
+- GoRouter (navegação)
