@@ -1,4 +1,4 @@
-package com.example.sde_projeto_1
+package com.example.filament_os
 
 import io.flutter.embedding.android.FlutterActivity
 
