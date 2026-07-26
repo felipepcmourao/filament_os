@@ -7,18 +7,27 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: Center(child: Column(
-        children: [
-          const Text('FilamentOS'),
-          const SizedBox(height: 20,),
-          TextButton(
-            onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const FilamentsPage()));
-            }
-            , 
-            child: const Text('Filamentos'))
-        ],
-      ))),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            children: [
+              const Text('FilamentOS'),
+              const SizedBox(height: 20),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const FilamentsPage(),
+                    ),
+                  );
+                },
+                child: const Text('Filamentos'),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

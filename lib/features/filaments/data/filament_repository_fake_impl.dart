@@ -6,10 +6,7 @@ class FilamentRepositoryFakeImpl implements FilamentRepository {
 
   @override
   List<Filament> list() {
-    if (_filamentList.isEmpty) {
-      return [];
-    }
-    return _filamentList;
+    return List.unmodifiable(_filamentList);
   }
 
   @override

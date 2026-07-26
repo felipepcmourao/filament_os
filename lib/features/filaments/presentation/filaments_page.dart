@@ -10,8 +10,7 @@ class FilamentsPage extends StatefulWidget {
 }
 
 class _FilamentsPageState extends State<FilamentsPage> {
-  final filamentRepository = FilamentRepositoryFakeImpl();
-  
+  List<Filament> filamentList = FilamentRepositoryFakeImpl().list();
 
   @override
   Widget build(BuildContext context) {
@@ -22,25 +21,33 @@ class _FilamentsPageState extends State<FilamentsPage> {
           direction: Axis.vertical,
           children: [
             Expanded(
-              child: 
-              filamentRepository.list().isEmpty 
-              ? Center(child: TextButton(
-                onPressed: (){
-                  filamentRepository.add(const Filament(id: '00001', name: 'BambuLab PLA Silk', material: 'PLA', quantityInGrams: 1000));
-                  setState(() {
-                  });
-                }, 
-                child: const Text('Add Filamento')),)
-              : ListView.builder(
-                itemCount: filamentRepository.list().length,
-                itemBuilder: (BuildContext context, int index) {
-                  final filament = filamentRepository.list()[index];
-                  return ListTile(
-                    title: Text(filament.name),
-                    subtitle: Text(filament.material),
-                  );
-                },
-              ),
+              child: filamentList.isEmpty
+                  ? Center(
+                      child: TextButton(
+                        onPressed: () {
+                          filamentList.add(
+                            const Filament(
+                              id: '00001',
+                              name: 'BambuLab PLA Silk',
+                              material: 'PLA',
+                              quantityInGrams: 1000,
+                            ),
+                          );
+                          setState(() {});
+                        },
+                        child: const Text('Add Filamento'),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: filamentList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final filament = filamentList[index];
+                        return ListTile(
+                          title: Text(filament.name),
+                          subtitle: Text(filament.material),
+                        );
+                      },
+                    ),
             ),
           ],
         ),
