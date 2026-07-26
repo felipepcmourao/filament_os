@@ -2,20 +2,14 @@ import 'package:filament_os/features/filaments/domain/filament.dart';
 import 'package:filament_os/features/filaments/domain/filament_repository.dart';
 
 class FilamentRepositoryFakeImpl implements FilamentRepository {
-  List<Filament> _filamentList = [];
-
-  get filamentList => _filamentList;
-
-  set filamentList (List<Filament> filamentList){
-    _filamentList = filamentList;
-  }
+  final List<Filament> _filamentList = [];
 
   @override
-  String list() {
+  List<Filament> list() {
     if (_filamentList.isEmpty) {
-      return 'Sem filamentos.';
+      return [];
     }
-    return _filamentList.join(' \n\n ');
+    return _filamentList;
   }
 
   @override
