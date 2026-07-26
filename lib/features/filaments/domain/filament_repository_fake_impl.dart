@@ -2,25 +2,31 @@ import 'package:filament_os/features/filaments/domain/filament.dart';
 import 'package:filament_os/features/filaments/domain/filament_repository.dart';
 
 class FilamentRepositoryFakeImpl implements FilamentRepository {
-  List<Filament> filamentList = [
-    const Filament(id: 'a', name: 'a', material: 'a', quantityInGrams: 123.45),
-    const Filament(id: 'b', name: 'b', material: 'b', quantityInGrams: 678.90),
-  ];
-  @override
-  void list() {
-    print(filamentList.join(' - '));
+  List<Filament> _filamentList = [];
+
+  get filamentList => _filamentList;
+
+  set filamentList (List<Filament> filamentList){
+    _filamentList = filamentList;
   }
 
   @override
-  void add(Filament filament) {
-    filamentList.add(filament);
-
-    print('New filament ${filament.name} added');
+  String list() {
+    if (_filamentList.isEmpty) {
+      return 'Sem filamentos.';
+    }
+    return _filamentList.join(' \n\n ');
   }
 
   @override
-  void remove(String id) {
-    filamentList.removeWhere((e) => e.id == 'id');
-    print('Filament removed');
+  String add(Filament filament) {
+    _filamentList.add(filament);
+    return 'Filamento adicionado';
+  }
+
+  @override
+  String remove(String id) {
+    _filamentList.removeWhere((e) => e.id == id);
+    return 'Filamento removido';
   }
 }

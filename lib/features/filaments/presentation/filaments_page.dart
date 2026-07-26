@@ -16,12 +16,16 @@ class _FilamentsPageState extends State<FilamentsPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Filaments Page')),
       body: SafeArea(
-        child: Expanded(
+        child: Container(
+          height: double.infinity,
+          width: double.infinity,
           child: ListView.builder(
             itemCount: filamentRepository.filamentList.length,
             itemBuilder: (BuildContext bc, int index) {
               final filament = filamentRepository.filamentList[index];
-              return ListTile(
+              return filamentRepository.filamentList.isEmpty || filamentRepository.filamentList == null
+              ? Container(color: Colors.red, height: 20, width: 20,)
+              : ListTile(
                 title: Text(filament.name),
                 subtitle: Text(filament.material),
               );
