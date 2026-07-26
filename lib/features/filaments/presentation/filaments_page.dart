@@ -10,10 +10,11 @@ class FilamentsPage extends StatefulWidget {
 }
 
 class _FilamentsPageState extends State<FilamentsPage> {
-  List<Filament> filamentList = FilamentRepositoryFakeImpl().list();
+  final filamentRepository = FilamentRepositoryFakeImpl();
 
   @override
   Widget build(BuildContext context) {
+    final filamentList = filamentRepository.list();
     return Scaffold(
       appBar: AppBar(title: const Text('Filaments Page')),
       body: SafeArea(
@@ -25,7 +26,7 @@ class _FilamentsPageState extends State<FilamentsPage> {
                   ? Center(
                       child: TextButton(
                         onPressed: () {
-                          filamentList.add(
+                          filamentRepository.add(
                             const Filament(
                               id: '00001',
                               name: 'BambuLab PLA Silk',
@@ -45,6 +46,13 @@ class _FilamentsPageState extends State<FilamentsPage> {
                         return ListTile(
                           title: Text(filament.name),
                           subtitle: Text(filament.material),
+                          trailing: IconButton(
+                            onPressed: (){
+                              filamentRepository.remove(filament.id);
+                              setState(() {
+                                
+                              });
+                            }, icon: const Icon(Icons.delete)),
                         );
                       },
                     ),
