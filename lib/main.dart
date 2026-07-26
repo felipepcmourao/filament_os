@@ -1,4 +1,4 @@
-import 'package:filament_os/features/dashboard/screens/home_page.dart';
+import 'package:filament_os/features/dashboard/presentation/home_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
