@@ -5,19 +5,21 @@ class FilamentRepositoryFakeImpl implements FilamentRepository {
   final List<Filament> _filamentList = [];
 
   @override
-  List<Filament> list() {
+  Future<List<Filament>> list() async {
     return List.unmodifiable(_filamentList);
   }
 
   @override
-  String add(Filament filament) {
+  Future<void> add(Filament filament) async {
+    final currentLenght = _filamentList.length;
     _filamentList.add(filament);
-    return 'Filamento adicionado';
+    if (_filamentList.length <= currentLenght) throw Exception('Erro ao adicionar filamento');
   }
 
   @override
-  String remove(String id) {
+  Future<void> remove(String id) async {
+    final currentLenght = _filamentList.length;
     _filamentList.removeWhere((e) => e.id == id);
-    return 'Filamento removido';
+    if (_filamentList.length >= currentLenght) throw Exception('Erro ao remover filamento');
   }
 }
