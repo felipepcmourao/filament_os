@@ -1,1 +1,1 @@
-enum PrintStatus { imprimindo , sucesso , falha }
+enum PrintStatus { printing , successful , fail }
