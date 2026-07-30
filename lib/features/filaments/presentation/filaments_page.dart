@@ -54,7 +54,7 @@ class _FilamentsPageState extends State<FilamentsPage> {
                             name: 'BambuLab PLA Silk',
                             ownerId: '92',
                             type: FilamentType.pla,
-                            diameterInMms: 17.5,
+                            diameterInMms: 1.75,
                             color: FilamentColor.blue,
                             weightInGrams: Weight.fromGrams(
                               weightInGrams: 1000.20,

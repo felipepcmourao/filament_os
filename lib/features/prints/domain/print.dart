@@ -1,3 +1,4 @@
+import 'package:filament_os/features/prints/domain/print_status.dart';
 import 'package:filament_os/shared/domain/money.dart';
 import 'package:filament_os/shared/domain/weight.dart';
 
@@ -32,7 +33,7 @@ class Print {
   // decisão que motivou `Money` e `Weight`.
   final double printTime;
   final DateTime dateTime;
-  final String status;
+  final PrintStatus status;
   final Weight finalWeight;
   final Money totalCost;
 
@@ -58,10 +59,19 @@ class Print {
     required List<FilamentUsage> filamentUsage,
     required double printTime,
     required DateTime dateTime,
-    required String status,
+    required PrintStatus status,
     required Weight finalWeight,
     required Money totalCost,
   }) {
+
+    if (id.trim().isEmpty) {
+      throw ArgumentError.value(
+        id,
+        'id',
+        'O id da impressão deve estar preenchido.',
+      );
+    }
+
     // Nome é o identificador legível da impressão.
     if (name.trim().isEmpty) {
       throw ArgumentError.value(

@@ -1,0 +1,1 @@
+enum PrintStatus { imprimindo , sucesso , falha }

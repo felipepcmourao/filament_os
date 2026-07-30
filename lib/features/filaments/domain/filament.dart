@@ -48,6 +48,10 @@ class Filament extends Equatable {
     required Weight weightInGrams,
     required Money totalCost,
   }) {
+    if (id.trim().isEmpty) {
+      throw ArgumentError.value(id, 'id', 'Id não pode estar vazio.');
+    }
+
     // Nome é o identificador legível do filamento — vazio não faz sentido.
     if (name.trim().isEmpty) {
       throw ArgumentError.value(

@@ -1,6 +1,7 @@
 import 'package:filament_os/features/filaments/domain/filament_not_found_exception.dart';
 import 'package:filament_os/features/filaments/domain/filament_repository.dart';
 import 'package:filament_os/features/prints/domain/print.dart';
+import 'package:filament_os/features/prints/domain/print_status.dart';
 import 'package:filament_os/shared/domain/money.dart';
 import 'package:filament_os/shared/domain/weight.dart';
 
@@ -22,7 +23,7 @@ class RegisterPrint {
   final FilamentRepository repository;
   final String printId;
   final String ownerId;
-  final String status;
+  final PrintStatus status;
   final String name;
   final List<FilamentUsage> filamentUsage;
 
