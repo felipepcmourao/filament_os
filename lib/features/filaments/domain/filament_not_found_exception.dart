@@ -10,7 +10,6 @@ class FilamentNotFoundException implements Exception {
 
   @override
   String toString() {
-
     return 'Filamento de ID $filamentId não foi encontrado.';
   }
 }

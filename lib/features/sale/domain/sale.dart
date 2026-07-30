@@ -44,7 +44,11 @@ class Sale {
 
     // Toda venda precisa referenciar qual impressão foi vendida.
     if (printId.trim().isEmpty) {
-      throw ArgumentError.value(printId, 'printId', 'Print Id não pode estar vazio.');
+      throw ArgumentError.value(
+        printId,
+        'printId',
+        'Print Id não pode estar vazio.',
+      );
     }
 
     // Money permite negativo de propósito (serve pra representar prejuízo
@@ -52,12 +56,26 @@ class Sale {
     // venda isolada não faz sentido ser negativo — por isso a checagem
     // mora aqui, na entidade, e não dentro do Money.
     if (totalCost.isNegative) {
-      throw ArgumentError.value(totalCost, 'totalCost', 'Custo total não pode ser negativo');
+      throw ArgumentError.value(
+        totalCost,
+        'totalCost',
+        'Custo total não pode ser negativo',
+      );
     }
     if (salePrice.isNegative) {
-      throw ArgumentError.value(salePrice, 'salePrice', 'O preço de venda não pode ser negativo.');
+      throw ArgumentError.value(
+        salePrice,
+        'salePrice',
+        'O preço de venda não pode ser negativo.',
+      );
     }
 
-    return Sale._(id: id.trim(), printId: printId.trim(), dateTime: dateTime, totalCost: totalCost, salePrice: salePrice);
+    return Sale._(
+      id: id.trim(),
+      printId: printId.trim(),
+      dateTime: dateTime,
+      totalCost: totalCost,
+      salePrice: salePrice,
+    );
   }
 }
