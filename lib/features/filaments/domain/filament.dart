@@ -1,5 +1,8 @@
 import 'package:equatable/equatable.dart';
+import 'package:filament_os/features/filaments/domain/filament_color.dart';
+import 'package:filament_os/features/filaments/domain/filament_type.dart';
 import 'package:filament_os/shared/domain/money.dart';
+import 'package:filament_os/shared/domain/weight.dart';
 
 /// Estoque de um filamento comprado.
 ///
@@ -14,14 +17,10 @@ class Filament extends Equatable {
   final String id;
   final String name;
   final String ownerId;
-  final String color;
-  final String type;
+  final FilamentColor color;
+  final FilamentType type;
   final double diameterInMms;
-
-  // Ainda `double` — vira `Weight` quando esse value object for criado,
-  // pelo mesmo motivo de arredondamento do `Money`.
-  final double quantityInGrams;
-
+  final Weight weightInGrams;
   final Money totalCost;
 
   /// Construtor privado: só guarda os valores, sem validar nada — quem
@@ -33,7 +32,7 @@ class Filament extends Equatable {
     required this.color,
     required this.type,
     required this.diameterInMms,
-    required this.quantityInGrams,
+    required this.weightInGrams,
     required this.totalCost,
   });
 
@@ -43,10 +42,10 @@ class Filament extends Equatable {
     required String id,
     required String name,
     required String ownerId,
-    required String color,
-    required String type,
+    required FilamentColor color,
+    required FilamentType type,
     required double diameterInMms,
-    required double quantityInGrams,
+    required Weight weightInGrams,
     required Money totalCost,
   }) {
     // Nome é o identificador legível do filamento — vazio não faz sentido.
@@ -64,15 +63,6 @@ class Filament extends Equatable {
         ownerId,
         'ownerId',
         'O Id do usuário não pode estar vazio.',
-      );
-    }
-
-    // Estoque negativo não existe fisicamente.
-    if (quantityInGrams < 0) {
-      throw ArgumentError.value(
-        quantityInGrams,
-        'quantityInGrams',
-        'A quantidade do filamento não pode ser negativa',
       );
     }
 
@@ -105,14 +95,34 @@ class Filament extends Equatable {
       color: color,
       type: type,
       diameterInMms: diameterInMms,
-      quantityInGrams: quantityInGrams,
+      weightInGrams: weightInGrams,
       totalCost: totalCost,
     );
   }
 
-  // Dois Filament são "iguais" (via Equatable) se tiverem mesmo id, name
-  // e type — não compara todos os campos, só os que definem identidade
-  // pra fins de comparação/teste.
+  /// Registra o consumo de filamento (ex: ao registrar uma impressão).
+  ///
+  /// Chama o `factory Filament(...)` público, não o construtor privado —
+  /// assim TODAS as invariantes são revalidadas (não só o peso), mantendo
+  /// a garantia documentada acima ("se um Filament existe, é sempre
+  /// válido") mesmo para esse novo Filament derivado. O `-` do `Weight` já
+  /// lança erro sozinho se `usedWeight` for maior que o estoque disponível.
+  Filament consumeGrams(Weight usedWeight) {
+    return Filament(
+      id: id,
+      name: name,
+      ownerId: ownerId,
+      color: color,
+      type: type,
+      diameterInMms: diameterInMms,
+      weightInGrams: weightInGrams - usedWeight,
+      totalCost: totalCost,
+    );
+  }
+
+  // Dois Filament são "iguais" (via Equatable) se tiverem mesmo id, name,
+  // type e ownerId — não compara todos os campos, só os que definem
+  // identidade pra fins de comparação/teste.
   @override
-  List<Object?> get props => [id, name, type];
+  List<Object?> get props => [id, name, type, ownerId];
 }

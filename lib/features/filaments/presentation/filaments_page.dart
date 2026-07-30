@@ -1,6 +1,9 @@
 import 'package:filament_os/features/filaments/data/filament_repository_fake_impl.dart';
 import 'package:filament_os/features/filaments/domain/filament.dart';
+import 'package:filament_os/features/filaments/domain/filament_color.dart';
+import 'package:filament_os/features/filaments/domain/filament_type.dart';
 import 'package:filament_os/shared/domain/money.dart';
+import 'package:filament_os/shared/domain/weight.dart';
 import 'package:flutter/material.dart';
 
 class FilamentsPage extends StatefulWidget {
@@ -50,11 +53,16 @@ class _FilamentsPageState extends State<FilamentsPage> {
                             id: '00001',
                             name: 'BambuLab PLA Silk',
                             ownerId: '92',
-                            type: 'PLA Silk',
+                            type: FilamentType.pla,
                             diameterInMms: 17.5,
-                            color: 'red',
-                            quantityInGrams: 1000,
-                            totalCost: Money(amountInCents: 1000, currency: 'EUR'),
+                            color: FilamentColor.blue,
+                            weightInGrams: Weight.fromGrams(
+                              weightInGrams: 1000.20,
+                            ),
+                            totalCost: Money(
+                              amountInCents: 1000,
+                              currency: 'EUR',
+                            ),
                           ),
                         );
                         // Um Future só resolve uma vez. Depois de adicionar
@@ -75,7 +83,7 @@ class _FilamentsPageState extends State<FilamentsPage> {
                       final filament = filamentList[index];
                       return ListTile(
                         title: Text(filament.name),
-                        subtitle: Text(filament.type),
+                        subtitle: Text(filament.type.name),
                         trailing: IconButton(
                           onPressed: () async {
                             await filamentRepository.remove(filament.id);
