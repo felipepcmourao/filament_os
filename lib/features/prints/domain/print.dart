@@ -1,3 +1,6 @@
+import 'package:filament_os/shared/domain/money.dart';
+import 'package:filament_os/shared/domain/weight.dart';
+
 /// Um par (filamento usado + quantos gramas) dentro de uma impressão.
 ///
 /// É um Record (recurso do Dart 3), não uma classe própria — serve só pra
@@ -6,32 +9,36 @@
 /// `quantityInGramsPerFilament`) que precisavam ficar do mesmo tamanho e na
 /// mesma ordem manualmente; com o Record dentro de uma lista, cada item já
 /// carrega os dois valores juntos.
-typedef FilamentUsage = ({String filamentId, double usedGrams});
+typedef FilamentUsage = ({String filamentId, Weight usedGrams});
 
 /// Uma impressão feita, podendo usar mais de um filamento (multi-material).
 ///
 /// Pertence a um usuário (`ownerId`) e referencia os filamentos usados só
 /// pelo `id` (não guarda o `Filament` inteiro) — assim, se o preço de um
 /// filamento mudar depois no estoque, o custo de impressões antigas não é
-/// afetado retroativamente.
+/// afetado retroativamente. `totalCost` é o custo já calculado (proporcional
+/// ao quanto foi usado de cada filamento), montado por quem cria o `Print`
+/// (ex: `RegisterPrint`), não recalculado aqui.
 ///
 /// Mesmo padrão de `factory` + construtor privado do resto do domínio.
-class Prints {
+class Print {
   final String id;
   final String name;
   final String ownerId;
   final List<FilamentUsage> filamentUsage;
 
-  // Ainda `double` — vira `Weight`/`Duration` quando esses value objects
-  // forem migrados, mesmo raciocínio do `Filament.quantityInGrams`.
+  // Ainda `double` — só migraria pra um value object (ex: `Duration`) se
+  // esse tipo passasse a ter invariantes/comportamento próprio, mesma
+  // decisão que motivou `Money` e `Weight`.
   final double printTime;
   final DateTime dateTime;
   final String status;
-  final double finalWeight;
+  final Weight finalWeight;
+  final Money totalCost;
 
   /// Construtor privado: só guarda os valores. A validação já aconteceu
   /// no `factory` antes de chegar aqui.
-  Prints._({
+  Print._({
     required this.dateTime,
     required this.name,
     required this.ownerId,
@@ -40,10 +47,11 @@ class Prints {
     required this.finalWeight,
     required this.id,
     required this.status,
+    required this.totalCost,
   });
 
-  /// Único jeito público de criar um `Prints`. Cada `if` é uma invariante.
-  factory Prints({
+  /// Único jeito público de criar um `Print`. Cada `if` é uma invariante.
+  factory Print({
     required String id,
     required String name,
     required String ownerId,
@@ -51,7 +59,8 @@ class Prints {
     required double printTime,
     required DateTime dateTime,
     required String status,
-    required double finalWeight,
+    required Weight finalWeight,
+    required Money totalCost,
   }) {
     // Nome é o identificador legível da impressão.
     if (name.trim().isEmpty) {
@@ -81,8 +90,9 @@ class Prints {
       );
     }
 
-    // Peso final zero ou negativo não representa uma peça impressa real.
-    if (finalWeight <= 0) {
+    // O próprio `Weight` já impede valor negativo na criação; falta só
+    // barrar zero, que também não representa uma peça impressa real.
+    if (finalWeight.isZero) {
       throw ArgumentError.value(
         finalWeight,
         'finalWeight',
@@ -99,7 +109,18 @@ class Prints {
       );
     }
 
-    return Prints._(
+    // Mesmo raciocínio do Filament/Sale: Money permite negativo de
+    // propósito (serve pra prejuízo em Sale), então essa checagem é
+    // responsabilidade do Print, não do Money em si.
+    if (totalCost.isNegative) {
+      throw ArgumentError.value(
+        totalCost,
+        'totalCost',
+        'O custo de impressão não pode ser negativo.',
+      );
+    }
+
+    return Print._(
       dateTime: dateTime,
       name: name,
       ownerId: ownerId,
@@ -108,6 +129,7 @@ class Prints {
       finalWeight: finalWeight,
       id: id,
       status: status,
+      totalCost: totalCost,
     );
   }
 }
