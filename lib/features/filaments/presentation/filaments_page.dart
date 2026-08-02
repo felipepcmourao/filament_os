@@ -48,23 +48,22 @@ class _FilamentsPageState extends State<FilamentsPage> {
                 ? Center(
                     child: TextButton(
                       onPressed: () {
-                        filamentRepository.add(
-                          Filament(
-                            id: '00001',
-                            name: 'BambuLab PLA Silk',
-                            ownerId: '92',
-                            type: FilamentType.pla,
-                            diameterInMms: 1.75,
-                            color: FilamentColor.blue,
-                            weightInGrams: Weight.fromGrams(
-                              weightInGrams: 1000.20,
-                            ),
-                            totalCost: Money(
-                              amountInCents: 1000,
-                              currency: 'EUR',
-                            ),
+                        final addedFilament = Filament(
+                          id: '00001',
+                          name: 'BambuLab PLA Silk',
+                          ownerId: '92',
+                          type: FilamentType.plaSilk,
+                          diameterInMms: 1.75,
+                          color: FilamentColor.blue,
+                          weightInGrams: Weight.fromGrams(
+                            weightInGrams: 1000.20,
+                          ),
+                          totalCost: Money(
+                            amountInCents: 1000,
+                            currency: 'EUR',
                           ),
                         );
+                        filamentRepository.add(addedFilament);
                         // Um Future só resolve uma vez. Depois de adicionar
                         // um filamento no repositório, o Future antigo não
                         // "atualiza sozinho" — por isso criamos um Future
