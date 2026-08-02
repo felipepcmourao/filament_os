@@ -26,6 +26,11 @@ typedef FilamentUsage = ({String filamentId, Weight usedGrams});
 class Print extends Equatable {
   final String id;
   final String name;
+
+  // String solta, não uma referência a uma entity `User` — o domínio de
+  // usuário foi removido (existia sem invariantes, sem factory e com
+  // campos que nada no app usava). Volta como entity de verdade quando a
+  // autenticação for implementada.
   final String ownerId;
   final List<FilamentUsage> filamentUsage;
 
