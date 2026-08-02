@@ -6,14 +6,15 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Home Page')),
+        body: Center(
           child: Column(
             children: [
               const Text('FilamentOS'),
               const SizedBox(height: 20),
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
