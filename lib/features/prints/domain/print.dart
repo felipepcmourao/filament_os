@@ -63,7 +63,6 @@ class Print {
     required Weight finalWeight,
     required Money totalCost,
   }) {
-
     if (id.trim().isEmpty) {
       throw ArgumentError.value(
         id,

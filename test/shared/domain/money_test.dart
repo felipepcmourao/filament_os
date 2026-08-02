@@ -1,4 +1,3 @@
-
 import 'package:filament_os/shared/domain/currency_mismatch_exception.dart';
 import 'package:filament_os/shared/domain/money.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,10 +10,12 @@ void main() {
     expect(money.currency, 'BRL');
   });
 
-  test('Lançar exceção ao tentar somar duas moedas diferentes', (){
+  test('Lançar exceção ao tentar somar duas moedas diferentes', () {
     final moneyEUR = Money(amountInCents: 100, currency: 'EUR');
     final moneyBRL = Money(amountInCents: 100, currency: 'BRL');
-    expect(()=> moneyBRL + moneyEUR
-    , throwsA(isA<CurrencyMismatchException>()));
+    expect(
+      () => moneyBRL + moneyEUR,
+      throwsA(isA<CurrencyMismatchException>()),
+    );
   });
 }
