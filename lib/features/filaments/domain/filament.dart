@@ -128,5 +128,19 @@ class Filament extends Equatable {
   // type e ownerId — não compara todos os campos, só os que definem
   // identidade pra fins de comparação/teste.
   @override
-  List<Object?> get props => [id, name, type, ownerId];
+  List<Object?> get props => [
+    id,
+    name,
+    type,
+    ownerId,
+    color,
+    diameterInMms,
+    weightInGrams,
+    totalCost,
+  ];
+
+  @override
+  String toString() {
+    return 'Filamento: $name \nID: $id \nID de usuário: $ownerId \nCor: $color \nTipo: $type \nDiâmetro: ${diameterInMms.toStringAsFixed(2).replaceAll('.', ',')} mm \nPeso: $weightInGrams \nCusto total: $totalCost';
+  }
 }

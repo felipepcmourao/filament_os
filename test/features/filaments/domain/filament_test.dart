@@ -105,4 +105,24 @@ void main() {
       throwsArgumentError,
     );
   });
+
+  test(
+    'Verificar se dois objetos diferentes são considerados diferentes pelo Equatable',
+    () {
+      final filament1 = Filament(
+        id: 'id',
+        name: 'name',
+        ownerId: 'ownerId',
+        color: FilamentColor.blue,
+        type: FilamentType.petg,
+        diameterInMms: 1.75,
+        weightInGrams: Weight.fromGrams(weightInGrams: 200),
+        totalCost: Money(amountInCents: 10000, currency: 'EUR'),
+      );
+      final filament2 = filament1.consumeGrams(
+        Weight.fromGrams(weightInGrams: 100),
+      );
+      expect(filament1 == filament2, false);
+    },
+  );
 }

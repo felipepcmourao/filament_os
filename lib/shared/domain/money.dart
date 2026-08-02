@@ -148,4 +148,9 @@ class Money extends Equatable {
 
   @override
   List<Object?> get props => [amountInCents, currency];
+
+  @override
+  String toString() {
+    return '$currency ${(amountInCents / 100).toStringAsFixed(2).replaceAll('.', ',')}';
+  }
 }

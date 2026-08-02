@@ -85,4 +85,9 @@ class Weight extends Equatable {
 
   @override
   List<Object?> get props => [weightInMiligrams];
+
+  @override
+  String toString() {
+    return '${(weightInMiligrams / 1000).toStringAsFixed(2).replaceAll('.', ',')} gramas';
+  }
 }
