@@ -36,20 +36,19 @@ void main() {
         totalCost: Money(amountInCents: 300, currency: 'EUR'),
       ),
     );
-    final print = await RegisterPrint(
-      repository: repository,
+    final print = await RegisterPrint(repository: repository).call(
       printId: 'printId',
-      dateTime: DateTime.now(),
+      ownerId: 'ownerId',
+      status: PrintStatus.successful,
+      name: 'name',
       filamentUsage: [
         (filamentId: 'a12', usedGrams: Weight(weightInMiligrams: 1000)),
         (filamentId: 'b23', usedGrams: Weight(weightInMiligrams: 1000)),
       ],
-      name: 'name',
-      printTime: 1.2,
       finalWeight: Weight(weightInMiligrams: 3000),
-      ownerId: 'ownerId',
-      status: PrintStatus.successful,
-    ).call();
+      printTime: 1.2,
+      dateTime: DateTime.now(),
+    );
 
     expect(print.totalCost, Money(amountInCents: 250, currency: 'EUR'));
   });
@@ -57,19 +56,19 @@ void main() {
   test('Teste de registro com filamento inexistente', () async {
     final repository = FilamentRepositoryFakeImpl();
     expect(
-      () async => await RegisterPrint(
-        repository: repository,
+      () async => await RegisterPrint(repository: repository).call(
         printId: 'printId',
-        dateTime: DateTime.now(),
-        filamentUsage: [
-          (filamentId: '2222', usedGrams: Weight(weightInMiligrams: 2000)),
-        ],
-        name: 'name',
-        printTime: 1.2,
-        finalWeight: Weight(weightInMiligrams: 20000),
         ownerId: 'ownerId',
         status: PrintStatus.successful,
-      ).call(),
+        name: 'name',
+        filamentUsage: [
+          (filamentId: 'a12', usedGrams: Weight(weightInMiligrams: 1000)),
+          (filamentId: 'b23', usedGrams: Weight(weightInMiligrams: 1000)),
+        ],
+        finalWeight: Weight(weightInMiligrams: 3000),
+        printTime: 1.2,
+        dateTime: DateTime.now(),
+      ),
       throwsA(isA<FilamentNotFoundException>()),
     );
   });
