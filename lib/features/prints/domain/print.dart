@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:filament_os/features/prints/domain/print_status.dart';
 import 'package:filament_os/shared/domain/money.dart';
 import 'package:filament_os/shared/domain/weight.dart';
@@ -22,7 +23,7 @@ typedef FilamentUsage = ({String filamentId, Weight usedGrams});
 /// (ex: `RegisterPrint`), não recalculado aqui.
 ///
 /// Mesmo padrão de `factory` + construtor privado do resto do domínio.
-class Print {
+class Print extends Equatable {
   final String id;
   final String name;
   final String ownerId;
@@ -39,15 +40,15 @@ class Print {
 
   /// Construtor privado: só guarda os valores. A validação já aconteceu
   /// no `factory` antes de chegar aqui.
-  Print._({
-    required this.dateTime,
+  const Print._({
+    required this.id,
     required this.name,
     required this.ownerId,
     required this.filamentUsage,
     required this.printTime,
-    required this.finalWeight,
-    required this.id,
+    required this.dateTime,
     required this.status,
+    required this.finalWeight,
     required this.totalCost,
   });
 
@@ -130,15 +131,28 @@ class Print {
     }
 
     return Print._(
-      dateTime: dateTime,
+      id: id,
       name: name,
       ownerId: ownerId,
       filamentUsage: filamentUsage,
       printTime: printTime,
-      finalWeight: finalWeight,
-      id: id,
+      dateTime: dateTime,
       status: status,
+      finalWeight: finalWeight,
       totalCost: totalCost,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    id,
+    name,
+    ownerId,
+    filamentUsage,
+    printTime,
+    dateTime,
+    status,
+    finalWeight,
+    totalCost,
+  ];
 }

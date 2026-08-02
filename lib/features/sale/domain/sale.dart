@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:filament_os/shared/domain/money.dart';
 
 /// O evento de vender uma peça impressa.
@@ -13,7 +14,7 @@ import 'package:filament_os/shared/domain/money.dart';
 ///
 /// `totalCost`/`salePrice` são `Money`, não `double`, pelos mesmos motivos
 /// documentados em `money.dart`.
-class Sale {
+class Sale extends Equatable {
   final String id;
   final String printId;
   final DateTime dateTime;
@@ -22,7 +23,7 @@ class Sale {
 
   /// Construtor privado: só guarda os valores, validação já aconteceu
   /// no `factory`.
-  Sale._({
+  const Sale._({
     required this.id,
     required this.printId,
     required this.dateTime,
@@ -78,4 +79,7 @@ class Sale {
       salePrice: salePrice,
     );
   }
+
+  @override
+  List<Object?> get props => [id, printId, dateTime, totalCost, salePrice];
 }
