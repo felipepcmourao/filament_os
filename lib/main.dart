@@ -1,3 +1,4 @@
+import 'package:filament_os/core/theme/my_theme.dart';
 import 'package:filament_os/features/dashboard/presentation/home_page.dart';
 import 'package:flutter/material.dart';
 
@@ -10,10 +11,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'FilamentOS',
-      home: HomePage(),
+      home: const HomePage(),
       debugShowCheckedModeBanner: false,
+      theme: MyTheme.lightTheme,
     );
   }
 }
