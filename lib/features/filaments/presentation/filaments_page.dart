@@ -43,7 +43,14 @@ class _FilamentsPageState extends State<FilamentsPage> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError == true) {
-              return Center(child: Text('Erro: ${snapshot.error}'));
+              return Center(
+                child: Text(
+                  'Erro: ${snapshot.error}',
+                  style: Theme.of(context).textTheme.bodyMedium!.apply(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                ),
+              );
             }
             final filamentList = snapshot.data ?? const [];
             return filamentList.isEmpty

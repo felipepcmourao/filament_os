@@ -1,3 +1,4 @@
+import 'package:filament_os/core/theme/app_spacing.dart';
 import 'package:filament_os/features/filaments/presentation/filaments_page.dart';
 import 'package:flutter/material.dart';
 
@@ -12,8 +13,11 @@ class HomePage extends StatelessWidget {
         child: Center(
           child: Column(
             children: [
-              const Text('FilamentOS'),
-              const SizedBox(height: 20),
+              Text(
+                'FilamentOS',
+                style: Theme.of(context).textTheme.displayMedium,
+              ),
+              const SizedBox(height: AppSpacing.xl),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
