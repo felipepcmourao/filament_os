@@ -5,11 +5,9 @@ class PrintsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(title: const Text('Impressões')),
-        body: Container(),
-      ),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Impressões')),
+      body: SafeArea(child: Container()),
     );
   }
 }

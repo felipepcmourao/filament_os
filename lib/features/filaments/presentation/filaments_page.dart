@@ -31,17 +31,19 @@ class _FilamentsPageState extends State<FilamentsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(title: const Text('Filaments Page')),
-        // FutureBuilder reconstrói a tela sozinho quando o Future resolve:
-        // enquanto está "esperando", mostra um estado; quando termina,
-        // `snapshot.data` já é a List<Filament> de verdade.
-        body: FutureBuilder(
+    return Scaffold(
+      appBar: AppBar(title: const Text('Filaments Page')),
+      // FutureBuilder reconstrói a tela sozinho quando o Future resolve:
+      // enquanto está "esperando", mostra um estado; quando termina,
+      // `snapshot.data` já é a List<Filament> de verdade.
+      body: SafeArea(
+        child: FutureBuilder(
           future: _futureFilamentList,
           builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return const CircularProgressIndicator();
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError == true) {
+              return Center(child: Text('Erro: ${snapshot.error}'));
             }
             final filamentList = snapshot.data ?? const [];
             return filamentList.isEmpty

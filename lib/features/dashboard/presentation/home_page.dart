@@ -6,10 +6,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(title: const Text('Home Page')),
-        body: Center(
+    return Scaffold(
+      appBar: AppBar(title: const Text('Home Page')),
+      body: SafeArea(
+        child: Center(
           child: Column(
             children: [
               const Text('FilamentOS'),
