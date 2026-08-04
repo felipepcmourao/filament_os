@@ -1,4 +1,5 @@
 import 'package:filament_os/core/theme/app_colors.dart';
+import 'package:filament_os/core/theme/app_text_theme.dart';
 import 'package:flutter/material.dart';
 
 class MyTheme {
@@ -15,21 +16,25 @@ class MyTheme {
   );
 
   static ColorScheme lightColorScheme = const ColorScheme(
-  brightness: Brightness.light,
-  primary: Color(0xFFe85a0f), 
-  onPrimary: Color(0xFFffffff),
-  secondary: Color(0xFFff6a1a),
-  onSecondary: Color(0xFFffffff),
-  error: Color(0xFFdc2626), 
-  onError: Color(0xFFffffff),
-  surface: Color(0xFFf8f9fa),
-  onSurface: Color(0xFF121316), 
-);
+    brightness: Brightness.light,
+    primary: Color(0xFFe85a0f),
+    onPrimary: Color(0xFFffffff),
+    secondary: Color(0xFFff6a1a),
+    onSecondary: Color(0xFFffffff),
+    error: Color(0xFFdc2626),
+    onError: Color(0xFFffffff),
+    surface: Color(0xFFf8f9fa),
+    onSurface: Color(0xFF121316),
+  );
 
   static ThemeData get darkTheme {
     return ThemeData(
       colorScheme: darkColorScheme,
       extensions: [AppColors.dark],
+      textTheme: AppTextTheme.textTheme.apply(
+        bodyColor: darkColorScheme.onSurface,
+        displayColor: darkColorScheme.onSurface,
+      ),
     );
   }
 
@@ -37,6 +42,10 @@ class MyTheme {
     return ThemeData(
       colorScheme: lightColorScheme,
       extensions: [AppColors.light],
+      textTheme: AppTextTheme.textTheme.apply(
+        bodyColor: lightColorScheme.onSurface,
+        displayColor: lightColorScheme.onSurface,
+      ),
     );
   }
 }
