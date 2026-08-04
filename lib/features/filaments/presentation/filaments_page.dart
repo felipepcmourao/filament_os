@@ -1,3 +1,5 @@
+import 'package:filament_os/core/theme/app_colors.dart';
+import 'package:filament_os/core/theme/app_radius.dart';
 import 'package:filament_os/core/theme/app_spacing.dart';
 import 'package:filament_os/features/filaments/data/filament_repository_fake_impl.dart';
 import 'package:filament_os/features/filaments/domain/filament.dart';
@@ -6,6 +8,8 @@ import 'package:filament_os/features/filaments/domain/filament_type.dart';
 import 'package:filament_os/features/filaments/presentation/filament_color_material.dart';
 import 'package:filament_os/shared/domain/money.dart';
 import 'package:filament_os/shared/domain/weight.dart';
+import 'package:filament_os/shared/presentation/stock_status.dart';
+import 'package:filament_os/shared/presentation/stock_status_material.dart';
 import 'package:flutter/material.dart';
 
 class FilamentsPage extends StatefulWidget {
@@ -66,9 +70,7 @@ class _FilamentsPageState extends State<FilamentsPage> {
                           type: FilamentType.plaSilk,
                           diameterInMms: 1.75,
                           color: FilamentColor.blue,
-                          weightInGrams: Weight.fromGrams(
-                            weightInGrams: 1000.20,
-                          ),
+                          weightInGrams: Weight.fromGrams(weightInGrams: 0),
                           totalCost: Money(
                             amountInCents: 1000,
                             currency: 'EUR',
@@ -91,16 +93,56 @@ class _FilamentsPageState extends State<FilamentsPage> {
                     itemCount: filamentList.length,
                     itemBuilder: (context, int index) {
                       final filament = filamentList[index];
+                      final status = StockStatus.fromWeight(
+                        filament.weightInGrams,
+                      );
+                      final color = Theme.of(context).extension<AppColors>();
                       return ListTile(
-                        title: Text(filament.name),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(filament.name),
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                  AppRadius.pill,
+                                ),
+                                color: status.toMaterial(color!).container,
+                              ),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: AppSpacing.xs,
+                                    vertical: AppSpacing.xxs,
+                                  ),
+                                  child: Text(
+                                    status.label,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall!
+                                        .apply(
+                                          color: status
+                                              .toMaterial(color)
+                                              .content,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                         subtitle: Row(
                           children: [
                             Text('Tipo: ${filament.type.name}'),
                             const VerticalDivider(),
-                            Text('Cor: ${filament.color.label}')
+                            Text('Cor: ${filament.color.label}'),
                           ],
                         ),
-                        leading: Container(color: filament.color.toMaterial(), height: AppSpacing.sm, width: AppSpacing.sm,),
+                        leading: Container(
+                          color: filament.color.toMaterial(),
+                          height: AppSpacing.sm,
+                          width: AppSpacing.sm,
+                        ),
                         trailing: IconButton(
                           onPressed: () async {
                             await filamentRepository.remove(filament.id);

@@ -9,6 +9,10 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color failedContainer;
   final Color lowStock;
   final Color lowStockContainer;
+  final Color healthyStock;
+  final Color healthyStockContainer;
+  final Color exhaustedStock;
+  final Color exhaustedStockContainer;
 
   const AppColors({
     required this.printing,
@@ -19,6 +23,10 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.failedContainer,
     required this.lowStock,
     required this.lowStockContainer,
+    required this.healthyStock,
+    required this.healthyStockContainer,
+    required this.exhaustedStock,
+    required this.exhaustedStockContainer,
   });
 
   @override
@@ -31,6 +39,10 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? failedContainer,
     Color? lowStock,
     Color? lowStockContainer,
+    Color? healthyStock,
+    Color? healthyStockContainer,
+    Color? exhaustedStock,
+    Color? exhaustedStockContainer,
   }) {
     return AppColors(
       printing: printing ?? this.printing,
@@ -41,6 +53,12 @@ class AppColors extends ThemeExtension<AppColors> {
       failedContainer: failedContainer ?? this.failedContainer,
       lowStock: lowStock ?? this.lowStock,
       lowStockContainer: lowStockContainer ?? this.lowStockContainer,
+      healthyStock: healthyStock ?? this.healthyStock,
+      healthyStockContainer:
+          healthyStockContainer ?? this.healthyStockContainer,
+      exhaustedStock: exhaustedStock ?? this.exhaustedStock,
+      exhaustedStockContainer:
+          exhaustedStockContainer ?? this.exhaustedStockContainer,
     );
   }
 
@@ -71,6 +89,18 @@ class AppColors extends ThemeExtension<AppColors> {
           other.lowStockContainer,
           t,
         )!,
+        healthyStock: Color.lerp(healthyStock, other.healthyStock, t)!,
+        healthyStockContainer: Color.lerp(
+          healthyStockContainer,
+          other.healthyStockContainer,
+          t,
+        )!,
+        exhaustedStock: Color.lerp(exhaustedStock, other.exhaustedStock, t)!,
+        exhaustedStockContainer: Color.lerp(
+          exhaustedStockContainer,
+          other.exhaustedStockContainer,
+          t,
+        )!,
       );
     }
     return this;
@@ -85,6 +115,10 @@ class AppColors extends ThemeExtension<AppColors> {
     failedContainer: Color(0xFF372121),
     lowStock: Color(0xFFFBBF24),
     lowStockContainer: Color(0xFF372E15),
+    healthyStock: Color(0xFF34D399),
+    healthyStockContainer: Color(0xFF173128),
+    exhaustedStock: Color(0xFFFB7185),
+    exhaustedStockContainer: Color(0xFF372124),
   );
 
   static const light = AppColors(
@@ -96,5 +130,9 @@ class AppColors extends ThemeExtension<AppColors> {
     failedContainer: Color(0xFFFEE2E2),
     lowStock: Color(0xFFB45309),
     lowStockContainer: Color(0xFFFEF3C7),
+    healthyStock: Color(0xFF0F766E),
+    healthyStockContainer: Color(0xFFCCFBF1),
+    exhaustedStock: Color(0xFFBE123C),
+    exhaustedStockContainer: Color(0xFFFFE4E6),
   );
 }
