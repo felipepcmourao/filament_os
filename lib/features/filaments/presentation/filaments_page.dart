@@ -1,7 +1,9 @@
+import 'package:filament_os/core/theme/app_spacing.dart';
 import 'package:filament_os/features/filaments/data/filament_repository_fake_impl.dart';
 import 'package:filament_os/features/filaments/domain/filament.dart';
 import 'package:filament_os/features/filaments/domain/filament_color.dart';
 import 'package:filament_os/features/filaments/domain/filament_type.dart';
+import 'package:filament_os/features/filaments/presentation/filament_color_material.dart';
 import 'package:filament_os/shared/domain/money.dart';
 import 'package:filament_os/shared/domain/weight.dart';
 import 'package:flutter/material.dart';
@@ -91,7 +93,14 @@ class _FilamentsPageState extends State<FilamentsPage> {
                       final filament = filamentList[index];
                       return ListTile(
                         title: Text(filament.name),
-                        subtitle: Text(filament.type.name),
+                        subtitle: Row(
+                          children: [
+                            Text('Tipo: ${filament.type.name}'),
+                            const VerticalDivider(),
+                            Text('Cor: ${filament.color.label}')
+                          ],
+                        ),
+                        leading: Container(color: filament.color.toMaterial(), height: AppSpacing.sm, width: AppSpacing.sm,),
                         trailing: IconButton(
                           onPressed: () async {
                             await filamentRepository.remove(filament.id);

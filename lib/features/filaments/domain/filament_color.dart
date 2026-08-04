@@ -6,12 +6,13 @@
 enum FilamentColor {
   red('Vermelho'),
   yellow('Amarelo'),
-  golden('Dourado'),
-  silver('Prateado'),
+  grey('Cinza'),
+  pink('Rosa'),
   green('Verde'),
   blue('Azul');
 
   final String label;
+
   const FilamentColor(this.label);
 
   @override
