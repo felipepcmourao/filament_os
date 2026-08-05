@@ -8,7 +8,7 @@ import 'package:filament_os/features/filaments/domain/filament_type.dart';
 import 'package:filament_os/features/filaments/presentation/filament_color_material.dart';
 import 'package:filament_os/shared/domain/money.dart';
 import 'package:filament_os/shared/domain/weight.dart';
-import 'package:filament_os/shared/presentation/stock_status.dart';
+import 'package:filament_os/shared/domain/stock_status.dart';
 import 'package:filament_os/shared/presentation/stock_status_material.dart';
 import 'package:flutter/material.dart';
 
@@ -38,7 +38,10 @@ class _FilamentsPageState extends State<FilamentsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Filaments Page'), scrolledUnderElevation: 0,),
+      appBar: AppBar(
+        title: const Text('Filaments Page'),
+        scrolledUnderElevation: 0,
+      ),
       // FutureBuilder reconstrói a tela sozinho quando o Future resolve:
       // enquanto está "esperando", mostra um estado; quando termina,
       // `snapshot.data` já é a List<Filament> de verdade.
@@ -154,40 +157,34 @@ class _FilamentsPageState extends State<FilamentsPage> {
 }
 
 final addedFilament1 = Filament(
-                          id: '00001',
-                          name: 'BambuLab PLA Silk',
-                          ownerId: '92',
-                          type: FilamentType.plaSilk,
-                          diameterInMms: 1.75,
-                          color: FilamentColor.green,
-                          weightInGrams: Weight.fromGrams(weightInGrams: 0),
-                          totalCost: Money(
-                            amountInCents: 1000,
-                            currency: 'EUR',
-                          ));
+  id: '00001',
+  name: 'BambuLab PLA Silk',
+  ownerId: '92',
+  type: FilamentType.plaSilk,
+  diameterInMms: 1.75,
+  color: FilamentColor.green,
+  weightInGrams: Weight.fromGrams(weightInGrams: 0),
+  totalCost: Money(amountInCents: 1000, currency: 'EUR'),
+);
 
 final addedFilament2 = Filament(
-                          id: '00002',
-                          name: 'BambuLab PLA Silk',
-                          ownerId: '92',
-                          type: FilamentType.plaSilk,
-                          diameterInMms: 1.75,
-                          color: FilamentColor.pink,
-                          weightInGrams: Weight.fromGrams(weightInGrams: 80),
-                          totalCost: Money(
-                            amountInCents: 1000,
-                            currency: 'EUR',
-                          ));
+  id: '00002',
+  name: 'BambuLab PLA Silk',
+  ownerId: '92',
+  type: FilamentType.plaSilk,
+  diameterInMms: 1.75,
+  color: FilamentColor.pink,
+  weightInGrams: Weight.fromGrams(weightInGrams: 80),
+  totalCost: Money(amountInCents: 1000, currency: 'EUR'),
+);
 
 final addedFilament3 = Filament(
-                          id: '00003',
-                          name: 'BambuLab PLA Silk',
-                          ownerId: '92',
-                          type: FilamentType.plaSilk,
-                          diameterInMms: 1.75,
-                          color: FilamentColor.blue,
-                          weightInGrams: Weight.fromGrams(weightInGrams: 450),
-                          totalCost: Money(
-                            amountInCents: 1000,
-                            currency: 'EUR',
-                          ));
+  id: '00003',
+  name: 'BambuLab PLA Silk',
+  ownerId: '92',
+  type: FilamentType.plaSilk,
+  diameterInMms: 1.75,
+  color: FilamentColor.blue,
+  weightInGrams: Weight.fromGrams(weightInGrams: 450),
+  totalCost: Money(amountInCents: 1000, currency: 'EUR'),
+);

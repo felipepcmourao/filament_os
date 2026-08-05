@@ -1,5 +1,5 @@
 import 'package:filament_os/core/theme/app_colors.dart';
-import 'package:filament_os/shared/presentation/stock_status.dart';
+import 'package:filament_os/shared/domain/stock_status.dart';
 import 'package:flutter/material.dart';
 
 extension StockStatusMaterial on StockStatus {
