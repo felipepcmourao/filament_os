@@ -6,21 +6,21 @@ class MyTheme {
   static ColorScheme darkColorScheme = const ColorScheme(
     brightness: Brightness.dark,
     primary: Color(0xFFff6a1a),
-    onPrimary: Color(0xFFffffff),
+    onPrimary: Color(0xFF121316),
     secondary: Color(0xFFe85a0f),
-    onSecondary: Color(0xFFffffff),
+    onSecondary: Color(0xFF121316),
     error: Color(0xFFef4444),
-    onError: Color(0xFFffffff),
+    onError: Color(0xFF121316),
     surface: Color(0xFF121316),
-    onSurface: Color(0xFFffffff),
+    onSurface: Color(0xFFFFFFFF),
   );
 
   static ColorScheme lightColorScheme = const ColorScheme(
     brightness: Brightness.light,
     primary: Color(0xFFe85a0f),
-    onPrimary: Color(0xFFffffff),
+    onPrimary: Color(0xFF121316),
     secondary: Color(0xFFff6a1a),
-    onSecondary: Color(0xFFffffff),
+    onSecondary: Color(0xFF121316),
     error: Color(0xFFdc2626),
     onError: Color(0xFFffffff),
     surface: Color(0xFFf8f9fa),
