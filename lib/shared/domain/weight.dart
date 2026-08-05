@@ -88,6 +88,6 @@ class Weight extends Equatable {
 
   @override
   String toString() {
-    return '${(weightInMiligrams / 1000).toStringAsFixed(2).replaceAll('.', ',')} gramas';
+    return '${(weightInMiligrams / 1000).toStringAsFixed(0).replaceAll('.', ',')} gramas';
   }
 }

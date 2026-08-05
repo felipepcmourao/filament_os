@@ -38,7 +38,7 @@ class _FilamentsPageState extends State<FilamentsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Filaments Page')),
+      appBar: AppBar(title: const Text('Filaments Page'), scrolledUnderElevation: 0,),
       // FutureBuilder reconstrói a tela sozinho quando o Future resolve:
       // enquanto está "esperando", mostra um estado; quando termina,
       // `snapshot.data` já é a List<Filament> de verdade.
@@ -63,20 +63,9 @@ class _FilamentsPageState extends State<FilamentsPage> {
                 ? Center(
                     child: TextButton(
                       onPressed: () {
-                        final addedFilament = Filament(
-                          id: '00001',
-                          name: 'BambuLab PLA Silk',
-                          ownerId: '92',
-                          type: FilamentType.plaSilk,
-                          diameterInMms: 1.75,
-                          color: FilamentColor.blue,
-                          weightInGrams: Weight.fromGrams(weightInGrams: 0),
-                          totalCost: Money(
-                            amountInCents: 1000,
-                            currency: 'EUR',
-                          ),
-                        );
-                        filamentRepository.add(addedFilament);
+                        filamentRepository.add(addedFilament1);
+                        filamentRepository.add(addedFilament2);
+                        filamentRepository.add(addedFilament3);
                         // Um Future só resolve uma vez. Depois de adicionar
                         // um filamento no repositório, o Future antigo não
                         // "atualiza sozinho" — por isso criamos um Future
@@ -135,7 +124,7 @@ class _FilamentsPageState extends State<FilamentsPage> {
                           children: [
                             Text('Tipo: ${filament.type.name}'),
                             const VerticalDivider(),
-                            Text('Cor: ${filament.color.label}'),
+                            Text('Peso: ${filament.weightInGrams}'),
                           ],
                         ),
                         leading: Container(
@@ -163,3 +152,42 @@ class _FilamentsPageState extends State<FilamentsPage> {
     );
   }
 }
+
+final addedFilament1 = Filament(
+                          id: '00001',
+                          name: 'BambuLab PLA Silk',
+                          ownerId: '92',
+                          type: FilamentType.plaSilk,
+                          diameterInMms: 1.75,
+                          color: FilamentColor.green,
+                          weightInGrams: Weight.fromGrams(weightInGrams: 0),
+                          totalCost: Money(
+                            amountInCents: 1000,
+                            currency: 'EUR',
+                          ));
+
+final addedFilament2 = Filament(
+                          id: '00002',
+                          name: 'BambuLab PLA Silk',
+                          ownerId: '92',
+                          type: FilamentType.plaSilk,
+                          diameterInMms: 1.75,
+                          color: FilamentColor.pink,
+                          weightInGrams: Weight.fromGrams(weightInGrams: 80),
+                          totalCost: Money(
+                            amountInCents: 1000,
+                            currency: 'EUR',
+                          ));
+
+final addedFilament3 = Filament(
+                          id: '00003',
+                          name: 'BambuLab PLA Silk',
+                          ownerId: '92',
+                          type: FilamentType.plaSilk,
+                          diameterInMms: 1.75,
+                          color: FilamentColor.blue,
+                          weightInGrams: Weight.fromGrams(weightInGrams: 450),
+                          totalCost: Money(
+                            amountInCents: 1000,
+                            currency: 'EUR',
+                          ));
