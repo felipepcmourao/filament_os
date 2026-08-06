@@ -70,9 +70,9 @@ Pendências da Sessão 5, na ordem em que o enunciado pede:
 
 - ~~Texto de UI no `domain/`~~ — resolvido. Os quatro enums ficaram só com os valores e os labels foram para extensions `*Label` na presentation.
 - ~~`RegisterPrint` não persistia o `Print`~~ — resolvido. `PrintsRepositoryFakeImpl` implementado com exceções tipadas, e o use case grava o `Print` **antes** das baixas de estoque, por escolha registrada no próprio método.
-- `FilamentColor.toMaterial()` usa a paleta bruta do Material, passando por fora dos tokens. Decidir se cor física de filamento merece token próprio; se ficar como está, verificar a legibilidade de `Colors.yellow` no tema claro.
-- `lib/core/router/` está vazia; a navegação é `Navigator.push` e a `HomePage` importa a `FilamentsPage` direto.
-- `lib/features/.gitkeep` e `lib/shared/.gitkeep` continuam em pastas já populadas (os de `core/config` e `core/router` seguem válidos enquanto essas pastas estiverem vazias).
+- ~~`FilamentColor.toMaterial()` fora dos tokens~~ — decidido e mantido: cor de filamento é dado do produto, não decisão visual, então continua na paleta bruta do Material. O contraste vem de uma borda em `colorScheme.outline` no swatch. Justificativa registrada em `FilamentColorMaterial`.
+- ~~`.gitkeep` em pastas populadas~~ — removidos de `features/` e `shared/`. Os de `core/config` e `core/router` seguem válidos enquanto essas pastas estiverem vazias.
+- **`lib/core/router/` está vazia; a navegação é `Navigator.push` e a `HomePage` importa a `FilamentsPage` direto.** É o que resta da sessão — toda a dívida técnica que a precedia está paga.
 
 ## Dívidas conhecidas, adiadas de propósito
 
