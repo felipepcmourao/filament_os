@@ -1,6 +1,7 @@
+import 'package:filament_os/core/router/app_paths.dart';
 import 'package:filament_os/core/theme/app_spacing.dart';
-import 'package:filament_os/features/filaments/presentation/filaments_page.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -19,14 +20,7 @@ class HomePage extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.xl),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const FilamentsPage(),
-                    ),
-                  );
-                },
+                onPressed: () => context.go(AppPaths.filaments),
                 child: const Text('Filamentos'),
               ),
             ],
