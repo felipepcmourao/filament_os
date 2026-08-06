@@ -1,5 +1,6 @@
 import 'package:filament_os/core/router/app_route_names.dart';
 import 'package:filament_os/core/router/app_paths.dart';
+import 'package:filament_os/core/presentation/not_found_page.dart';
 import 'package:filament_os/features/dashboard/presentation/home_page.dart';
 import 'package:filament_os/features/filaments/presentation/filament_details_page.dart';
 import 'package:filament_os/features/filaments/presentation/filaments_page.dart';
@@ -18,6 +19,27 @@ import 'package:go_router/go_router.dart';
 /// o histórico e a posição atual do usuário.
 class AppRouter {
   static final router = GoRouter(
+    // Rede de segurança para URLs que não casam com nenhuma rota. Só pega
+    // erro de roteamento: `/filaments/id-inexistente` NÃO passa por aqui,
+    // porque casa com a rota `:id` — aquela ausência é tratada dentro da
+    // `FilamentDetailsPage`, depois de consultar o repositório.
+    //
+    // Nada aqui dentro pode lançar. Este é o tratador de erros: se ele
+    // quebrar, o app fecha justamente enquanto tentava explicar o problema.
+    // Daí o `if` em vez de `state.error!` direto, e `toString()` em vez de
+    // `toFilePath()` — este último lança quando a URI tem query string ou
+    // fragmento, que é exatamente o tipo de URL torta que chega aqui.
+    errorBuilder: (context, state) {
+      final uri = state.uri.toString();
+      String error;
+      if (state.error == null) {
+        error = 'Erro desconhecido.';
+      } else {
+        error = state.error!.message;
+      }
+
+      return NotFoundPage(uri: uri, error: error);
+    },
     routes: [
       // Início, filamentos e impressões são irmãs de propósito: são áreas
       // paralelas do app, não telas empilhadas. A consequência é que `go`

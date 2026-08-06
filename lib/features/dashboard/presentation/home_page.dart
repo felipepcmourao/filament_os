@@ -23,6 +23,11 @@ class HomePage extends StatelessWidget {
                 onPressed: () => context.go(AppPaths.filaments),
                 child: const Text('Filamentos'),
               ),
+              const SizedBox(height: AppSpacing.xl),
+              ElevatedButton(
+                onPressed: () => context.go('dsada'),
+                child: const Text('Teste Not Found'),
+              ),
             ],
           ),
         ),
