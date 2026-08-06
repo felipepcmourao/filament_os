@@ -1,3 +1,5 @@
+import 'package:filament_os/core/router/app_paths.dart';
+import 'package:filament_os/core/router/app_route_names.dart';
 import 'package:filament_os/core/theme/app_colors.dart';
 import 'package:filament_os/core/theme/app_radius.dart';
 import 'package:filament_os/core/theme/app_spacing.dart';
@@ -14,6 +16,7 @@ import 'package:filament_os/shared/domain/stock_status.dart';
 import 'package:filament_os/shared/presentation/stock_status_label.dart';
 import 'package:filament_os/shared/presentation/stock_status_material.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class FilamentsPage extends StatefulWidget {
   const FilamentsPage({super.key});
@@ -93,6 +96,10 @@ class _FilamentsPageState extends State<FilamentsPage> {
                       );
                       final color = Theme.of(context).extension<AppColors>();
                       return ListTile(
+                        onTap: () => context.goNamed(
+                          AppRouteNames.filamentDetails,
+                          pathParameters: {AppPaths.idParam: filament.id},
+                        ),
                         title: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
