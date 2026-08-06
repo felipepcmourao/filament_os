@@ -142,8 +142,20 @@ class _FilamentsPageState extends State<FilamentsPage> {
                         ),
                         // Swatch puramente decorativo — a informação que ele
                         // carrega já está escrita no `subtitle`.
+                        //
+                        // A borda vem de `colorScheme.outline` porque a cor
+                        // do filamento é dado do produto e não se adapta ao
+                        // tema (ver `FilamentColorMaterial`): sem contorno,
+                        // um amarelo some no fundo claro e um cinza escuro
+                        // some no escuro. O contraste mora na borda, que o
+                        // tema controla, não na cor, que ele não deve tocar.
                         leading: Container(
-                          color: filament.color.toMaterial(),
+                          decoration: BoxDecoration(
+                            border: BoxBorder.all(
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
+                            color: filament.color.toMaterial(),
+                          ),
                           height: AppSpacing.sm,
                           width: AppSpacing.sm,
                         ),
@@ -174,7 +186,7 @@ final addedFilament1 = Filament(
   ownerId: '92',
   type: FilamentType.plaSilk,
   diameterInMms: 1.75,
-  color: FilamentColor.green,
+  color: FilamentColor.yellow,
   weightInGrams: Weight.fromGrams(weightInGrams: 0),
   totalCost: Money(amountInCents: 1000, currency: 'EUR'),
 );

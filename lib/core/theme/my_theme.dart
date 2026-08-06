@@ -13,6 +13,7 @@ class MyTheme {
     onError: Color(0xFF121316),
     surface: Color(0xFF121316),
     onSurface: Color(0xFFFFFFFF),
+    outline: Color(0xFFFFFFFF),
   );
 
   static ColorScheme lightColorScheme = const ColorScheme(
@@ -25,6 +26,7 @@ class MyTheme {
     onError: Color(0xFFffffff),
     surface: Color(0xFFf8f9fa),
     onSurface: Color(0xFF121316),
+    outline: Color(0xFF121316),
   );
 
   static ThemeData get darkTheme {
