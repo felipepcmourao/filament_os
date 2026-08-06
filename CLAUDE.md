@@ -69,11 +69,17 @@ O que existe hoje: domínio completo (`Filament`, `Print`, `Sale`, `Money`, `Wei
 Pendências da Sessão 5, na ordem em que o enunciado pede:
 
 - ~~Texto de UI no `domain/`~~ — resolvido. Os quatro enums ficaram só com os valores e os labels foram para extensions `*Label` na presentation.
-- `PrintsRepository` não tem implementação, e `RegisterPrint` monta o `Print` mas nunca o persiste — o estoque é debitado para uma impressão que não existe. Inclui decidir o que fazer se a gravação do `Print` falhar depois da baixa de estoque já ter sido persistida.
-- `FilamentColor.toMaterial()` usa a paleta bruta do Material, passando por fora dos tokens.
+- ~~`RegisterPrint` não persistia o `Print`~~ — resolvido. `PrintsRepositoryFakeImpl` implementado com exceções tipadas, e o use case grava o `Print` **antes** das baixas de estoque, por escolha registrada no próprio método.
+- `FilamentColor.toMaterial()` usa a paleta bruta do Material, passando por fora dos tokens. Decidir se cor física de filamento merece token próprio; se ficar como está, verificar a legibilidade de `Colors.yellow` no tema claro.
 - `lib/core/router/` está vazia; a navegação é `Navigator.push` e a `HomePage` importa a `FilamentsPage` direto.
-- `lib/features/.gitkeep` e `lib/shared/.gitkeep` continuam em pastas já populadas.
+- `lib/features/.gitkeep` e `lib/shared/.gitkeep` continuam em pastas já populadas (os de `core/config` e `core/router` seguem válidos enquanto essas pastas estiverem vazias).
 
-Fora do escopo da Sessão 5, mas conhecido: `Money.toString()` e `Weight.toString()` devolvem texto formatado para exibição (`'EUR 10,00'`, `'450 gramas'`) e a UI depende disso. É o mesmo problema que foi tirado dos enums, entrando por outra porta — o conserto passa por `NumberFormat` do `intl` e fica para a sessão de internacionalização.
+## Dívidas conhecidas, adiadas de propósito
+
+Não conserte estas por iniciativa própria — cada uma tem uma sessão dona.
+
+- **Test double para a ordem das escritas do `RegisterPrint`** (Fase 1). A decisão de gravar o `Print` antes das baixas de estoque está protegida só por um comentário, e comentário não roda no CI: inverter as duas linhas mantém os 14 testes verdes. Testar isso exige um `FilamentRepository` que falhe de propósito no `update` — um dublê que simula falha, diferente do fake que simula sucesso. Um dado ruim não serve para provocar essa falha, porque as passadas 1 e 2 do `call()` filtram tudo antes da fase de escrita; só a infraestrutura pode falhar ali.
+- **`Money.toString()` e `Weight.toString()` formatam texto de exibição** (`'EUR 10,00'`, `'450 gramas'`) e a UI depende disso. É o mesmo problema que saiu dos enums, entrando por outra porta. O conserto passa por `NumberFormat` do `intl` e fica para a sessão de internacionalização.
+- **Limiar de estoque baixo fixo em 100g** dentro de `StockStatus.fromWeight`. Deveria ser configurável por filamento ou por usuário.
 
 Dependências declaradas no `pubspec.yaml` e ainda **sem uso**, cada uma reservada para uma sessão futura: `go_router` (Sessão 5), `flutter_riverpod` (Sessão 6), `firebase_core`/`cloud_firestore` (Sessão 7), `hive`/`hive_flutter` (Sessão 8), `intl` (internacionalização). Não antecipe o uso delas — cada sessão tem escopo fechado de propósito.
