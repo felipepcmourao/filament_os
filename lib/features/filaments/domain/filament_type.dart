@@ -2,17 +2,10 @@
 ///
 /// Mesmo raciocínio do `FilamentColor`: vive em `filaments/domain` porque é
 /// vocabulário específico do `Filament`, não um conceito cross-feature.
-enum FilamentType {
-  pla('PLA'),
-  plaSilk('PLA Silk'),
-  plaMatte('PLA Matte'),
-  petg('PETG'),
-  tpu('TPU'),
-  abs('ABS');
-
-  final String label;
-  const FilamentType(this.label);
-
-  @override
-  String toString() => label;
-}
+///
+/// O nome exibido ('PLA Silk') fica em `FilamentTypeLabel`, na presentation,
+/// mesmo sendo designação técnica que não seria traduzida em idioma nenhum.
+/// A regra adotada é uma só, sem exceção a julgar caso a caso: `domain/` não
+/// carrega string de exibição. Uma regra sem ressalva é mais fácil de seguir
+/// — e de revisar — do que uma que exige decidir a cada enum novo.
+enum FilamentType { pla, plaSilk, plaMatte, petg, tpu, abs }

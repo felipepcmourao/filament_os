@@ -6,9 +6,11 @@ import 'package:filament_os/features/filaments/domain/filament.dart';
 import 'package:filament_os/features/filaments/domain/filament_color.dart';
 import 'package:filament_os/features/filaments/domain/filament_type.dart';
 import 'package:filament_os/features/filaments/presentation/filament_color_material.dart';
+import 'package:filament_os/features/filaments/presentation/filament_type_label.dart';
 import 'package:filament_os/shared/domain/money.dart';
 import 'package:filament_os/shared/domain/weight.dart';
 import 'package:filament_os/shared/domain/stock_status.dart';
+import 'package:filament_os/shared/presentation/stock_status_label.dart';
 import 'package:filament_os/shared/presentation/stock_status_material.dart';
 import 'package:flutter/material.dart';
 
@@ -125,7 +127,7 @@ class _FilamentsPageState extends State<FilamentsPage> {
                         ),
                         subtitle: Row(
                           children: [
-                            Text('Tipo: ${filament.type.name}'),
+                            Text('Tipo: ${filament.type.label}'),
                             const VerticalDivider(),
                             Text('Peso: ${filament.weightInGrams}'),
                           ],
