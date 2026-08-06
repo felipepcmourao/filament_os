@@ -5,6 +5,7 @@ import 'package:filament_os/features/filaments/data/filament_repository_fake_imp
 import 'package:filament_os/features/filaments/domain/filament.dart';
 import 'package:filament_os/features/filaments/domain/filament_color.dart';
 import 'package:filament_os/features/filaments/domain/filament_type.dart';
+import 'package:filament_os/features/filaments/presentation/filament_color_label.dart';
 import 'package:filament_os/features/filaments/presentation/filament_color_material.dart';
 import 'package:filament_os/features/filaments/presentation/filament_type_label.dart';
 import 'package:filament_os/shared/domain/money.dart';
@@ -125,13 +126,22 @@ class _FilamentsPageState extends State<FilamentsPage> {
                             ),
                           ],
                         ),
+                        // O nome da cor aparece aqui como texto, e não só
+                        // como o quadradinho colorido do `leading`: quem não
+                        // distingue cores não recebe informação nenhuma de um
+                        // swatch sozinho. Texto ao lado resolve pra todo
+                        // mundo, sem depender de leitor de tela.
                         subtitle: Row(
                           children: [
-                            Text('Tipo: ${filament.type.label}'),
+                            Text(filament.type.label),
                             const VerticalDivider(),
-                            Text('Peso: ${filament.weightInGrams}'),
+                            Text(filament.weightInGrams.toString()),
+                            const VerticalDivider(),
+                            Text(filament.color.label),
                           ],
                         ),
+                        // Swatch puramente decorativo — a informação que ele
+                        // carrega já está escrita no `subtitle`.
                         leading: Container(
                           color: filament.color.toMaterial(),
                           height: AppSpacing.sm,
