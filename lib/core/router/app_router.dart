@@ -6,9 +6,23 @@ import 'package:filament_os/features/filaments/presentation/filaments_page.dart'
 import 'package:filament_os/features/prints/presentation/prints_page.dart';
 import 'package:go_router/go_router.dart';
 
+/// Onde a aplicação é montada: o único arquivo que conhece todas as telas.
+///
+/// Isso pode parecer violar a regra "nenhuma feature importa a presentation
+/// de outra", mas não viola — ele não é uma feature. É o papel que o
+/// `main.dart` tinha antes: existe para conhecer todo mundo, justamente para
+/// que as features não precisem se conhecer entre si.
+///
+/// `static final`, uma instância só. Fosse campo de instância, cada `build`
+/// do `MyApp` criaria um `GoRouter` novo e jogaria fora a pilha de navegação,
+/// o histórico e a posição atual do usuário.
 class AppRouter {
   static final router = GoRouter(
     routes: [
+      // Início, filamentos e impressões são irmãs de propósito: são áreas
+      // paralelas do app, não telas empilhadas. A consequência é que `go`
+      // entre elas não deixa botão de voltar — o que passa a fazer sentido
+      // quando a barra de navegação persistente entrar.
       GoRoute(
         path: AppPaths.home,
         builder: (context, state) => const HomePage(),
@@ -17,10 +31,20 @@ class AppRouter {
       GoRoute(
         path: AppPaths.filaments,
         builder: (context, state) => const FilamentsPage(),
+        // O detalhe é FILHA de /filaments, e isso não é organização de
+        // arquivo: `go` reconstrói a pilha a partir da árvore, então navegar
+        // pro detalhe empilha a lista embaixo e o botão de voltar leva de
+        // volta a ela sem uma linha de código pra isso.
+        //
+        // O path da filha é relativo (`:id`, sem barra na frente) — com barra
+        // o go_router o trataria como caminho absoluto e o aninhamento não
+        // aconteceria.
         routes: [
           GoRoute(
             path: AppPaths.idSegm,
             name: AppRouteNames.filamentDetails,
+            // `!` é seguro: se o builder rodou, a rota casou, e uma rota só
+            // casa quando o segmento do parâmetro está presente.
             builder: (context, state) {
               final id = state.pathParameters[AppPaths.idParam]!;
               return FilamentDetailsPage(id: id);

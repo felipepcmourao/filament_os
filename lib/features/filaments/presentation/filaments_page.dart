@@ -96,6 +96,13 @@ class _FilamentsPageState extends State<FilamentsPage> {
                       );
                       final color = Theme.of(context).extension<AppColors>();
                       return ListTile(
+                        // Navega por NOME, não por path: esta tela não sabe
+                        // que a URL do detalhe é `/filaments/<id>`, só que
+                        // existe um destino chamado `filamentDetails`.
+                        //
+                        // E passa o `id`, não o `filament`. A tela de destino
+                        // busca sozinha — é o que faz ela funcionar também
+                        // quando aberta por link, sem esta tela no caminho.
                         onTap: () => context.goNamed(
                           AppRouteNames.filamentDetails,
                           pathParameters: {AppPaths.idParam: filament.id},

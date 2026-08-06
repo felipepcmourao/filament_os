@@ -72,7 +72,14 @@ Pendências da Sessão 5, na ordem em que o enunciado pede:
 - ~~`RegisterPrint` não persistia o `Print`~~ — resolvido. `PrintsRepositoryFakeImpl` implementado com exceções tipadas, e o use case grava o `Print` **antes** das baixas de estoque, por escolha registrada no próprio método.
 - ~~`FilamentColor.toMaterial()` fora dos tokens~~ — decidido e mantido: cor de filamento é dado do produto, não decisão visual, então continua na paleta bruta do Material. O contraste vem de uma borda em `colorScheme.outline` no swatch. Justificativa registrada em `FilamentColorMaterial`.
 - ~~`.gitkeep` em pastas populadas~~ — removidos de `features/` e `shared/`. Os de `core/config` e `core/router` seguem válidos enquanto essas pastas estiverem vazias.
-- **`lib/core/router/` está vazia; a navegação é `Navigator.push` e a `HomePage` importa a `FilamentsPage` direto.** É o que resta da sessão — toda a dívida técnica que a precedia está paga.
+- ~~`lib/core/router/` vazia e navegação por `Navigator.push`~~ — resolvido. `go_router` configurado, `MaterialApp.router` no lugar do `home:`, e nenhuma feature importa a presentation de outra.
+
+Navegação — o que já está de pé e o que falta:
+
+- Feito: rotas de início, filamentos e impressões; rota de detalhe `/filaments/:id`; navegação por nome.
+- Falta: rota de erro (404), `ShellRoute` com barra persistente, `redirect` de guard e teste de navegação.
+
+**Convenções de rota.** `AppPaths` (caminhos) é lido só pelo `app_router.dart`; `AppRouteNames` (nomes de destino) é lido pelas telas. Telas navegam por nome, nunca por path — assim nenhuma delas conhece o formato da URL. Rota filha usa path relativo (`:id`, sem barra). Telas de detalhe recebem **id**, nunca a entity: URL carrega texto, não objeto, e uma tela que depende da anterior lhe entregar o objeto quebra em deep link.
 
 ## Dívidas conhecidas, adiadas de propósito
 
@@ -81,5 +88,6 @@ Não conserte estas por iniciativa própria — cada uma tem uma sessão dona.
 - **Test double para a ordem das escritas do `RegisterPrint`** (Fase 1). A decisão de gravar o `Print` antes das baixas de estoque está protegida só por um comentário, e comentário não roda no CI: inverter as duas linhas mantém os 14 testes verdes. Testar isso exige um `FilamentsRepository` que falhe de propósito no `update` — um dublê que simula falha, diferente do fake que simula sucesso. Um dado ruim não serve para provocar essa falha, porque as passadas 1 e 2 do `call()` filtram tudo antes da fase de escrita; só a infraestrutura pode falhar ali.
 - **`Money.toString()` e `Weight.toString()` formatam texto de exibição** (`'EUR 10,00'`, `'450 gramas'`) e a UI depende disso. É o mesmo problema que saiu dos enums, entrando por outra porta. O conserto passa por `NumberFormat` do `intl` e fica para a sessão de internacionalização.
 - **Limiar de estoque baixo fixo em 100g** dentro de `StockStatus.fromWeight`. Deveria ser configurável por filamento ou por usuário.
+- **Não há injeção de dependência: cada tela instancia o próprio repositório** (Sessão 6). Como o fake guarda os dados numa lista de instância, telas diferentes não compartilham dado nenhum — por isso a `FilamentDetailsPage` nunca acha o filamento, embora esteja correta. Tornar a lista `static` foi tentado e revertido: quebrou o isolamento entre testes, que passaram a herdar dados uns dos outros. O conserto é o `flutter_riverpod`.
 
 Dependências declaradas no `pubspec.yaml` e ainda **sem uso**, cada uma reservada para uma sessão futura: `go_router` (Sessão 5), `flutter_riverpod` (Sessão 6), `firebase_core`/`cloud_firestore` (Sessão 7), `hive`/`hive_flutter` (Sessão 8), `intl` (internacionalização). Não antecipe o uso delas — cada sessão tem escopo fechado de propósito.
