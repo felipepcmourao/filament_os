@@ -1,5 +1,5 @@
+import 'package:filament_os/core/router/app_router.dart';
 import 'package:filament_os/core/theme/app_theme.dart';
-import 'package:filament_os/features/dashboard/presentation/home_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,9 +11,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'FilamentOS',
-      home: const HomePage(),
+      routerConfig: AppRouter.router,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
