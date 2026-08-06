@@ -41,7 +41,9 @@ As decisões estruturais estão documentadas em [docs/adr/](docs/adr/) — leia 
 - **Imutabilidade.** Operações devolvem instância nova (`consumeGrams`, `operator +`), nunca mutam.
 - **`Equatable`** para igualdade por valor em todo o domínio.
 - **Exceções tipadas** (`FilamentNotFoundException`, `CurrencyMismatchException`) em vez de `String` de mensagem cruzando camadas.
-- **Enums de domínio não importam Flutter.** A tradução enum → `Color` mora numa `extension` na `presentation`, com `switch` exaustivo e **sem `default`** — assim um valor novo sem mapeamento quebra em tempo de compilação, não em runtime. Ver `FilamentColorMaterial` e `StockStatusMaterial`.
+- **Enums de domínio são só os valores.** Nada de campo `label`, e nunca sobrescreva `toString()` neles — o padrão do Dart já devolve `FilamentColor.blue`, que é o que serve em log e stack trace.
+- **`domain/` não carrega string de exibição**, sem exceção — nem quando o texto não muda com o idioma (`'PLA'` também mora na presentation). Uma regra sem ressalva é mais fácil de seguir do que uma que exige decidir caso a caso.
+- **Toda tradução enum → UI mora numa `extension` na `presentation`**, com `switch` exaustivo e **sem `default`**, para que um valor novo sem mapeamento quebre em tempo de compilação e não em runtime. Duas famílias: `*Label` (getter `label`, devolve o texto exibido) e `*Material` (devolve `Color`/tokens). Ver `FilamentColorLabel` e `StockStatusMaterial`.
 - **Domínio enxuto.** Campo ou entity só existe quando algo do app realmente usa. Código especulativo é removido, não mantido "por garantia".
 
 ## Design system
@@ -60,16 +62,18 @@ Separe commits por assunto: correção de dívida técnica não vai junto com fe
 
 O projeto segue um roadmap de sessões progressivas que vive no Notion (`myDesk → studies → projetos → FilamentOS → Roadmap`). Cada sessão traz teoria, exercícios e um checklist de aprovação.
 
-**Fase 0 — Fundamentos:** sessões 1 a 4 concluídas (setup, clean architecture, modelagem de domínio, design system). **Sessão 5 — Navegação está em andamento e ainda não foi iniciada no código.**
+**Fase 0 — Fundamentos:** sessões 1 a 4 concluídas (setup, clean architecture, modelagem de domínio, design system). **Sessão 5 — Navegação em andamento**, começando pela dívida técnica antes da navegação em si.
 
 O que existe hoje: domínio completo (`Filament`, `Print`, `Sale`, `Money`, `Weight`), o use case `RegisterPrint`, `FilamentRepositoryFakeImpl` em memória, design system aplicado e 13 testes verdes.
 
-Pendências conhecidas da Sessão 5:
+Pendências da Sessão 5, na ordem em que o enunciado pede:
 
-- Texto de UI (`label`, `toString()`) ainda mora no `domain/` em `StockStatus`, `PrintStatus` e `FilamentColor`.
-- `PrintsRepository` não tem implementação, e `RegisterPrint` monta o `Print` mas nunca o persiste — o estoque é debitado para uma impressão que não existe.
+- ~~Texto de UI no `domain/`~~ — resolvido. Os quatro enums ficaram só com os valores e os labels foram para extensions `*Label` na presentation.
+- `PrintsRepository` não tem implementação, e `RegisterPrint` monta o `Print` mas nunca o persiste — o estoque é debitado para uma impressão que não existe. Inclui decidir o que fazer se a gravação do `Print` falhar depois da baixa de estoque já ter sido persistida.
 - `FilamentColor.toMaterial()` usa a paleta bruta do Material, passando por fora dos tokens.
 - `lib/core/router/` está vazia; a navegação é `Navigator.push` e a `HomePage` importa a `FilamentsPage` direto.
 - `lib/features/.gitkeep` e `lib/shared/.gitkeep` continuam em pastas já populadas.
+
+Fora do escopo da Sessão 5, mas conhecido: `Money.toString()` e `Weight.toString()` devolvem texto formatado para exibição (`'EUR 10,00'`, `'450 gramas'`) e a UI depende disso. É o mesmo problema que foi tirado dos enums, entrando por outra porta — o conserto passa por `NumberFormat` do `intl` e fica para a sessão de internacionalização.
 
 Dependências declaradas no `pubspec.yaml` e ainda **sem uso**, cada uma reservada para uma sessão futura: `go_router` (Sessão 5), `flutter_riverpod` (Sessão 6), `firebase_core`/`cloud_firestore` (Sessão 7), `hive`/`hive_flutter` (Sessão 8), `intl` (internacionalização). Não antecipe o uso delas — cada sessão tem escopo fechado de propósito.
