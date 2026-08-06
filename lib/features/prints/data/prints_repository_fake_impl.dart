@@ -4,7 +4,7 @@ import 'package:filament_os/features/prints/domain/print_not_updated_exception.d
 import 'package:filament_os/features/prints/domain/prints_repository.dart';
 
 /// Implementação "fake" do `PrintsRepository`: guarda tudo numa lista em
-/// memória, pelos mesmos motivos do `FilamentRepositoryFakeImpl` e sob a
+/// memória, pelos mesmos motivos do `FilamentsRepositoryFakeImpl` e sob a
 /// mesma ADR 0004 — dá pra construir e testar o fluxo de registro de
 /// impressão sem depender de Hive, Firestore, rede ou autenticação. Os dados
 /// somem quando o app fecha.

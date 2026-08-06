@@ -1,7 +1,7 @@
 import 'package:filament_os/core/theme/app_colors.dart';
 import 'package:filament_os/core/theme/app_radius.dart';
 import 'package:filament_os/core/theme/app_spacing.dart';
-import 'package:filament_os/features/filaments/data/filament_repository_fake_impl.dart';
+import 'package:filament_os/features/filaments/data/filaments_repository_fake_impl.dart';
 import 'package:filament_os/features/filaments/domain/filament.dart';
 import 'package:filament_os/features/filaments/domain/filament_color.dart';
 import 'package:filament_os/features/filaments/domain/filament_type.dart';
@@ -23,7 +23,7 @@ class FilamentsPage extends StatefulWidget {
 }
 
 class _FilamentsPageState extends State<FilamentsPage> {
-  final filamentRepository = FilamentRepositoryFakeImpl();
+  final filamentRepository = FilamentsRepositoryFakeImpl();
 
   // `filamentRepository.list()` devolve um Future<List<Filament>>, não a
   // lista em si — por isso essa variável guarda o Future, e não uma List.

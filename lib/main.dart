@@ -1,4 +1,4 @@
-import 'package:filament_os/core/theme/my_theme.dart';
+import 'package:filament_os/core/theme/app_theme.dart';
 import 'package:filament_os/features/dashboard/presentation/home_page.dart';
 import 'package:flutter/material.dart';
 
@@ -15,8 +15,8 @@ class MyApp extends StatelessWidget {
       title: 'FilamentOS',
       home: const HomePage(),
       debugShowCheckedModeBanner: false,
-      theme: MyTheme.lightTheme,
-      darkTheme: MyTheme.darkTheme,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
     );
   }

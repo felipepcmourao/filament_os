@@ -48,7 +48,7 @@ As decisões estruturais estão documentadas em [docs/adr/](docs/adr/) — leia 
 
 ## Design system
 
-Tokens em `lib/core/theme/`: `AppColors` (ThemeExtension, com par `x`/`xContainer` para badges), `AppSpacing`, `AppRadius`, `AppTextTheme`, `MyTheme`. Nunca use valor mágico de cor, espaçamento ou raio direto no widget — se falta um token, adicione o token.
+Tokens em `lib/core/theme/`: `AppColors` (ThemeExtension, com par `x`/`xContainer` para badges), `AppSpacing`, `AppRadius`, `AppTextTheme`, `AppTheme`. Nunca use valor mágico de cor, espaçamento ou raio direto no widget — se falta um token, adicione o token.
 
 O `ColorScheme` é escrito à mão (não `fromSeed`) por decisão deliberada — ver [ADR 0003](docs/adr/0003-design-system.md).
 
@@ -64,7 +64,7 @@ O projeto segue um roadmap de sessões progressivas que vive no Notion (`myDesk 
 
 **Fase 0 — Fundamentos:** sessões 1 a 4 concluídas (setup, clean architecture, modelagem de domínio, design system). **Sessão 5 — Navegação em andamento**, começando pela dívida técnica antes da navegação em si.
 
-O que existe hoje: domínio completo (`Filament`, `Print`, `Sale`, `Money`, `Weight`), o use case `RegisterPrint`, `FilamentRepositoryFakeImpl` em memória, design system aplicado e 13 testes verdes.
+O que existe hoje: domínio completo (`Filament`, `Print`, `Sale`, `Money`, `Weight`), o use case `RegisterPrint`, `FilamentsRepositoryFakeImpl` em memória, design system aplicado e 13 testes verdes.
 
 Pendências da Sessão 5, na ordem em que o enunciado pede:
 
@@ -78,7 +78,7 @@ Pendências da Sessão 5, na ordem em que o enunciado pede:
 
 Não conserte estas por iniciativa própria — cada uma tem uma sessão dona.
 
-- **Test double para a ordem das escritas do `RegisterPrint`** (Fase 1). A decisão de gravar o `Print` antes das baixas de estoque está protegida só por um comentário, e comentário não roda no CI: inverter as duas linhas mantém os 14 testes verdes. Testar isso exige um `FilamentRepository` que falhe de propósito no `update` — um dublê que simula falha, diferente do fake que simula sucesso. Um dado ruim não serve para provocar essa falha, porque as passadas 1 e 2 do `call()` filtram tudo antes da fase de escrita; só a infraestrutura pode falhar ali.
+- **Test double para a ordem das escritas do `RegisterPrint`** (Fase 1). A decisão de gravar o `Print` antes das baixas de estoque está protegida só por um comentário, e comentário não roda no CI: inverter as duas linhas mantém os 14 testes verdes. Testar isso exige um `FilamentsRepository` que falhe de propósito no `update` — um dublê que simula falha, diferente do fake que simula sucesso. Um dado ruim não serve para provocar essa falha, porque as passadas 1 e 2 do `call()` filtram tudo antes da fase de escrita; só a infraestrutura pode falhar ali.
 - **`Money.toString()` e `Weight.toString()` formatam texto de exibição** (`'EUR 10,00'`, `'450 gramas'`) e a UI depende disso. É o mesmo problema que saiu dos enums, entrando por outra porta. O conserto passa por `NumberFormat` do `intl` e fica para a sessão de internacionalização.
 - **Limiar de estoque baixo fixo em 100g** dentro de `StockStatus.fromWeight`. Deveria ser configurável por filamento ou por usuário.
 

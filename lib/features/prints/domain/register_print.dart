@@ -1,6 +1,6 @@
 import 'package:filament_os/features/filaments/domain/filament.dart';
 import 'package:filament_os/features/filaments/domain/filament_not_found_exception.dart';
-import 'package:filament_os/features/filaments/domain/filament_repository.dart';
+import 'package:filament_os/features/filaments/domain/filaments_repository.dart';
 import 'package:filament_os/features/prints/domain/print.dart';
 import 'package:filament_os/features/prints/domain/print_status.dart';
 import 'package:filament_os/features/prints/domain/prints_repository.dart';
@@ -11,7 +11,7 @@ import 'package:filament_os/shared/domain/weight.dart';
 ///
 /// Diferente de uma entity (`Print`, `Filament`), isso não é uma regra de
 /// negócio nova — é quem executa, em ordem, regras que já existem em outro
-/// lugar. Depende das ABSTRAÇÕES `FilamentRepository` e `PrintsRepository`
+/// lugar. Depende das ABSTRAÇÕES `FilamentsRepository` e `PrintsRepository`
 /// (não das implementações concretas), recebidas via construtor — é essa
 /// injeção de dependência que permite trocar a persistência real sem mudar
 /// nada aqui (ver ADR 0002). Ambas vêm pelo construtor, e não como parâmetro
@@ -33,7 +33,7 @@ import 'package:filament_os/shared/domain/weight.dart';
 /// corpo do método antes de inverter.
 
 class RegisterPrint {
-  final FilamentRepository filamentRepository;
+  final FilamentsRepository filamentRepository;
   final PrintsRepository printsRepository;
 
   RegisterPrint({

@@ -1,10 +1,10 @@
 import 'package:filament_os/features/prints/domain/print.dart';
 
 /// Abstração da fonte de dados de `Print` — mesma ideia do
-/// `FilamentRepository`: nem `domain` nem quem usa esse contrato sabem se
+/// `FilamentsRepository`: nem `domain` nem quem usa esse contrato sabem se
 /// por trás existe uma lista em memória, um banco local ou uma API.
 ///
-/// Todo método é `Future` pelo mesmo motivo do `FilamentRepository`: toda
+/// Todo método é `Future` pelo mesmo motivo do `FilamentsRepository`: toda
 /// fonte de dados real é assíncrona (banco, rede).
 abstract class PrintsRepository {
   Future<List<Print>> list();

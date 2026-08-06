@@ -1,12 +1,12 @@
 import 'package:filament_os/features/filaments/domain/filament.dart';
 import 'package:filament_os/features/filaments/domain/filament_not_removed_exception.dart';
 import 'package:filament_os/features/filaments/domain/filament_not_updated_exception.dart';
-import 'package:filament_os/features/filaments/domain/filament_repository.dart';
+import 'package:filament_os/features/filaments/domain/filaments_repository.dart';
 
-/// Implementação "fake" do `FilamentRepository`: guarda tudo numa lista em
+/// Implementação "fake" do `FilamentsRepository`: guarda tudo numa lista em
 /// memória, só pra desenvolver/testar sem precisar de um banco de dados de
 /// verdade ainda. Os dados somem quando o app fecha.
-class FilamentRepositoryFakeImpl implements FilamentRepository {
+class FilamentsRepositoryFakeImpl implements FilamentsRepository {
   final List<Filament> _filamentList = [];
 
   @override

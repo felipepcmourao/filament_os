@@ -1,7 +1,7 @@
 # Design System: Tema Manual e Isolamento de Cores de Domínio
 
 ## Contexto
-Foi construído um sistema de tema em `lib/core/theme/` (`AppColors`, `AppSpacing`, `AppRadius`, `AppTextTheme`, `MyTheme`) para centralizar as decisões visuais do app e evitar valores mágicos espalhados pelos widgets. Duas decisões dentro desse sistema têm trade-offs que não são óbvios só lendo o código e merecem registro.
+Foi construído um sistema de tema em `lib/core/theme/` (`AppColors`, `AppSpacing`, `AppRadius`, `AppTextTheme`, `AppTheme`) para centralizar as decisões visuais do app e evitar valores mágicos espalhados pelos widgets. Duas decisões dentro desse sistema têm trade-offs que não são óbvios só lendo o código e merecem registro.
 
 ## Decisão
 

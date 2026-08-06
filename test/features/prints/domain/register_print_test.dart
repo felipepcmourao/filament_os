@@ -1,4 +1,4 @@
-import 'package:filament_os/features/filaments/data/filament_repository_fake_impl.dart';
+import 'package:filament_os/features/filaments/data/filaments_repository_fake_impl.dart';
 import 'package:filament_os/features/filaments/domain/filament.dart';
 import 'package:filament_os/features/filaments/domain/filament_color.dart';
 import 'package:filament_os/features/filaments/domain/filament_not_found_exception.dart';
@@ -12,7 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('Teste de registro de impressão com mais de um filamento', () async {
-    final filamentRepository = FilamentRepositoryFakeImpl();
+    final filamentRepository = FilamentsRepositoryFakeImpl();
     final printsRepository = PrintsRepositoryFakeImpl();
     await filamentRepository.add(
       Filament(
@@ -63,7 +63,7 @@ void main() {
   });
 
   test('Teste de registro com filamento inexistente', () async {
-    final filamentRepository = FilamentRepositoryFakeImpl();
+    final filamentRepository = FilamentsRepositoryFakeImpl();
     final printsRepository = PrintsRepositoryFakeImpl();
     await expectLater(
       () async =>
@@ -88,7 +88,7 @@ void main() {
   });
 
   test('Verificar não persistência após falha na validação', () async {
-    final filamentRepository = FilamentRepositoryFakeImpl();
+    final filamentRepository = FilamentsRepositoryFakeImpl();
     final printsRepository = PrintsRepositoryFakeImpl();
 
     await filamentRepository.add(

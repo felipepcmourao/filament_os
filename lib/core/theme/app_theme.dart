@@ -2,7 +2,7 @@ import 'package:filament_os/core/theme/app_colors.dart';
 import 'package:filament_os/core/theme/app_text_theme.dart';
 import 'package:flutter/material.dart';
 
-class MyTheme {
+class AppTheme {
   static ColorScheme darkColorScheme = const ColorScheme(
     brightness: Brightness.dark,
     primary: Color(0xFFff6a1a),
