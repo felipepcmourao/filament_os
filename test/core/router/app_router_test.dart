@@ -1,0 +1,59 @@
+import 'package:filament_os/core/router/app_router.dart';
+import 'package:filament_os/features/dashboard/presentation/home_page.dart';
+import 'package:filament_os/features/filaments/presentation/filaments_page.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+// Testes do roteador: que navegar leva onde deveria, e que um teste não
+// contamina o outro.
+//
+// Monta `MaterialApp.router` com `AppRouter.createRouter()` em vez de usar o
+// `MyApp` pronto, e isso não é preciosismo: o `MyApp` usa `AppRouter.router`,
+// que é `static` — uma instância por isolate. Como o `flutter test` roda o
+// arquivo inteiro num isolate só, os testes herdariam a posição de navegação
+// uns dos outros, e um teste que tocasse em "Filamentos" deixaria o seguinte
+// começando em `/filaments` sem ter tocado em nada.
+//
+// Afirma com `find.byType`, não com `find.text`: o que se quer provar é que o
+// roteador chegou naquela tela. Um `find.text('Filaments Page')` quebraria
+// numa tradução do título, sem bug nenhum ter acontecido.
+
+void main() {
+  testWidgets('Tocar em Filamentos leva a Filaments Pages', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp.router(routerConfig: AppRouter.createRouter()),
+    );
+    await tester.tap(find.text('Filamentos'));
+    await tester.pumpAndSettle();
+    expect(find.byType(FilamentsPage), findsOneWidget);
+  });
+
+  testWidgets('Roteador novo não herda a navegação do anterior', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp.router(routerConfig: AppRouter.createRouter()),
+    );
+    await tester.tap(find.text('Filamentos'));
+    await tester.pumpAndSettle();
+
+    // A segunda montagem não é repetição — é o teste inteiro. Navegar já
+    // aconteceu acima; aqui um roteador NOVO entra no lugar do anterior, e a
+    // pergunta é se ele começa do zero ou herda o `/filaments` de cima.
+    //
+    // Simular isso dentro de um teste só é deliberado. Dava pra provar o mesmo
+    // com dois testes vizinhos — um que navega, outro que espera a home — mas
+    // aí a garantia dependeria da ordem em que eles rodam, e ordem não está
+    // escrita em lugar nenhum: bastaria alguém inserir um teste no meio, ou o
+    // `flutter test` mudar de critério, pra proteção sumir sem ninguém notar.
+    // Verificado: trocando `createRouter()` por `AppRouter.router`, este teste
+    // (e só ele) falha.
+    await tester.pumpWidget(
+      MaterialApp.router(routerConfig: AppRouter.createRouter()),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byType(HomePage), findsOneWidget);
+  });
+}
