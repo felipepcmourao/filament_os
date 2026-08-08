@@ -42,6 +42,7 @@ import 'package:go_router/go_router.dart';
 class AppRouter {
   static GoRouter createRouter() {
     return GoRouter(
+      initialLocation: AppPaths.home,
       // Rede de segurança para URLs que não casam com nenhuma rota. Só pega
       // erro de roteamento: `/filaments/id-inexistente` NÃO passa por aqui,
       // porque casa com a rota `:id` — aquela ausência é tratada dentro da
