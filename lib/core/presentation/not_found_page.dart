@@ -40,6 +40,12 @@ class NotFoundPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
+                'Ixi, não tá aqui! Clica aí embaixo pra ter acesso ao app.',
+                style: Theme.of(context).textTheme.titleMedium!,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: AppSpacing.xl),
+              Text(
                 'Você tentou acessar: $uri',
                 style: Theme.of(context).textTheme.bodyMedium!,
               ),
@@ -47,12 +53,6 @@ class NotFoundPage extends StatelessWidget {
               Text(
                 'Erro: $error',
                 style: Theme.of(context).textTheme.bodyMedium!,
-              ),
-              const SizedBox(height: AppSpacing.xl),
-              Text(
-                'Ixi, não tá aqui! Clica aí embaixo pra ter acesso ao app.',
-                style: Theme.of(context).textTheme.titleMedium!,
-                textAlign: TextAlign.center,
               ),
               const SizedBox(height: AppSpacing.xl),
               TextButton(
