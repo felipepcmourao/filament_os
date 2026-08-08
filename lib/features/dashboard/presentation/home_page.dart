@@ -1,8 +1,20 @@
-import 'package:filament_os/core/router/app_paths.dart';
+import 'package:filament_os/core/router/app_route_names.dart';
 import 'package:filament_os/core/theme/app_spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+/// A tela de entrada do app, alcançada por `/`.
+///
+/// Mora em `features/dashboard/` porque é o lugar dela no fim: um painel com
+/// estoque total, impressões recentes e lucro do mês. Hoje não tem nada disso
+/// — é um título e dois botões, servindo só como ponto de partida da
+/// navegação enquanto a barra persistente não existe.
+///
+/// Não conhece a `FilamentsPage`: manda o roteador ir pra `/filaments` e quem
+/// resolve isso em widget é o `AppRouter`. Foi essa inversão que permitiu à
+/// regra "nenhuma feature importa a presentation de outra" valer de fato —
+/// antes esta tela dava `Navigator.push(FilamentsPage())` e, com isso, o
+/// dashboard dependia da feature de filamentos em tempo de compilação.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -20,7 +32,7 @@ class HomePage extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.xl),
               ElevatedButton(
-                onPressed: () => context.go(AppPaths.filaments),
+                onPressed: () => context.goNamed(AppRouteNames.filaments),
                 child: const Text('Filamentos'),
               ),
               const SizedBox(height: AppSpacing.xl),

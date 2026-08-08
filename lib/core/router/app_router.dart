@@ -48,11 +48,13 @@ class AppRouter {
       GoRoute(
         path: AppPaths.home,
         builder: (context, state) => const HomePage(),
+        name: AppRouteNames.home,
       ),
 
       GoRoute(
         path: AppPaths.filaments,
         builder: (context, state) => const FilamentsPage(),
+        name: AppRouteNames.filaments,
         // O detalhe é FILHA de /filaments, e isso não é organização de
         // arquivo: `go` reconstrói a pilha a partir da árvore, então navegar
         // pro detalhe empilha a lista embaixo e o botão de voltar leva de
@@ -78,6 +80,7 @@ class AppRouter {
       GoRoute(
         path: AppPaths.prints,
         builder: (context, state) => const PrintsPage(),
+        name: AppRouteNames.prints,
       ),
     ],
   );

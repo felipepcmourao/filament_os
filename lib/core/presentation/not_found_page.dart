@@ -1,4 +1,4 @@
-import 'package:filament_os/core/router/app_paths.dart';
+import 'package:filament_os/core/router/app_route_names.dart';
 import 'package:filament_os/core/theme/app_spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -56,7 +56,7 @@ class NotFoundPage extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.xl),
               TextButton(
-                onPressed: () => context.go(AppPaths.home),
+                onPressed: () => context.goNamed(AppRouteNames.home),
                 child: const Text('Acessar app'),
               ),
             ],

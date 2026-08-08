@@ -10,4 +10,7 @@
 /// `go_router` monta a URL a partir do mapa — ninguém concatena string na mão.
 class AppRouteNames {
   static const String filamentDetails = 'filamentDetails';
+  static const String prints = 'prints';
+  static const String filaments = 'filaments';
+  static const String home = 'home';
 }
