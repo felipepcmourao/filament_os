@@ -24,6 +24,18 @@ class HomePage extends StatelessWidget {
                 child: const Text('Filamentos'),
               ),
               const SizedBox(height: AppSpacing.xl),
+              // Andaime temporário: é o único jeito de chegar na `NotFoundPage`
+              // sem digitar URL à mão, o que no emulador dá trabalho.
+              //
+              // É também a única navegação por string literal do app, e aqui
+              // isso não fere a convenção — fere pelo motivo certo. Navegar por
+              // nome (`AppRouteNames`) só alcança destinos que existem, e o que
+              // se quer testar é justamente um caminho que NÃO existe. Uma
+              // constante em `AppPaths` pra uma rota inválida seria uma
+              // contradição: aquela classe descreve o espaço de URLs válido.
+              //
+              // Sai daqui quando o teste de navegação da Sessão 5 cobrir o 404
+              // de verdade — teste automatizado não precisa de botão na tela.
               ElevatedButton(
                 onPressed: () => context.go('dsada'),
                 child: const Text('Teste Not Found'),

@@ -131,7 +131,7 @@ class Filament extends Equatable {
 
   // Dois Filament são "iguais" (via Equatable) se todos os campos forem
   // iguais — mesma regra de igualdade por valor usada em todo o domínio
-  // (ver `Sale`, `Print`, `User`, `Money`, `Weight`).
+  // (ver `Sale`, `Print`, `Money`, `Weight`).
   @override
   List<Object?> get props => [
     id,

@@ -18,6 +18,20 @@ import 'package:filament_os/shared/presentation/stock_status_material.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+/// Lista o estoque de filamentos, alcançada por `/filaments`.
+///
+/// É `StatefulWidget` porque precisa guardar o Future entre rebuilds (ver o
+/// campo `_futureFilamentList`) e trocá-lo por um novo quando a lista muda.
+///
+/// Cada `ListTile` mostra a mesma informação três vezes em linguagens
+/// diferentes, e isso é de propósito: o swatch colorido, o nome da cor escrito
+/// e o badge de estoque. Cor sozinha não informa quem não a distingue, e por
+/// isso nenhuma informação depende só dela aqui.
+///
+/// Instancia o próprio repositório, como todas as telas hoje — é a dívida que
+/// o `flutter_riverpod` fecha na Sessão 6, e a razão pela qual a
+/// `FilamentDetailsPage` nunca acha o filamento que esta tela adicionou (ver
+/// `FilamentDetailsPage`, que documenta o caso por inteiro).
 class FilamentsPage extends StatefulWidget {
   const FilamentsPage({super.key});
 
@@ -194,6 +208,17 @@ class _FilamentsPageState extends State<FilamentsPage> {
   }
 }
 
+// Dados de demonstração, presos no arquivo enquanto não existe persistência.
+// O botão "Adicionar Filamento" despeja os três de uma vez só pra tela sair do
+// estado vazio — não é feature, é andaime.
+//
+// Os pesos não são arbitrários: 0g, 80g e 450g dão um filamento de cada
+// `StockStatus` (`exhausted`, `low` e `healthy`, com o limiar de 100g que o
+// `StockStatus.fromWeight` aplica). É o que permite ver os três badges lado a
+// lado sem mexer em nada. Mudar esses números apaga essa cobertura em silêncio.
+//
+// Saem daqui quando os dados vierem do Hive/Firestore. Enquanto isso, ficam
+// fora da classe de propósito: são fixture, não estado da tela.
 final addedFilament1 = Filament(
   id: '00001',
   name: 'BambuLab PLA Silk',

@@ -34,9 +34,9 @@ class FilamentsRepositoryFakeImpl implements FilamentsRepository {
   // existe" e não falhar silenciosamente.
   @override
   Future<void> remove(String id) async {
-    final currentLenght = _filamentList.length;
+    final currentLength = _filamentList.length;
     _filamentList.removeWhere((e) => e.id == id);
-    if (_filamentList.length >= currentLenght) {
+    if (_filamentList.length >= currentLength) {
       throw FilamentNotRemovedException(id: id);
     }
   }

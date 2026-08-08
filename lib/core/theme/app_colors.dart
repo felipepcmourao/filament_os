@@ -1,5 +1,37 @@
 import 'package:flutter/material.dart';
 
+/// As cores que o `ColorScheme` do Material não tem.
+///
+/// O `ColorScheme` cobre os papéis genéricos de qualquer app (`primary`,
+/// `error`, `surface`), mas não sabe o que é "estoque baixo" nem "impressão
+/// falhou" — esses são conceitos deste domínio. Um `ThemeExtension` é como o
+/// Flutter deixa pendurar cores próprias no `ThemeData`, e é o que faz elas
+/// chegarem nos widgets pelo mesmo caminho das nativas:
+/// `Theme.of(context).extension<AppColors>()`.
+///
+/// A alternativa seria um `AppColors` com `static const` lidos direto do
+/// widget — mais curto de escrever, e errado: constante estática não sabe se o
+/// app está em tema claro ou escuro. Passando pelo tema, o Flutter entrega o
+/// `light` ou o `dark` conforme o contexto, sem nenhum `if` no widget.
+///
+/// **O par `x`/`xContainer`.** Toda cor aparece duas vezes: `lowStock` é a cor
+/// do conteúdo (texto, ícone) e `lowStockContainer` é a do fundo atrás dele.
+/// Elas nascem juntas porque a informação que importa não está em nenhuma das
+/// duas isoladamente, e sim no **contraste entre elas** — um badge legível é
+/// um par calibrado, não duas cores escolhidas em momentos diferentes. É a
+/// mesma convenção de nome do Material (`primary`/`primaryContainer`), e é por
+/// isso que `StockStatusMaterial.toMaterial` devolve as duas de uma vez.
+///
+/// Repara que os pares invertem de papel entre os temas: no `light` o
+/// container é claro e o conteúdo escuro, no `dark` o oposto. Não são as
+/// mesmas cores com brilho ajustado — são duas paletas escolhidas à mão, pela
+/// mesma decisão que rejeitou o `ColorScheme.fromSeed` (ver ADR 0003).
+///
+/// `copyWith` e `lerp` são `@override` obrigatórios do contrato de
+/// `ThemeExtension`. O `lerp` é o que permite ao Flutter **animar** a troca de
+/// tema: durante a transição ele pede as cores intermediárias entre os dois
+/// temas, com `t` indo de 0 a 1. Sem ele implementado de verdade, as cores
+/// customizadas dariam um salto seco enquanto o resto do app faz o fade.
 class AppColors extends ThemeExtension<AppColors> {
   final Color printing;
   final Color printingContainer;

@@ -3,11 +3,11 @@ import 'package:filament_os/shared/domain/money.dart';
 
 /// O evento de vender uma peça impressa.
 ///
-/// Referencia a impressão vendida via `printId` (não guarda o `Prints`
-/// inteiro, mesma lógica de referência-por-id do `Prints` -> `Filament`).
+/// Referencia a impressão vendida via `printId` (não guarda o `Print`
+/// inteiro, mesma lógica de referência-por-id do `Print` -> `Filament`).
 ///
 /// Não tem `ownerId` próprio: quem é o dono se descobre indiretamente via
-/// `Sale.printId -> Prints.ownerId`, evitando duplicar esse dado.
+/// `Sale.printId -> Print.ownerId`, evitando duplicar esse dado.
 ///
 /// Não tem campo `isSold`: se um `Sale` existe, ele já É uma venda que
 /// aconteceu — um booleano assim seria sempre `true`, portanto redundante.
