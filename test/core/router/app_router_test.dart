@@ -56,4 +56,15 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(HomePage), findsOneWidget);
   });
+
+  testWidgets('Clicar na Navigation Bar leva para a tela correta', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp.router(routerConfig: AppRouter.createRouter()),
+    );
+    await tester.tap(find.widgetWithIcon(NavigationDestination, Icons.circle));
+    await tester.pumpAndSettle();
+    expect(find.byType(FilamentsPage), findsOneWidget);
+  });
 }
