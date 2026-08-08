@@ -64,22 +64,26 @@ O projeto segue um roadmap de sessões progressivas que vive no Notion (`myDesk 
 
 **Fase 0 — Fundamentos:** sessões 1 a 4 concluídas (setup, clean architecture, modelagem de domínio, design system). **Sessão 5 — Navegação em andamento**, começando pela dívida técnica antes da navegação em si.
 
-O que existe hoje: domínio completo (`Filament`, `Print`, `Sale`, `Money`, `Weight`), o use case `RegisterPrint`, `FilamentsRepositoryFakeImpl` em memória, design system aplicado e 13 testes verdes.
+O que existe hoje: domínio completo (`Filament`, `Print`, `Sale`, `Money`, `Weight`), o use case `RegisterPrint`, `FilamentsRepositoryFakeImpl` e `PrintsRepositoryFakeImpl` em memória, design system aplicado e 14 testes verdes.
 
 Pendências da Sessão 5, na ordem em que o enunciado pede:
 
 - ~~Texto de UI no `domain/`~~ — resolvido. Os quatro enums ficaram só com os valores e os labels foram para extensions `*Label` na presentation.
 - ~~`RegisterPrint` não persistia o `Print`~~ — resolvido. `PrintsRepositoryFakeImpl` implementado com exceções tipadas, e o use case grava o `Print` **antes** das baixas de estoque, por escolha registrada no próprio método.
 - ~~`FilamentColor.toMaterial()` fora dos tokens~~ — decidido e mantido: cor de filamento é dado do produto, não decisão visual, então continua na paleta bruta do Material. O contraste vem de uma borda em `colorScheme.outline` no swatch. Justificativa registrada em `FilamentColorMaterial`.
-- ~~`.gitkeep` em pastas populadas~~ — removidos de `features/` e `shared/`. Os de `core/config` e `core/router` seguem válidos enquanto essas pastas estiverem vazias.
+- ~~`.gitkeep` em pastas populadas~~ — removidos de `features/`, `shared/` e, depois que o roteador nasceu, de `core/router/`. Só o de `core/config` segue válido, enquanto aquela pasta estiver vazia.
 - ~~`lib/core/router/` vazia e navegação por `Navigator.push`~~ — resolvido. `go_router` configurado, `MaterialApp.router` no lugar do `home:`, e nenhuma feature importa a presentation de outra.
 
 Navegação — o que já está de pé e o que falta:
 
-- Feito: rotas de início, filamentos e impressões; rota de detalhe `/filaments/:id`; navegação por nome.
-- Falta: rota de erro (404), `ShellRoute` com barra persistente, `redirect` de guard e teste de navegação.
+- Feito: rotas de início, filamentos e impressões; rota de detalhe `/filaments/:id`; rota de erro (404) via `errorBuilder`; navegação por nome nas quatro rotas.
+- Falta: `ShellRoute` com barra persistente, `redirect` de guard e teste de navegação.
 
-**Convenções de rota.** `AppPaths` (caminhos) é lido só pelo `app_router.dart`; `AppRouteNames` (nomes de destino) é lido pelas telas. Telas navegam por nome, nunca por path — assim nenhuma delas conhece o formato da URL. Rota filha usa path relativo (`:id`, sem barra). Telas de detalhe recebem **id**, nunca a entity: URL carrega texto, não objeto, e uma tela que depende da anterior lhe entregar o objeto quebra em deep link.
+**Convenções de rota.** `AppPaths` (caminhos) é lido só pelo `app_router.dart`; `AppRouteNames` (nomes de destino) é lido pelas telas. Telas navegam por nome, nunca por path — assim nenhuma delas conhece o formato da URL, e hoje nenhuma importa `AppPaths` (o compilador confirma a regra, não só o comentário). Rota filha usa path relativo (`:id`, sem barra). Telas de detalhe recebem **id**, nunca a entity: URL carrega texto, não objeto, e uma tela que depende da anterior lhe entregar o objeto quebra em deep link.
+
+**Uma exceção deliberada:** o botão "Teste Not Found" da `HomePage` navega por path literal. `goNamed` com nome desconhecido lança assertion e derruba o app (nome inválido só pode vir do programador); só `go` com path inválido cai no `errorBuilder`. É andaime e sai quando o teste de navegação cobrir o 404.
+
+**`AppRouter` expõe dois membros.** `router` é a instância única que o `MyApp` usa; `createRouter()` fabrica um `GoRouter` novo e é o que **todo teste de navegação deve chamar**. `static` é uma instância por isolate e o `flutter test` roda o arquivo num isolate só, então testes que compartilhem `AppRouter.router` herdam a posição de navegação uns dos outros. Não é a `factory` do Dart: aquela palavra-chave só devolve a própria classe, e aqui se fabrica um `GoRouter`.
 
 ## Dívidas conhecidas, adiadas de propósito
 
@@ -90,4 +94,4 @@ Não conserte estas por iniciativa própria — cada uma tem uma sessão dona.
 - **Limiar de estoque baixo fixo em 100g** dentro de `StockStatus.fromWeight`. Deveria ser configurável por filamento ou por usuário.
 - **Não há injeção de dependência: cada tela instancia o próprio repositório** (Sessão 6). Como o fake guarda os dados numa lista de instância, telas diferentes não compartilham dado nenhum — por isso a `FilamentDetailsPage` nunca acha o filamento, embora esteja correta. Tornar a lista `static` foi tentado e revertido: quebrou o isolamento entre testes, que passaram a herdar dados uns dos outros. O conserto é o `flutter_riverpod`.
 
-Dependências declaradas no `pubspec.yaml` e ainda **sem uso**, cada uma reservada para uma sessão futura: `go_router` (Sessão 5), `flutter_riverpod` (Sessão 6), `firebase_core`/`cloud_firestore` (Sessão 7), `hive`/`hive_flutter` (Sessão 8), `intl` (internacionalização). Não antecipe o uso delas — cada sessão tem escopo fechado de propósito.
+Dependências declaradas no `pubspec.yaml` e ainda **sem uso**, cada uma reservada para uma sessão futura: `flutter_riverpod` (Sessão 6), `firebase_core`/`cloud_firestore` (Sessão 7), `hive`/`hive_flutter` (Sessão 8), `intl` (internacionalização). Não antecipe o uso delas — cada sessão tem escopo fechado de propósito. O `go_router` saiu desta lista: está em uso desde a Sessão 5.
