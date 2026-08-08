@@ -13,4 +13,18 @@ class AppRouteNames {
   static const String prints = 'prints';
   static const String filaments = 'filaments';
   static const String home = 'home';
+
+  /// Os três destinos da barra de navegação, **na ordem em que aparecem nela**.
+  ///
+  /// Guarda só nomes, não caminhos: o `ShellRouter` descobre onde está lendo
+  /// `GoRouterState.of(context).topRoute?.name`, que devolve o nome da rota
+  /// atual. Comparar nome com nome mantém `AppPaths` fora daqui — se esta
+  /// classe importasse `AppPaths`, toda tela que a importa arrastaria os
+  /// caminhos junto, desfazendo a regra documentada acima.
+  ///
+  /// A ordem é acoplada à lista `destinations` do `ShellRouter`: o índice 0
+  /// daqui tem que ser o mesmo destino do índice 0 de lá. Nada no compilador
+  /// verifica isso — quem verifica é o teste 'Clicar na Navigation Bar leva
+  /// para a tela correta'. Trocar dois itens de lugar aqui deixa ele vermelho.
+  static const List<String> navBarPages = [filaments, home, prints];
 }

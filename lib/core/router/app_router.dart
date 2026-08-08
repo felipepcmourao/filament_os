@@ -1,3 +1,4 @@
+import 'package:filament_os/core/presentation/shell_router.dart';
 import 'package:filament_os/core/router/app_route_names.dart';
 import 'package:filament_os/core/router/app_paths.dart';
 import 'package:filament_os/core/presentation/not_found_page.dart';
@@ -5,6 +6,7 @@ import 'package:filament_os/features/dashboard/presentation/home_page.dart';
 import 'package:filament_os/features/filaments/presentation/filament_details_page.dart';
 import 'package:filament_os/features/filaments/presentation/filaments_page.dart';
 import 'package:filament_os/features/prints/presentation/prints_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
 /// Onde a aplicação é montada: o único arquivo que conhece todas as telas.
@@ -41,7 +43,10 @@ import 'package:go_router/go_router.dart';
 /// dois membros estáticos.
 class AppRouter {
   static GoRouter createRouter() {
+    final rootNavigatorKey = GlobalKey<NavigatorState>();
+    final shellNavigatorKey = GlobalKey<NavigatorState>();
     return GoRouter(
+      navigatorKey: rootNavigatorKey,
       initialLocation: AppPaths.home,
       // Rede de segurança para URLs que não casam com nenhuma rota. Só pega
       // erro de roteamento: `/filaments/id-inexistente` NÃO passa por aqui,
@@ -65,47 +70,54 @@ class AppRouter {
         return NotFoundPage(uri: uri, error: error);
       },
       routes: [
+        ShellRoute(
+          navigatorKey: shellNavigatorKey,
+          builder: (context, state, child) => ShellRouter(child: child),
+          routes: [
+            GoRoute(
+              path: AppPaths.home,
+              builder: (context, state) => const HomePage(),
+              name: AppRouteNames.home,
+            ),
+
+            GoRoute(
+              path: AppPaths.filaments,
+              builder: (context, state) => const FilamentsPage(),
+              name: AppRouteNames.filaments,
+              // O detalhe é FILHA de /filaments, e isso não é organização de
+              // arquivo: `go` reconstrói a pilha a partir da árvore, então navegar
+              // pro detalhe empilha a lista embaixo e o botão de voltar leva de
+              // volta a ela sem uma linha de código pra isso.
+              //
+              // O path da filha é relativo (`:id`, sem barra na frente) — com barra
+              // o go_router o trataria como caminho absoluto e o aninhamento não
+              // aconteceria.
+              routes: [
+                GoRoute(
+                  path: AppPaths.idSegm,
+                  name: AppRouteNames.filamentDetails,
+                  // `!` é seguro: se o builder rodou, a rota casou, e uma rota só
+                  // casa quando o segmento do parâmetro está presente.
+                  builder: (context, state) {
+                    final id = state.pathParameters[AppPaths.idParam]!;
+                    return FilamentDetailsPage(id: id);
+                  },
+                  parentNavigatorKey: rootNavigatorKey,
+                ),
+              ],
+            ),
+
+            GoRoute(
+              path: AppPaths.prints,
+              builder: (context, state) => const PrintsPage(),
+              name: AppRouteNames.prints,
+            ),
+          ],
+        ),
         // Início, filamentos e impressões são irmãs de propósito: são áreas
         // paralelas do app, não telas empilhadas. A consequência é que `go`
         // entre elas não deixa botão de voltar — o que passa a fazer sentido
         // quando a barra de navegação persistente entrar.
-        GoRoute(
-          path: AppPaths.home,
-          builder: (context, state) => const HomePage(),
-          name: AppRouteNames.home,
-        ),
-
-        GoRoute(
-          path: AppPaths.filaments,
-          builder: (context, state) => const FilamentsPage(),
-          name: AppRouteNames.filaments,
-          // O detalhe é FILHA de /filaments, e isso não é organização de
-          // arquivo: `go` reconstrói a pilha a partir da árvore, então navegar
-          // pro detalhe empilha a lista embaixo e o botão de voltar leva de
-          // volta a ela sem uma linha de código pra isso.
-          //
-          // O path da filha é relativo (`:id`, sem barra na frente) — com barra
-          // o go_router o trataria como caminho absoluto e o aninhamento não
-          // aconteceria.
-          routes: [
-            GoRoute(
-              path: AppPaths.idSegm,
-              name: AppRouteNames.filamentDetails,
-              // `!` é seguro: se o builder rodou, a rota casou, e uma rota só
-              // casa quando o segmento do parâmetro está presente.
-              builder: (context, state) {
-                final id = state.pathParameters[AppPaths.idParam]!;
-                return FilamentDetailsPage(id: id);
-              },
-            ),
-          ],
-        ),
-
-        GoRoute(
-          path: AppPaths.prints,
-          builder: (context, state) => const PrintsPage(),
-          name: AppRouteNames.prints,
-        ),
       ],
     );
   }

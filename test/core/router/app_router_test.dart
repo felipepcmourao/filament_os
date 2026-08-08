@@ -25,7 +25,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp.router(routerConfig: AppRouter.createRouter()),
     );
-    await tester.tap(find.text('Filamentos'));
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Filamentos'));
     await tester.pumpAndSettle();
     expect(find.byType(FilamentsPage), findsOneWidget);
   });
@@ -36,7 +36,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp.router(routerConfig: AppRouter.createRouter()),
     );
-    await tester.tap(find.text('Filamentos'));
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Filamentos'));
     await tester.pumpAndSettle();
 
     // A segunda montagem não é repetição — é o teste inteiro. Navegar já
