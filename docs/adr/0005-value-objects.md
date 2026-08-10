@@ -8,13 +8,20 @@ O domínio da aplicação trabalha com grandezas que têm regras próprias e nã
 
 A criação é sempre via `factory`, nunca por construtor público: um construtor privado (`Money._`/`Weight._`) só guarda o valor, e o `factory` valida as invariantes (ex: peso não pode ser negativo) antes de instanciar. Isso garante que uma instância inválida nunca existe — quem recebe um `Weight` não precisa validar de novo. Operadores (`+`, `-`, `>`, `<` etc.) sempre retornam uma instância nova através do próprio `factory`, então uma operação que resultaria num estado inválido (ex: subtrair mais peso do que existe em estoque) já lança o erro no lugar onde o problema acontece, sem precisar de checagem manual em cada chamada.
 
+**Um value object guarda a grandeza, não o texto dela.** A conversão para texto de tela é decisão de apresentação — envolve idioma, unidade, separador decimal, precisão e formato, cinco escolhas que mudam com o usuário e não com o conceito — e por isso mora numa `extension` na `presentation` (`WeightLabel`), do mesmo jeito que os labels dos enums. O `toString()` da classe fica reservado ao seu consumidor real em Dart, que é o diagnóstico: `stringify => true` do `Equatable` devolve `Weight(450000)` e `Money(1000, EUR)`, na unidade interna e sem idioma nenhum.
+
+A fronteira precisou ser escrita porque a versão original a atravessava sem parecer que atravessava: `Weight.toString()` devolvia `'450 gramas'` e a tela renderizava isso direto, o que fazia uma tradução para inglês exigir a edição de um arquivo de `shared/domain/`. Nada no compilador reclama disso — todo objeto tem `toString()`, então o `analyze` fica verde sobre um `Text(weight.toString())`.
+
 ## Consequências
 
 ### Positivas
 * **Impossível representar um estado inválido:** peso negativo ou moedas incompatíveis (ver `CurrencyMismatchException`) nunca chegam a existir como instância, então o resto do código não precisa validar de novo.
 * **Sem erro de arredondamento:** aritmética em inteiros (centavos/miligramas) elimina o problema clássico de somar muitos `double` ao longo do tempo.
 * **Conversões centralizadas:** o código que converte entre a unidade interna e a unidade "humana" (`toGrams`, `fromGrams` etc.) fica num único lugar, em vez de espalhado como `* 1000` ou `/ 100` pelo app.
+* **A internacionalização não toca no domínio:** trocar `'gramas'` por `'g'`, mudar o separador decimal ou tratar plural são mudanças confinadas à `presentation`. `Money` e `Weight` não precisam ser abertos.
+* **Log e tela param de competir:** `toString()` atende quem lê stack trace e a extension atende quem lê a tela, cada um com o formato que serve a ele.
 
 ### Negativas / Trade-offs
 * **Mais boilerplate por grandeza:** cada novo value object exige factory, validação, operadores e conversões próprias, em vez de usar o tipo primitivo direto.
 * **Exige disciplina:** o ganho de segurança só existe se todo o código continuar passando por essas classes — qualquer código que "vaze" pra `int`/`double` cru perde as garantias.
+* **A fronteira de apresentação não tem rede:** `Text(weight.toString())` compila, o `analyze` não reclama, e o texto errado só aparece rodando o app. Diferente das extensions sobre enum, onde o `switch` sem `default` faz o compilador cobrar o mapeamento, aqui o que protege é o teste do `WeightLabel` e a revisão.
