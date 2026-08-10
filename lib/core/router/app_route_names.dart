@@ -13,4 +13,5 @@ class AppRouteNames {
   static const String prints = 'prints';
   static const String filaments = 'filaments';
   static const String home = 'home';
+  static const String login = 'login';
 }

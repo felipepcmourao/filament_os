@@ -1,3 +1,4 @@
+import 'package:filament_os/core/presentation/login_page.dart';
 import 'package:filament_os/core/presentation/shell_router.dart';
 import 'package:filament_os/core/router/app_route_names.dart';
 import 'package:filament_os/core/router/app_paths.dart';
@@ -6,7 +7,7 @@ import 'package:filament_os/features/dashboard/presentation/home_page.dart';
 import 'package:filament_os/features/filaments/presentation/filament_details_page.dart';
 import 'package:filament_os/features/filaments/presentation/filaments_page.dart';
 import 'package:filament_os/features/prints/presentation/prints_page.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 /// Onde a aplicação é montada: o único arquivo que conhece todas as telas.
@@ -42,10 +43,19 @@ import 'package:go_router/go_router.dart';
 /// `AppRouter`. Esta classe nunca é instanciada — é só o nome que agrupa os
 /// dois membros estáticos.
 class AppRouter {
-  static GoRouter createRouter() {
+  static GoRouter createRouter({bool isLoggedIn = true}) {
     final rootNavigatorKey = GlobalKey<NavigatorState>();
     final shellNavigatorKey = GlobalKey<NavigatorState>();
     return GoRouter(
+      redirect: (context, state) {
+        if (isLoggedIn) {
+          return null;
+        } else if (state.matchedLocation == AppPaths.login) {
+          return null;
+        } else {
+          return AppPaths.login;
+        }
+      },
       navigatorKey: rootNavigatorKey,
       initialLocation: AppPaths.home,
       // Rede de segurança para URLs que não casam com nenhuma rota. Só pega
@@ -70,6 +80,12 @@ class AppRouter {
         return NotFoundPage(uri: uri, error: error);
       },
       routes: [
+        GoRoute(
+          path: AppPaths.login,
+          builder: (context, state) => const LoginPage(),
+          name: AppRouteNames.login,
+          redirect: (context, state) => isLoggedIn ? AppPaths.home : null,
+        ),
         ShellRoute(
           navigatorKey: shellNavigatorKey,
           builder: (context, state, child) => ShellRouter(child: child),

@@ -20,4 +20,5 @@ class AppPaths {
   static const String prints = '/prints';
   static const String idParam = 'id';
   static const String idSegm = ':$idParam';
+  static const String login = '/login';
 }
