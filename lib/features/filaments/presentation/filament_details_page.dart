@@ -1,6 +1,7 @@
 import 'package:filament_os/features/filaments/data/filaments_repository_fake_impl.dart';
 import 'package:filament_os/features/filaments/domain/filament.dart';
 import 'package:filament_os/features/filaments/presentation/filament_color_label.dart';
+import 'package:filament_os/shared/presentation/weight_label.dart';
 import 'package:flutter/material.dart';
 
 /// Detalhe de um filamento, alcançada por `/filaments/<id>`.
@@ -95,7 +96,7 @@ class _FilamentDetailsPageState extends State<FilamentDetailsPage> {
                 const Divider(),
                 Text(filament.color.label),
                 const Divider(),
-                Text(filament.weightInGrams.toString()),
+                Text(filament.weightInGrams.label),
               ],
             );
           },

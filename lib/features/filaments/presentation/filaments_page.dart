@@ -15,6 +15,7 @@ import 'package:filament_os/shared/domain/weight.dart';
 import 'package:filament_os/shared/domain/stock_status.dart';
 import 'package:filament_os/shared/presentation/stock_status_label.dart';
 import 'package:filament_os/shared/presentation/stock_status_material.dart';
+import 'package:filament_os/shared/presentation/weight_label.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -85,15 +86,16 @@ class _FilamentsPageState extends State<FilamentsPage> {
             return filamentList.isEmpty
                 ? Center(
                     child: TextButton(
-                      onPressed: () {
-                        filamentRepository.add(addedFilament1);
-                        filamentRepository.add(addedFilament2);
-                        filamentRepository.add(addedFilament3);
+                      onPressed: () async {
+                        await filamentRepository.add(addedFilament1);
+                        await filamentRepository.add(addedFilament2);
+                        await filamentRepository.add(addedFilament3);
                         // Um Future só resolve uma vez. Depois de adicionar
                         // um filamento no repositório, o Future antigo não
                         // "atualiza sozinho" — por isso criamos um Future
                         // NOVO aqui, e o setState faz o FutureBuilder
                         // reconstruir a tela com ele.
+                        if (!mounted) return;
                         setState(() {
                           _futureFilamentList = filamentRepository.list();
                         });
@@ -163,7 +165,7 @@ class _FilamentsPageState extends State<FilamentsPage> {
                           children: [
                             Text(filament.type.label),
                             const VerticalDivider(),
-                            Text(filament.weightInGrams.toString()),
+                            Text(filament.weightInGrams.label),
                             const VerticalDivider(),
                             Text(filament.color.label),
                           ],

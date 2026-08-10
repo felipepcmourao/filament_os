@@ -145,7 +145,5 @@ class Filament extends Equatable {
   ];
 
   @override
-  String toString() {
-    return 'Filamento: $name \nID: $id \nID de usuário: $ownerId \nCor: $color \nTipo: $type \nDiâmetro: ${diameterInMms.toStringAsFixed(2).replaceAll('.', ',')} mm \nPeso: $weightInGrams \nCusto total: $totalCost';
-  }
+  bool? get stringify => true;
 }
