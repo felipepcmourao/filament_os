@@ -52,10 +52,6 @@ class HomePage extends StatelessWidget {
                 onPressed: () => context.go('dsada'),
                 child: const Text('Teste Not Found'),
               ),
-              ElevatedButton(
-                onPressed: () => context.goNamed(AppRouteNames.login),
-                child: const Text('Teste Login Page'),
-              ),
             ],
           ),
         ),

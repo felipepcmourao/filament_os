@@ -6,9 +6,6 @@
 // `MaterialApp.router` precisa ter subido, o `AppRouter` precisa ter resolvido
 // a URL inicial `/` e o tema precisa ter sido aplicado sem lançar. Um erro em
 // qualquer um desses três pontos derruba este teste.
-//
-// Não substitui o teste de navegação da Sessão 5 (esse ainda falta): aqui
-// nada é tocado nem navegado, só se verifica o estado inicial.
 
 import 'package:flutter_test/flutter_test.dart';
 
