@@ -21,10 +21,10 @@ import 'package:go_router/go_router.dart';
 /// primeira navegação que não viesse da barra: um toque no botão da `HomePage`
 /// ou um deep link direto em `/prints` mudariam a tela sem passar pelo
 /// `onDestinationSelected`, e a barra ficaria acesa na aba errada.
-class ShellRouter extends StatelessWidget {
+class AppShell extends StatelessWidget {
   final Widget child;
 
-  const ShellRouter({super.key, required this.child});
+  const AppShell({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

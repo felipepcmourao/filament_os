@@ -1,5 +1,5 @@
+import 'package:filament_os/core/presentation/app_shell.dart';
 import 'package:filament_os/core/presentation/login_page.dart';
-import 'package:filament_os/core/presentation/shell_router.dart';
 import 'package:filament_os/core/router/app_route_names.dart';
 import 'package:filament_os/core/router/app_paths.dart';
 import 'package:filament_os/core/presentation/not_found_page.dart';
@@ -88,7 +88,7 @@ class AppRouter {
         ),
         ShellRoute(
           navigatorKey: shellNavigatorKey,
-          builder: (context, state, child) => ShellRouter(child: child),
+          builder: (context, state, child) => AppShell(child: child),
           routes: [
             GoRoute(
               path: AppPaths.home,
