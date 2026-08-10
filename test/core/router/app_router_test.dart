@@ -1,3 +1,5 @@
+import 'package:filament_os/core/presentation/login_page.dart';
+import 'package:filament_os/core/router/app_paths.dart';
 import 'package:filament_os/core/router/app_router.dart';
 import 'package:filament_os/features/dashboard/presentation/home_page.dart';
 import 'package:filament_os/features/filaments/presentation/filaments_page.dart';
@@ -66,5 +68,28 @@ void main() {
     await tester.tap(find.widgetWithIcon(NavigationDestination, Icons.circle));
     await tester.pumpAndSettle();
     expect(find.byType(FilamentsPage), findsOneWidget);
+  });
+
+  testWidgets(
+    'Direcionamento para LoginPage caso o usuário não esteja logado.',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp.router(
+          routerConfig: AppRouter.createRouter(isLoggedIn: false),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(LoginPage), findsOneWidget);
+    },
+  );
+
+  testWidgets('Deslogado consegue chegar na tela de login', (
+    WidgetTester tester,
+  ) async {
+    final router = AppRouter.createRouter(isLoggedIn: false);
+    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+    router.go(AppPaths.login);
+    await tester.pumpAndSettle();
+    expect(find.byType(LoginPage), findsOneWidget);
   });
 }
