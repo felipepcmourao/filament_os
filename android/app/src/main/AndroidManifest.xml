@@ -24,6 +24,38 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
+            <!-- Deep link: diz ao Android que este app atende URLs
+                 filamentos://app/... , entregando o caminho ao go_router.
+
+                 Esquema próprio, e não https, de propósito: um App Link https
+                 exigiria hospedar um assetlinks.json no domínio para o Android
+                 verificar a posse dele, senão o sistema abre um diálogo
+                 perguntando qual app usar. O projeto não tem domínio, e o que
+                 se quer provar aqui é que a rota funciona vinda de fora.
+
+                 DEFAULT e BROWSABLE não são decoração: sem DEFAULT o intent
+                 não é entregue a esta activity, e sem BROWSABLE o link não
+                 abre a partir de navegador ou de outro app. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="filamentos" android:host="app"/>
+            </intent-filter>
+
+            <!-- Sem isto o deep link chega e é jogado fora: o Android entrega
+                 o intent, o app abre, e a URL é ignorada — cai na rota
+                 inicial. É esta linha que manda o Flutter passar a URI
+                 recebida para o roteador, em vez de tratá-la como uma
+                 abertura comum.
+
+                 Fica dentro da <activity>, e não da <application>, porque o
+                 FlutterActivity lê esta chave do ActivityInfo. No lugar
+                 errado ela é simplesmente ignorada, sem erro nenhum. -->
+            <meta-data
+                android:name="flutter_deeplinking_enabled"
+                android:value="true" />
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
