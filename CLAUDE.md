@@ -62,9 +62,9 @@ Separe commits por assunto: correção de dívida técnica não vai junto com fe
 
 O projeto segue um roadmap de sessões progressivas que vive no Notion (`myDesk → studies → projetos → FilamentOS → Roadmap`). Cada sessão traz teoria, exercícios e um checklist de aprovação.
 
-**Fase 0 — Fundamentos:** sessões 1 a 4 concluídas (setup, clean architecture, modelagem de domínio, design system). **Sessão 5 — Navegação em andamento**, começando pela dívida técnica antes da navegação em si.
+**Fase 0 — Fundamentos: concluída.** Sessões 1 a 5 fechadas (setup, clean architecture, modelagem de domínio, design system, navegação). **Sessão 6 — Riverpod** é a próxima, e o item que ela existe para consertar já está descrito nas dívidas conhecidas.
 
-O que existe hoje: domínio completo (`Filament`, `Print`, `Sale`, `Money`, `Weight`), o use case `RegisterPrint`, `FilamentsRepositoryFakeImpl` e `PrintsRepositoryFakeImpl` em memória, design system aplicado e 14 testes verdes.
+O que existe hoje: domínio completo (`Filament`, `Print`, `Sale`, `Money`, `Weight`), o use case `RegisterPrint`, `FilamentsRepositoryFakeImpl` e `PrintsRepositoryFakeImpl` em memória, design system aplicado, navegação completa com `go_router` e 19 testes verdes.
 
 Pendências da Sessão 5, na ordem em que o enunciado pede:
 
@@ -76,12 +76,20 @@ Pendências da Sessão 5, na ordem em que o enunciado pede:
 
 Navegação — o que já está de pé e o que falta:
 
-- Feito: rotas de início, filamentos e impressões; rota de detalhe `/filaments/:id`; rota de erro (404) via `errorBuilder`; navegação por nome nas quatro rotas.
-- Falta: `ShellRoute` com barra persistente, `redirect` de guard e teste de navegação.
+- Feito: rotas de início, filamentos e impressões; rota de detalhe `/filaments/:id`; rota de erro (404) via `errorBuilder`; navegação por nome nas quatro rotas; `ShellRoute` com barra persistente; três testes de navegação.
+- Feito também: `redirect` de guard com condição provisória. Falta só o opcional — ADR 0006 e o teste de deep link via `adb`.
+
+**O guard é de rota, não de dado.** O app inteiro é privado (as informações são por usuário), inclusive o 404 — não vazar quais URLs existem para quem não está logado é deliberado. Duas regras, em níveis diferentes: no `GoRouter`, deslogado vai para `/login`; na rota de login, logado vai para a home. A regra geral mora no topo, e não na `ShellRoute`, porque só ali ela roda também para URLs que não casam com rota nenhuma. A exclusão do `/login` da regra geral é o que impede o loop — **e, medido, neste desenho o loop não é alcançável mesmo sem ela**, porque o `go_router` trata "redirecionar para onde você já está" como nada a fazer e o destino da regra é justamente a rota excluída; ela fica por tornar a intenção explícita. A condição é um parâmetro de `createRouter()`, nunca uma flag global, e na Sessão 7 deixa de ser `bool` e passa a vir do Firebase.
+
+**A barra de navegação tem uma fonte só.** `NavBarOptions.all` (em `core/presentation/`) guarda ícone, rótulo, nome de rota e ordem juntos num Record; o `ShellRouter` deriva dela as `destinations`, a aba acesa e o destino do toque. Já foram duas listas paralelas alinhadas à mão — reordenar só uma quebrava a navegação com o `analyze` limpo. Guarda `IconData`, não `Icon`: dado, não widget.
 
 **Convenções de rota.** `AppPaths` (caminhos) é lido só pelo `app_router.dart`; `AppRouteNames` (nomes de destino) é lido pelas telas. Telas navegam por nome, nunca por path — assim nenhuma delas conhece o formato da URL, e hoje nenhuma importa `AppPaths` (o compilador confirma a regra, não só o comentário). Rota filha usa path relativo (`:id`, sem barra). Telas de detalhe recebem **id**, nunca a entity: URL carrega texto, não objeto, e uma tela que depende da anterior lhe entregar o objeto quebra em deep link.
 
 **Uma exceção deliberada:** o botão "Teste Not Found" da `HomePage` navega por path literal. `goNamed` com nome desconhecido lança assertion e derruba o app (nome inválido só pode vir do programador); só `go` com path inválido cai no `errorBuilder`. É andaime e sai quando o teste de navegação cobrir o 404.
+
+**`ShellRoute` e os dois eixos.** As três áreas (início, filamentos, impressões) vivem dentro de um `ShellRoute` que mantém a `NavigationBar` viva enquanto só o miolo troca. A tela de detalhe fica **fora** do shell (sem barra) mas **continua filha** de `/filaments` na árvore de caminhos: aninhamento de path define a pilha e o botão de voltar; `parentNavigatorKey` define qual `Navigator` desenha a tela. São eixos independentes. As duas `GlobalKey` nascem **dentro** do `createRouter()`, nunca como campo estático — key estática seria compartilhada por todo roteador que a fábrica produzisse.
+
+**A aba acesa é derivada, nunca guardada.** O `ShellRouter` lê `GoRouterState.of(context).topRoute?.name` a cada build e procura o `routeName` correspondente em `NavBarOptions.all`. Guardar o índice criaria segunda fonte de verdade, que desincroniza na primeira navegação que não venha da barra (botão da `HomePage`, deep link). Por isso o widget é `StatelessWidget`. Compara **nome com nome**, o que mantém `AppPaths` fora da presentation. Quando a rota não é nenhuma das abas, a busca devolve -1 e o fallback é a Home — a `NavigationBar` não aceita "nenhuma selecionada", então escolhe-se a mentira menos surpreendente, alinhada ao `initialLocation`.
 
 **`AppRouter` expõe dois membros.** `router` é a instância única que o `MyApp` usa; `createRouter()` fabrica um `GoRouter` novo e é o que **todo teste de navegação deve chamar**. `static` é uma instância por isolate e o `flutter test` roda o arquivo num isolate só, então testes que compartilhem `AppRouter.router` herdam a posição de navegação uns dos outros. Não é a `factory` do Dart: aquela palavra-chave só devolve a própria classe, e aqui se fabrica um `GoRouter`.
 
@@ -89,7 +97,7 @@ Navegação — o que já está de pé e o que falta:
 
 Não conserte estas por iniciativa própria — cada uma tem uma sessão dona.
 
-- **Test double para a ordem das escritas do `RegisterPrint`** (Fase 1). A decisão de gravar o `Print` antes das baixas de estoque está protegida só por um comentário, e comentário não roda no CI: inverter as duas linhas mantém os 14 testes verdes. Testar isso exige um `FilamentsRepository` que falhe de propósito no `update` — um dublê que simula falha, diferente do fake que simula sucesso. Um dado ruim não serve para provocar essa falha, porque as passadas 1 e 2 do `call()` filtram tudo antes da fase de escrita; só a infraestrutura pode falhar ali.
+- **Test double para a ordem das escritas do `RegisterPrint`** (Fase 1). A decisão de gravar o `Print` antes das baixas de estoque está protegida só por um comentário, e comentário não roda no CI: inverter as duas linhas mantém todos os testes verdes. Testar isso exige um `FilamentsRepository` que falhe de propósito no `update` — um dublê que simula falha, diferente do fake que simula sucesso. Um dado ruim não serve para provocar essa falha, porque as passadas 1 e 2 do `call()` filtram tudo antes da fase de escrita; só a infraestrutura pode falhar ali.
 - **`Money.toString()` e `Weight.toString()` formatam texto de exibição** (`'EUR 10,00'`, `'450 gramas'`) e a UI depende disso. É o mesmo problema que saiu dos enums, entrando por outra porta. O conserto passa por `NumberFormat` do `intl` e fica para a sessão de internacionalização.
 - **Limiar de estoque baixo fixo em 100g** dentro de `StockStatus.fromWeight`. Deveria ser configurável por filamento ou por usuário.
 - **Não há injeção de dependência: cada tela instancia o próprio repositório** (Sessão 6). Como o fake guarda os dados numa lista de instância, telas diferentes não compartilham dado nenhum — por isso a `FilamentDetailsPage` nunca acha o filamento, embora esteja correta. Tornar a lista `static` foi tentado e revertido: quebrou o isolamento entre testes, que passaram a herdar dados uns dos outros. O conserto é o `flutter_riverpod`.
