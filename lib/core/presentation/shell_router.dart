@@ -1,4 +1,5 @@
 import 'package:filament_os/core/router/app_route_names.dart';
+import 'package:filament_os/core/presentation/nav_bar_options.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -36,24 +37,49 @@ class ShellRouter extends StatelessWidget {
     // -1 quando a rota atual não é nenhuma das três abas. Hoje não acontece,
     // porque só essas três vivem dentro do shell — mas `NavigationBar` estoura
     // uma assertion com índice fora da faixa, e uma tela que quebra por causa
-    // da própria decoração é pior que uma aba acesa errada. Cair no 0 é a
-    // escolha conservadora, não a definitiva: quando entrar uma rota nova no
-    // shell, decida o que a barra deve mostrar em vez de herdar este default.
-    final index = AppRouteNames.navBarPages.indexOf(currentName ?? '');
+    // da própria decoração é pior que uma aba acesa errada.
+    //
+    // O fallback é a Home, para não contradizer o `initialLocation: '/'` do
+    // roteador: se o app assume a Home como ponto de partida quando não há
+    // URL, a barra assume a mesma coisa quando não reconhece a URL. Note que
+    // as duas saídas são mentira — a `NavigationBar` não aceita "nenhuma aba
+    // selecionada", o `selectedIndex` é um `int` obrigatório e dentro da
+    // faixa. Escolhe-se a mentira menos surpreendente, não a verdade.
+    //
+    // O índice da Home é procurado, não escrito à mão, para não depender da
+    // ordem de `NavBarOptions.all`: reordenar a lista não pode mudar em
+    // silêncio para onde o fallback aponta.
+    final index = NavBarOptions.all.indexWhere(
+      (o) => o.routeName == currentName,
+    );
 
     return Scaffold(
       bottomNavigationBar: NavigationBar(
-        // O índice tocado vira nome pela mesma lista que alimenta o
-        // `selectedIndex` — ida e volta pelo mesmo mapeamento, então não tem
-        // como as duas direções discordarem.
-        onDestinationSelected: (index) =>
-            context.goNamed(AppRouteNames.navBarPages[index]),
-        selectedIndex: index == -1 ? 0 : index,
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.circle), label: 'Filamentos'),
-          NavigationDestination(icon: Icon(Icons.home), label: 'Início'),
-          NavigationDestination(icon: Icon(Icons.toys), label: 'Impressões'),
-        ],
+        // Ícone, rótulo, nome de rota e ordem saem todos de `NavBarOptions`,
+        // e é isso que torna a barra consistente por construção: o índice que
+        // chega aqui é posição na mesma lista que desenhou as `destinations`,
+        // então não existe estado onde o ícone tocado e o destino discordem.
+        //
+        // Já foram duas listas paralelas — nomes de rota no `AppRouteNames` e
+        // ícones/rótulos aqui — que precisavam ficar na mesma ordem à mão.
+        // Verificado: naquele desenho, reordenar só uma delas deixava a suíte
+        // vermelha; neste, reordenar a lista única mantém tudo verde, porque
+        // não há segunda lista para discordar. Mesmo motivo que fez
+        // `FilamentUsage` virar um Record no domínio.
+        onDestinationSelected: (index) {
+          context.goNamed(NavBarOptions.all[index].routeName);
+        },
+
+        selectedIndex: index == -1
+            ? NavBarOptions.all.indexWhere(
+                (e) => e.routeName == AppRouteNames.home,
+              )
+            : index,
+        destinations: NavBarOptions.all
+            .map(
+              (e) => NavigationDestination(icon: Icon(e.icon), label: e.label),
+            )
+            .toList(),
       ),
       body: child,
     );
