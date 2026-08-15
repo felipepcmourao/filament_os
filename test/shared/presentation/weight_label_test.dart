@@ -1,4 +1,3 @@
-
 import 'package:filament_os/shared/domain/weight.dart';
 import 'package:filament_os/shared/presentation/weight_label.dart';
 import 'package:flutter_test/flutter_test.dart';

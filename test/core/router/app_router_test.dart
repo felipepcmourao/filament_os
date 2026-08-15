@@ -4,6 +4,7 @@ import 'package:filament_os/core/router/app_router.dart';
 import 'package:filament_os/features/dashboard/presentation/home_page.dart';
 import 'package:filament_os/features/filaments/presentation/filaments_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // Testes do roteador: que navegar leva onde deveria, e que um teste não
@@ -25,7 +26,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp.router(routerConfig: AppRouter.createRouter()),
+      ProviderScope(child: MaterialApp.router(routerConfig: AppRouter.createRouter())),
     );
     await tester.tap(find.widgetWithText(ElevatedButton, 'Filamentos'));
     await tester.pumpAndSettle();
@@ -36,7 +37,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp.router(routerConfig: AppRouter.createRouter()),
+      ProviderScope(child: MaterialApp.router(routerConfig: AppRouter.createRouter())),
     );
     await tester.tap(find.widgetWithText(ElevatedButton, 'Filamentos'));
     await tester.pumpAndSettle();
@@ -63,7 +64,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp.router(routerConfig: AppRouter.createRouter()),
+      ProviderScope(child: MaterialApp.router(routerConfig: AppRouter.createRouter())),
     );
     await tester.tap(find.widgetWithIcon(NavigationDestination, Icons.circle));
     await tester.pumpAndSettle();
