@@ -194,6 +194,7 @@ class _FilamentsPageState extends State<FilamentsPage> {
                             await filamentRepository.remove(filament.id);
                             // Mesma lógica do add: novo Future, novo setState,
                             // pra lista recarregar depois da remoção.
+                            if (!mounted) return;
                             setState(() {
                               _futureFilamentList = filamentRepository.list();
                             });
