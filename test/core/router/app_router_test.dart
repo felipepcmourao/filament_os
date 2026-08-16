@@ -26,7 +26,9 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
-      ProviderScope(child: MaterialApp.router(routerConfig: AppRouter.createRouter())),
+      ProviderScope(
+        child: MaterialApp.router(routerConfig: AppRouter.createRouter()),
+      ),
     );
     await tester.tap(find.widgetWithText(ElevatedButton, 'Filamentos'));
     await tester.pumpAndSettle();
@@ -37,7 +39,9 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
-      ProviderScope(child: MaterialApp.router(routerConfig: AppRouter.createRouter())),
+      ProviderScope(
+        child: MaterialApp.router(routerConfig: AppRouter.createRouter()),
+      ),
     );
     await tester.tap(find.widgetWithText(ElevatedButton, 'Filamentos'));
     await tester.pumpAndSettle();
@@ -64,7 +68,9 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
-      ProviderScope(child: MaterialApp.router(routerConfig: AppRouter.createRouter())),
+      ProviderScope(
+        child: MaterialApp.router(routerConfig: AppRouter.createRouter()),
+      ),
     );
     await tester.tap(find.widgetWithIcon(NavigationDestination, Icons.circle));
     await tester.pumpAndSettle();
