@@ -20,14 +20,14 @@ void main() {
 ///
 /// `themeMode: ThemeMode.system` deixa a escolha com o sistema operacional em
 /// vez de fixar um tema — e é por isso que `AppColors` mantém as duas paletas.
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
       title: 'FilamentOS',
-      routerConfig: AppRouter.router,
+      routerConfig: ref.watch(routerProvider),
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,

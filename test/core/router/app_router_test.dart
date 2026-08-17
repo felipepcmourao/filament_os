@@ -1,3 +1,4 @@
+import 'package:filament_os/core/auth/auth_notifier.dart';
 import 'package:filament_os/core/presentation/login_page.dart';
 import 'package:filament_os/core/router/app_paths.dart';
 import 'package:filament_os/core/router/app_router.dart';
@@ -20,14 +21,21 @@ import 'package:flutter_test/flutter_test.dart';
 // Afirma com `find.byType`, não com `find.text`: o que se quer provar é que o
 // roteador chegou naquela tela. Um `find.text('Filaments Page')` quebraria
 // numa tradução do título, sem bug nenhum ter acontecido.
+class LoggedOutNotifier extends AuthNotifier {
+  @override
+  bool build() => false;
+}
 
 void main() {
   testWidgets('Tocar em Filamentos leva a Filaments Pages', (
     WidgetTester tester,
   ) async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
     await tester.pumpWidget(
-      ProviderScope(
-        child: MaterialApp.router(routerConfig: AppRouter.createRouter()),
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp.router(routerConfig: container.read(routerProvider)),
       ),
     );
     await tester.tap(find.widgetWithText(ElevatedButton, 'Filamentos'));
@@ -38,9 +46,12 @@ void main() {
   testWidgets('Roteador novo não herda a navegação do anterior', (
     WidgetTester tester,
   ) async {
+    ProviderContainer container = ProviderContainer();
+    addTearDown(container.dispose);
     await tester.pumpWidget(
-      ProviderScope(
-        child: MaterialApp.router(routerConfig: AppRouter.createRouter()),
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp.router(routerConfig: container.read(routerProvider)),
       ),
     );
     await tester.tap(find.widgetWithText(ElevatedButton, 'Filamentos'));
@@ -57,8 +68,10 @@ void main() {
     // `flutter test` mudar de critério, pra proteção sumir sem ninguém notar.
     // Verificado: trocando `createRouter()` por `AppRouter.router`, este teste
     // (e só ele) falha.
+    container = ProviderContainer();
+    addTearDown(container.dispose);
     await tester.pumpWidget(
-      MaterialApp.router(routerConfig: AppRouter.createRouter()),
+      MaterialApp.router(routerConfig: container.read(routerProvider)),
     );
     await tester.pumpAndSettle();
     expect(find.byType(HomePage), findsOneWidget);
@@ -67,9 +80,12 @@ void main() {
   testWidgets('Clicar na Navigation Bar leva para a tela correta', (
     WidgetTester tester,
   ) async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
     await tester.pumpWidget(
-      ProviderScope(
-        child: MaterialApp.router(routerConfig: AppRouter.createRouter()),
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp.router(routerConfig: container.read(routerProvider)),
       ),
     );
     await tester.tap(find.widgetWithIcon(NavigationDestination, Icons.circle));
@@ -80,10 +96,12 @@ void main() {
   testWidgets(
     'Direcionamento para LoginPage caso o usuário não esteja logado.',
     (WidgetTester tester) async {
+      final container = ProviderContainer(
+        overrides: [authProvider.overrideWith(LoggedOutNotifier.new)],
+      );
+      addTearDown(container.dispose);
       await tester.pumpWidget(
-        MaterialApp.router(
-          routerConfig: AppRouter.createRouter(isLoggedIn: false),
-        ),
+        MaterialApp.router(routerConfig: container.read(routerProvider)),
       );
       await tester.pumpAndSettle();
       expect(find.byType(LoginPage), findsOneWidget);
@@ -93,9 +111,30 @@ void main() {
   testWidgets('Deslogado consegue chegar na tela de login', (
     WidgetTester tester,
   ) async {
-    final router = AppRouter.createRouter(isLoggedIn: false);
+    final container = ProviderContainer(
+      overrides: [authProvider.overrideWith(LoggedOutNotifier.new)],
+    );
+    addTearDown(container.dispose);
+    final router = container.read(routerProvider);
     await tester.pumpWidget(MaterialApp.router(routerConfig: router));
     router.go(AppPaths.login);
+    await tester.pumpAndSettle();
+    expect(find.byType(LoginPage), findsOneWidget);
+  });
+
+  testWidgets('Alternar o authProvider muda o comportamento da navegação', (
+    WidgetTester tester,
+  ) async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp.router(routerConfig: container.read(routerProvider)),
+      ),
+    );
+    await tester.pumpAndSettle();
+    container.read(authProvider.notifier).toggle();
     await tester.pumpAndSettle();
     expect(find.byType(LoginPage), findsOneWidget);
   });

@@ -1,3 +1,4 @@
+import 'package:filament_os/core/auth/auth_notifier.dart';
 import 'package:filament_os/core/presentation/app_shell.dart';
 import 'package:filament_os/core/presentation/login_page.dart';
 import 'package:filament_os/core/router/app_route_names.dart';
@@ -8,6 +9,7 @@ import 'package:filament_os/features/filaments/presentation/filament_details_pag
 import 'package:filament_os/features/filaments/presentation/filaments_page.dart';
 import 'package:filament_os/features/prints/presentation/prints_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 /// Onde a aplicação é montada: o único arquivo que conhece todas as telas.
@@ -43,11 +45,13 @@ import 'package:go_router/go_router.dart';
 /// `AppRouter`. Esta classe nunca é instanciada — é só o nome que agrupa os
 /// dois membros estáticos.
 class AppRouter {
-  static GoRouter createRouter({bool isLoggedIn = true}) {
+  static GoRouter createRouter(Ref ref) {
     final rootNavigatorKey = GlobalKey<NavigatorState>();
     final shellNavigatorKey = GlobalKey<NavigatorState>();
+    final goRouterRefreshNotifier = GoRouterRefreshNotifier(ref);
     return GoRouter(
       redirect: (context, state) {
+        final isLoggedIn = ref.read(authProvider);
         if (isLoggedIn) {
           return null;
         } else if (state.matchedLocation == AppPaths.login) {
@@ -56,6 +60,7 @@ class AppRouter {
           return AppPaths.login;
         }
       },
+      refreshListenable: goRouterRefreshNotifier,
       navigatorKey: rootNavigatorKey,
       initialLocation: AppPaths.home,
       // Rede de segurança para URLs que não casam com nenhuma rota. Só pega
@@ -84,7 +89,10 @@ class AppRouter {
           path: AppPaths.login,
           builder: (context, state) => const LoginPage(),
           name: AppRouteNames.login,
-          redirect: (context, state) => isLoggedIn ? AppPaths.home : null,
+          redirect: (context, state) {
+            final isLoggedIn = ref.read(authProvider);
+            return isLoggedIn ? AppPaths.home : null;
+          },
         ),
         ShellRoute(
           navigatorKey: shellNavigatorKey,
@@ -137,6 +145,12 @@ class AppRouter {
       ],
     );
   }
-
-  static final router = createRouter();
 }
+
+class GoRouterRefreshNotifier extends ChangeNotifier {
+  GoRouterRefreshNotifier(Ref ref) {
+    ref.listen(authProvider, (_, _) => notifyListeners());
+  }
+}
+
+final routerProvider = Provider<GoRouter>((ref) => AppRouter.createRouter(ref));
