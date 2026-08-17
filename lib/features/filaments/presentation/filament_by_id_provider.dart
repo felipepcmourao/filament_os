@@ -2,7 +2,7 @@ import 'package:filament_os/features/filaments/domain/filament.dart';
 import 'package:filament_os/features/filaments/presentation/filaments_list_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final filamentByIdProvider = Provider.family<AsyncValue<Filament?>, String>((
+final filamentByIdProvider = Provider.autoDispose.family<AsyncValue<Filament?>, String>((
   ref,
   filamentId,
 ) {
