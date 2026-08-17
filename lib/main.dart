@@ -1,5 +1,6 @@
 import 'package:filament_os/core/router/app_router.dart';
 import 'package:filament_os/core/theme/app_theme.dart';
+import 'package:filament_os/core/theme/theme_mode_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,8 +19,9 @@ void main() {
 /// de navegação: sem ele, telas iriam e viriam por `Navigator.push` a partir
 /// de quem chama, e o app não teria URL nenhuma pra abrir por deep link.
 ///
-/// `themeMode: ThemeMode.system` deixa a escolha com o sistema operacional em
-/// vez de fixar um tema — e é por isso que `AppColors` mantém as duas paletas.
+/// `themeMode` lê `themeModeProvider` (`ThemeMode.system` por padrão) em vez
+/// de vir fixo — troca de tema pela UI muda esse provider, e é por isso que
+/// `AppColors` mantém as duas paletas prontas.
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
@@ -31,7 +33,7 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: ref.watch(themeModeProvider),
     );
   }
 }

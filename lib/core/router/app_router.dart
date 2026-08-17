@@ -21,29 +21,27 @@ import 'package:go_router/go_router.dart';
 ///
 /// Expõe duas coisas, e a diferença entre elas é o ponto:
 ///
-/// - `router` é **a** instância do app. `static final`, uma só: fosse campo de
-///   instância, cada `build` do `MyApp` criaria um `GoRouter` novo e jogaria
-///   fora a pilha de navegação, o histórico e a posição atual do usuário.
-/// - `createRouter()` monta um `GoRouter` **novo** a cada chamada.
+/// - `createRouter(ref)` monta um `GoRouter` **novo** a cada chamada — é o
+///   que os testes usam, cada um com seu próprio `ProviderContainer`, pra não
+///   herdar posição de navegação uns dos outros (mesma armadilha da lista
+///   `static` que foi revertida no repositório fake).
+/// - `routerProvider`, declarado fora da classe (top-level, como todo
+///   provider deste projeto), é quem a produção usa. `Provider<GoRouter>`
+///   computa `createRouter(ref)` uma vez só por container e guarda o
+///   resultado — o mesmo mecanismo de cache que já protege
+///   `filamentsRepositoryProvider` contra recriar o repositório a cada
+///   rebuild, aplicado aqui pro roteador. Antes da Sessão 6, essa garantia
+///   vinha de um campo `static final router` nesta classe; saiu quando o
+///   `redirect` passou a depender de `ref` (roteador reativo a
+///   `authProvider`), porque `static` não tem de onde pegar um `ref` de
+///   dentro do `ProviderScope`.
 ///
-/// Parece contradição — o campo existe justamente pra não recriar o roteador —
-/// mas produção e teste querem coisas opostas. Em produção, muitos rebuilds
-/// precisam cair no mesmo roteador. Num teste, cada caso é um app do zero, e
-/// compartilhar a instância significa herdar onde o teste anterior parou:
-/// `static` é uma instância por isolate, e o `flutter test` roda o arquivo
-/// inteiro num isolate só. Sem a fábrica, um teste que navegasse pra
-/// `/filaments` deixaria o próximo começando lá, sem tocar em nada — mesma
-/// armadilha da lista `static` que foi revertida no repositório fake.
-///
-/// Note que `router` **chama** `createRouter()` em vez de repetir a
-/// configuração. É o que garante que só exista uma cópia das rotas: se cada um
-/// tivesse a sua, uma rota nova entraria em uma e não na outra, e os testes
-/// passariam validando um roteador que não é o que o usuário usa.
-///
-/// Não é a `factory` do Dart, e não poderia ser: aquela palavra-chave só
-/// devolve a própria classe, e o que se fabrica aqui é um `GoRouter`, não um
-/// `AppRouter`. Esta classe nunca é instanciada — é só o nome que agrupa os
-/// dois membros estáticos.
+/// `createRouter` continua `static` mesmo assim: não guarda estado nenhum
+/// (recebe `ref` de fora), então não precisa de instância de `AppRouter` pra
+/// existir. Não é a `factory` do Dart, e não poderia ser: aquela palavra-chave
+/// só devolve a própria classe, e o que se fabrica aqui é um `GoRouter`, não
+/// um `AppRouter`. Esta classe nunca é instanciada — é só o nome que agrupa a
+/// fábrica.
 class AppRouter {
   static GoRouter createRouter(Ref ref) {
     final rootNavigatorKey = GlobalKey<NavigatorState>();
