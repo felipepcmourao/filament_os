@@ -1,5 +1,5 @@
 import 'package:filament_os/features/filaments/presentation/filaments_list_notifier.dart';
-import 'package:filament_os/features/prints/data/register_print_provider.dart';
+import 'package:filament_os/features/prints/di/register_print_provider.dart';
 import 'package:filament_os/features/prints/domain/print_status.dart';
 import 'package:filament_os/features/prints/presentation/prints_list_notifier.dart';
 import 'package:filament_os/shared/domain/weight.dart';

@@ -1,5 +1,5 @@
 import 'package:filament_os/core/theme/app_theme.dart';
-import 'package:filament_os/features/filaments/data/filaments_repository_provider.dart';
+import 'package:filament_os/features/filaments/di/filaments_repository_provider.dart';
 import 'package:filament_os/features/filaments/domain/filament.dart';
 import 'package:filament_os/features/filaments/domain/filament_color.dart';
 import 'package:filament_os/features/filaments/domain/filament_type.dart';
