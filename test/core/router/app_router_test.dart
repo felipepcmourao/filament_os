@@ -71,7 +71,10 @@ void main() {
     container = ProviderContainer();
     addTearDown(container.dispose);
     await tester.pumpWidget(
-      MaterialApp.router(routerConfig: container.read(routerProvider)),
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp.router(routerConfig: container.read(routerProvider)),
+      ),
     );
     await tester.pumpAndSettle();
     expect(find.byType(HomePage), findsOneWidget);
@@ -101,7 +104,9 @@ void main() {
       );
       addTearDown(container.dispose);
       await tester.pumpWidget(
-        MaterialApp.router(routerConfig: container.read(routerProvider)),
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp.router(routerConfig: container.read(routerProvider))),
       );
       await tester.pumpAndSettle();
       expect(find.byType(LoginPage), findsOneWidget);
@@ -116,7 +121,9 @@ void main() {
     );
     addTearDown(container.dispose);
     final router = container.read(routerProvider);
-    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+    await tester.pumpWidget(UncontrolledProviderScope(
+      container: container,
+      child: MaterialApp.router(routerConfig: router)));
     router.go(AppPaths.login);
     await tester.pumpAndSettle();
     expect(find.byType(LoginPage), findsOneWidget);
