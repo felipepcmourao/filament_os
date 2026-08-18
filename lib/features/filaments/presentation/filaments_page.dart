@@ -22,10 +22,13 @@ import 'package:go_router/go_router.dart';
 
 /// Lista o estoque de filamentos, alcançada por `/filaments`.
 ///
-/// `ConsumerWidget`, não mais `StatefulWidget`: quem guarda o estado é o
-/// `FilamentsListNotifier`, via `filamentsListProvider` — esta tela só lê o
-/// `AsyncValue<List<Filament>>` atual (`ref.watch`) e trata os três estados
-/// (`loading`, `error`, `data`) com `.when`.
+/// `StatelessWidget`, não `ConsumerWidget`: quem guarda o estado é o
+/// `FilamentsListNotifier`, via `filamentsListProvider`, e só a parte da
+/// árvore que lê esse provider (`ref.watch`) precisa reconstruir a cada
+/// mudança. Um `Consumer` isolado em volta da lista cumpre isso — `Scaffold`
+/// e `AppBar` ficam fora do rebuild, que um `ConsumerWidget` na classe
+/// inteira não evitaria. Dentro do `Consumer`, trata os três estados
+/// (`loading`, `error`, `data`) do `AsyncValue<List<Filament>>` com `.when`.
 ///
 /// Cada `ListTile` mostra a mesma informação três vezes em linguagens
 /// diferentes, e isso é de propósito: o swatch colorido, o nome da cor escrito
@@ -35,136 +38,144 @@ import 'package:go_router/go_router.dart';
 /// Adicionar e remover filamento chamam métodos do notifier
 /// (`addFilament`/`removeFilament`), nunca o repositório direto — a tela não
 /// conhece `FilamentsRepository`, só o provider que já expõe a lista pronta.
-class FilamentsPage extends ConsumerWidget {
+class FilamentsPage extends StatelessWidget {
   const FilamentsPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final filaments = ref.watch(filamentsListProvider);
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Filaments Page'),
         scrolledUnderElevation: 0,
       ),
       body: SafeArea(
-        child: filaments.when(
-          data: (data) => data.isEmpty
-              ? Center(
-                  child: TextButton(
-                    onPressed: () async {
-                      final filamentList = ref.read(
-                        filamentsListProvider.notifier,
-                      );
-                      await filamentList.addFilament(addedFilament1);
-                      await filamentList.addFilament(addedFilament2);
-                      await filamentList.addFilament(addedFilament3);
-                    },
-                    child: const Text('Adicionar Filamento'),
-                  ),
-                )
-              : ListView.builder(
-                  itemCount: data.length,
-                  itemBuilder: (context, int index) {
-                    final filament = data[index];
-                    final status = StockStatus.fromWeight(
-                      filament.weightInGrams,
-                    );
-                    final color = Theme.of(context).extension<AppColors>();
-                    return ListTile(
-                      // Navega por NOME, não por path: esta tela não sabe
-                      // que a URL do detalhe é `/filaments/<id>`, só que
-                      // existe um destino chamado `filamentDetails`.
-                      //
-                      // E passa o `id`, não o `filament`. A tela de destino
-                      // busca sozinha — é o que faz ela funcionar também
-                      // quando aberta por link, sem esta tela no caminho.
-                      onTap: () => context.goNamed(
-                        AppRouteNames.filamentDetails,
-                        pathParameters: {AppPaths.idParam: filament.id},
-                      ),
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(filament.name),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(
-                                AppRadius.pill,
-                              ),
-                              color: status.toMaterial(color!).container,
-                            ),
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: AppSpacing.xs,
-                                  vertical: AppSpacing.xxs,
-                                ),
-                                child: Text(
-                                  status.label,
-                                  style: Theme.of(context).textTheme.labelSmall!
-                                      .apply(
-                                        color: status.toMaterial(color).content,
-                                      ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      // O nome da cor aparece aqui como texto, e não só
-                      // como o quadradinho colorido do `leading`: quem não
-                      // distingue cores não recebe informação nenhuma de um
-                      // swatch sozinho. Texto ao lado resolve pra todo
-                      // mundo, sem depender de leitor de tela.
-                      subtitle: Row(
-                        children: [
-                          Text(filament.type.label),
-                          const VerticalDivider(),
-                          Text(filament.weightInGrams.label),
-                          const VerticalDivider(),
-                          Text(filament.color.label),
-                        ],
-                      ),
-                      // Swatch puramente decorativo — a informação que ele
-                      // carrega já está escrita no `subtitle`.
-                      //
-                      // A borda vem de `colorScheme.outline` porque a cor
-                      // do filamento é dado do produto e não se adapta ao
-                      // tema (ver `FilamentColorMaterial`): sem contorno,
-                      // um amarelo some no fundo claro e um cinza escuro
-                      // some no escuro. O contraste mora na borda, que o
-                      // tema controla, não na cor, que ele não deve tocar.
-                      leading: Container(
-                        decoration: BoxDecoration(
-                          border: BoxBorder.all(
-                            color: Theme.of(context).colorScheme.outline,
-                          ),
-                          color: filament.color.toMaterial(),
-                        ),
-                        height: AppSpacing.sm,
-                        width: AppSpacing.sm,
-                      ),
-                      trailing: IconButton(
+        child: Consumer(
+          builder: (context, ref, child) {
+            final filaments = ref.watch(filamentsListProvider);
+            return filaments.when(
+              data: (data) => data.isEmpty
+                  ? Center(
+                      child: TextButton(
                         onPressed: () async {
                           final filamentList = ref.read(
                             filamentsListProvider.notifier,
                           );
-                          await filamentList.removeFilament(filament.id);
+                          await filamentList.addFilament(addedFilament1);
+                          await filamentList.addFilament(addedFilament2);
+                          await filamentList.addFilament(addedFilament3);
                         },
-                        icon: const Icon(Icons.delete),
+                        child: const Text('Adicionar Filamento'),
                       ),
-                    );
-                  },
+                    )
+                  : ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (context, int index) {
+                        final filament = data[index];
+                        final status = StockStatus.fromWeight(
+                          filament.weightInGrams,
+                        );
+                        final color = Theme.of(context).extension<AppColors>();
+                        return ListTile(
+                          // Navega por NOME, não por path: esta tela não sabe
+                          // que a URL do detalhe é `/filaments/<id>`, só que
+                          // existe um destino chamado `filamentDetails`.
+                          //
+                          // E passa o `id`, não o `filament`. A tela de destino
+                          // busca sozinha — é o que faz ela funcionar também
+                          // quando aberta por link, sem esta tela no caminho.
+                          onTap: () => context.goNamed(
+                            AppRouteNames.filamentDetails,
+                            pathParameters: {AppPaths.idParam: filament.id},
+                          ),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(filament.name),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                    AppRadius.pill,
+                                  ),
+                                  color: status.toMaterial(color!).container,
+                                ),
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: AppSpacing.xs,
+                                      vertical: AppSpacing.xxs,
+                                    ),
+                                    child: Text(
+                                      status.label,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelSmall!
+                                          .apply(
+                                            color: status
+                                                .toMaterial(color)
+                                                .content,
+                                          ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          // O nome da cor aparece aqui como texto, e não só
+                          // como o quadradinho colorido do `leading`: quem não
+                          // distingue cores não recebe informação nenhuma de um
+                          // swatch sozinho. Texto ao lado resolve pra todo
+                          // mundo, sem depender de leitor de tela.
+                          subtitle: Row(
+                            children: [
+                              Text(filament.type.label),
+                              const VerticalDivider(),
+                              Text(filament.weightInGrams.label),
+                              const VerticalDivider(),
+                              Text(filament.color.label),
+                            ],
+                          ),
+                          // Swatch puramente decorativo — a informação que ele
+                          // carrega já está escrita no `subtitle`.
+                          //
+                          // A borda vem de `colorScheme.outline` porque a cor
+                          // do filamento é dado do produto e não se adapta ao
+                          // tema (ver `FilamentColorMaterial`): sem contorno,
+                          // um amarelo some no fundo claro e um cinza escuro
+                          // some no escuro. O contraste mora na borda, que o
+                          // tema controla, não na cor, que ele não deve tocar.
+                          leading: Container(
+                            decoration: BoxDecoration(
+                              border: BoxBorder.all(
+                                color: Theme.of(context).colorScheme.outline,
+                              ),
+                              color: filament.color.toMaterial(),
+                            ),
+                            height: AppSpacing.sm,
+                            width: AppSpacing.sm,
+                          ),
+                          trailing: IconButton(
+                            onPressed: () async {
+                              final filamentList = ref.read(
+                                filamentsListProvider.notifier,
+                              );
+                              await filamentList.removeFilament(filament.id);
+                            },
+                            icon: const Icon(Icons.delete),
+                          ),
+                        );
+                      },
+                    ),
+              error: (err, stack) => Center(
+                child: Text(
+                  'Erro: $err',
+                  style: Theme.of(context).textTheme.bodyMedium!.apply(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
                 ),
-          error: (err, stack) => Center(
-            child: Text(
-              'Erro: $err',
-              style: Theme.of(context).textTheme.bodyMedium!.apply(
-                color: Theme.of(context).colorScheme.error,
               ),
-            ),
-          ),
-          loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const Center(child: CircularProgressIndicator()),
+            );
+          },
         ),
       ),
     );
