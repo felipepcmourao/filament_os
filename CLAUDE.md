@@ -22,10 +22,11 @@ Ambos são critério de aprovação de toda sessão — rode os dois antes de co
 
 ## Arquitetura
 
-**Feature-first + Clean Architecture em vertical slice.** Cada feature em `lib/features/<feature>/` tem até três camadas:
+**Feature-first + Clean Architecture em vertical slice.** Cada feature em `lib/features/<feature>/` tem até quatro camadas:
 
 - `domain/` — entities, value objects, enums, exceções e use cases. **Zero imports de Flutter ou de infraestrutura.**
 - `data/` — implementações concretas dos repositórios.
+- `di/` — providers Riverpod que ligam uma abstração (repositório, use case) à sua implementação concreta. Só injeção — estado de tela não mora aqui, mora em `presentation/`. Existe pra `presentation/` nunca precisar importar `data/` diretamente (ver [ADR 0007](docs/adr/0007-gerenciamento-de-estado.md)).
 - `presentation/` — widgets, páginas e extensions que traduzem domínio → Material.
 
 `lib/shared/` guarda o que é reutilizável entre features (`Money`, `Weight`, `StockStatus`). `lib/core/` guarda infraestrutura transversal (tema, rotas, config) — não pertence a nenhuma feature.
@@ -86,7 +87,7 @@ Navegação — o que já está de pé e o que falta:
 
 **A barra de navegação tem uma fonte só.** `NavBarOptions.all` (em `core/presentation/`) guarda ícone, rótulo, nome de rota e ordem juntos num Record; o `AppShell` deriva dela as `destinations`, a aba acesa e o destino do toque. Já foram duas listas paralelas alinhadas à mão — reordenar só uma quebrava a navegação com o `analyze` limpo. Guarda `IconData`, não `Icon`: dado, não widget.
 
-**Convenções de rota.** `AppPaths` (caminhos) é lido só pelo `app_router.dart`; `AppRouteNames` (nomes de destino) é lido pelas telas. Telas navegam por nome, nunca por path — assim nenhuma delas conhece o formato da URL, e hoje nenhuma importa `AppPaths` (o compilador confirma a regra, não só o comentário). Rota filha usa path relativo (`:id`, sem barra). Telas de detalhe recebem **id**, nunca a entity: URL carrega texto, não objeto, e uma tela que depende da anterior lhe entregar o objeto quebra em deep link.
+**Convenções de rota.** `AppPaths` (caminhos) é lido só pelo `app_router.dart`; `AppRouteNames` (nomes de destino) é lido pelas telas. Telas navegam por nome, nunca por path — assim nenhuma delas conhece o formato da URL. Exceção deliberada: `FilamentsPage` importa `AppPaths` só por `idParam`, a chave de `pathParameters` ao navegar pro detalhe — é nome de parâmetro, não path, e o mesmo texto que aparece na declaração da rota. Fora esse único caso, nenhuma tela importa `AppPaths`. Rota filha usa path relativo (`:id`, sem barra). Telas de detalhe recebem **id**, nunca a entity: URL carrega texto, não objeto, e uma tela que depende da anterior lhe entregar o objeto quebra em deep link.
 
 **Deep link está ligado no Android**, por esquema próprio: `filamentos://app/<path>`. Exige duas coisas no `AndroidManifest.xml`, e faltar qualquer uma falha em silêncio — um `intent-filter` de `VIEW` com `DEFAULT` e `BROWSABLE`, e o `meta-data flutter_deeplinking_enabled` **dentro da `<activity>`** (é o `FlutterActivity` que lê essa chave, do `ActivityInfo`; na `<application>` ela é ignorada sem erro). Testar: `adb shell am start -a android.intent.action.VIEW -d "filamentos://app/filaments/00001"` — o `adb` mora em `~/Library/Android/sdk/platform-tools/` e não está no PATH.
 
