@@ -16,9 +16,14 @@ import 'package:go_router/go_router.dart';
 /// `:id` — ali o roteador acertou, e quem trata a ausência é a própria
 /// `FilamentDetailsPage`, depois de consultar o repositório.
 ///
-/// Exibe a URL tentada e o erro porque "não encontrado" sem dizer *o quê* não
-/// ajuda ninguém a depurar — mas em `bodyMedium`, abaixo da explicação em
+/// Exibe a URL tentada porque "não encontrado" sem dizer *o quê* não ajuda
+/// ninguém a depurar — mas em `bodyMedium`, abaixo da explicação em
 /// `titleMedium`: quem lê quer primeiro saber o que houve, o resto é detalhe.
+///
+/// Não exibe o erro do roteador. A `message` da `GoException` é texto do
+/// go_router, em inglês, e diz o mesmo que a linha de cima ("no routes for
+/// location: /x") — repetir a URL em vocabulário de biblioteca não informa
+/// nem orienta ninguém.
 ///
 /// O botão para a home não é enfeite. Esta tela costuma ser alcançada por URL
 /// direta, sem tela anterior na pilha, então sem ele o usuário fica num beco
@@ -26,8 +31,7 @@ import 'package:go_router/go_router.dart';
 /// caminho, não empilhamento.
 class NotFoundPage extends StatelessWidget {
   final String uri;
-  final String error;
-  const NotFoundPage({super.key, required this.uri, required this.error});
+  const NotFoundPage({super.key, required this.uri});
 
   @override
   Widget build(BuildContext context) {
@@ -47,11 +51,6 @@ class NotFoundPage extends StatelessWidget {
               const SizedBox(height: AppSpacing.xl),
               Text(
                 'Você tentou acessar: $uri',
-                style: Theme.of(context).textTheme.bodyMedium!,
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              Text(
-                'Erro: $error',
                 style: Theme.of(context).textTheme.bodyMedium!,
               ),
               const SizedBox(height: AppSpacing.xl),
