@@ -1,4 +1,4 @@
-import 'package:filament_os/shared/domain/currency_mismatch_exception.dart';
+import 'package:filament_os/shared/domain/app_exception.dart';
 import 'package:filament_os/shared/domain/money.dart';
 import 'package:flutter_test/flutter_test.dart';
 

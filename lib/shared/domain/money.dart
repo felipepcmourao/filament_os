@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:filament_os/shared/domain/currency_mismatch_exception.dart';
+import 'package:filament_os/shared/domain/app_exception.dart';
 
 /// Value object de dinheiro.
 ///

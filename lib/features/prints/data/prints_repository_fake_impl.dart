@@ -1,7 +1,6 @@
 import 'package:filament_os/features/prints/domain/print.dart';
-import 'package:filament_os/features/prints/domain/print_not_removed_exception.dart';
-import 'package:filament_os/features/prints/domain/print_not_updated_exception.dart';
 import 'package:filament_os/features/prints/domain/prints_repository.dart';
+import 'package:filament_os/shared/domain/app_exception.dart';
 
 /// Implementação "fake" do `PrintsRepository`: guarda tudo numa lista em
 /// memória, pelos mesmos motivos do `FilamentsRepositoryFakeImpl` e sob a

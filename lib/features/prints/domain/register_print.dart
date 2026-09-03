@@ -1,9 +1,9 @@
 import 'package:filament_os/features/filaments/domain/filament.dart';
-import 'package:filament_os/features/filaments/domain/filament_not_found_exception.dart';
 import 'package:filament_os/features/filaments/domain/filaments_repository.dart';
 import 'package:filament_os/features/prints/domain/print.dart';
 import 'package:filament_os/features/prints/domain/print_status.dart';
 import 'package:filament_os/features/prints/domain/prints_repository.dart';
+import 'package:filament_os/shared/domain/app_exception.dart';
 import 'package:filament_os/shared/domain/money.dart';
 import 'package:filament_os/shared/domain/weight.dart';
 

@@ -1,7 +1,6 @@
 import 'package:filament_os/features/filaments/domain/filament.dart';
-import 'package:filament_os/features/filaments/domain/filament_not_removed_exception.dart';
-import 'package:filament_os/features/filaments/domain/filament_not_updated_exception.dart';
 import 'package:filament_os/features/filaments/domain/filaments_repository.dart';
+import 'package:filament_os/shared/domain/app_exception.dart';
 
 /// Implementação "fake" do `FilamentsRepository`: guarda tudo numa lista em
 /// memória, só pra desenvolver/testar sem precisar de um banco de dados de
