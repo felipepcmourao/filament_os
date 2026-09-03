@@ -1,5 +1,6 @@
 import 'package:filament_os/features/filaments/presentation/filament_by_id_provider.dart';
 import 'package:filament_os/features/filaments/presentation/filament_color_label.dart';
+import 'package:filament_os/shared/presentation/error_message_view.dart';
 import 'package:filament_os/shared/presentation/weight_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,14 +51,7 @@ class FilamentDetailsPage extends ConsumerWidget {
                     Text(data.weightInGrams.label),
                   ],
                 ),
-          error: (err, stack) => Center(
-            child: Text(
-              'Erro: $err',
-              style: Theme.of(context).textTheme.bodyMedium!.apply(
-                color: Theme.of(context).colorScheme.error,
-              ),
-            ),
-          ),
+          error: (err, stack) => ErrorMessageView(error: err),
           loading: () => const Center(child: CircularProgressIndicator()),
         ),
       ),

@@ -7,6 +7,7 @@ import 'package:filament_os/features/filaments/domain/filaments_repository.dart'
 import 'package:filament_os/features/filaments/presentation/filaments_page.dart';
 import 'package:filament_os/shared/domain/money.dart';
 import 'package:filament_os/shared/domain/weight.dart';
+import 'package:filament_os/shared/presentation/error_message_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -33,7 +34,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.textContaining('Falha'), findsOneWidget);
+    expect(find.textContaining(generalErrorMessage), findsOneWidget);
   });
 
   testWidgets(

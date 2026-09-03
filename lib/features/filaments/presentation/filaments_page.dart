@@ -13,6 +13,7 @@ import 'package:filament_os/features/filaments/presentation/filaments_list_notif
 import 'package:filament_os/shared/domain/money.dart';
 import 'package:filament_os/shared/domain/weight.dart';
 import 'package:filament_os/shared/domain/stock_status.dart';
+import 'package:filament_os/shared/presentation/error_message_view.dart';
 import 'package:filament_os/shared/presentation/stock_status_label.dart';
 import 'package:filament_os/shared/presentation/stock_status_material.dart';
 import 'package:filament_os/shared/presentation/weight_label.dart';
@@ -165,14 +166,7 @@ class FilamentsPage extends StatelessWidget {
                         );
                       },
                     ),
-              error: (err, stack) => Center(
-                child: Text(
-                  'Erro: $err',
-                  style: Theme.of(context).textTheme.bodyMedium!.apply(
-                    color: Theme.of(context).colorScheme.error,
-                  ),
-                ),
-              ),
+              error: (err, stack) => ErrorMessageView(error: err),
               loading: () => const Center(child: CircularProgressIndicator()),
             );
           },

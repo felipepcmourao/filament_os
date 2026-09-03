@@ -3,6 +3,7 @@ import 'package:filament_os/features/prints/di/register_print_provider.dart';
 import 'package:filament_os/features/prints/domain/print_status.dart';
 import 'package:filament_os/features/prints/presentation/prints_list_notifier.dart';
 import 'package:filament_os/shared/domain/weight.dart';
+import 'package:filament_os/shared/presentation/error_message_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -46,7 +47,7 @@ class PrintsPage extends ConsumerWidget {
                         },
                       ),
                     ),
-              error: (err, stack) => Center(child: Text('Erro: $err')),
+              error: (err, stack) => ErrorMessageView(error: err),
               loading: () => const Center(child: CircularProgressIndicator()),
             ),
             filaments.when(
@@ -79,7 +80,7 @@ class PrintsPage extends ConsumerWidget {
                       },
                       child: const Text('Registrar Impressão'),
                     ),
-              error: (err, stack) => Center(child: Text('Erro: $err')),
+              error: (err, stack) => ErrorMessageView(error: err),
               loading: () => const Center(child: CircularProgressIndicator()),
             ),
           ],
