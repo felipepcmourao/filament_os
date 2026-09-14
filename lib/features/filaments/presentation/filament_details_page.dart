@@ -21,38 +21,42 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// telas leem a mesma lista, vinda da mesma instância de
 /// `FilamentsRepository`, em vez de cada uma instanciar a própria (o
 /// problema que existia antes da Sessão 6).
-class FilamentDetailsPage extends ConsumerWidget {
+class FilamentDetailsPage extends StatelessWidget {
   final String id;
 
   const FilamentDetailsPage({super.key, required this.id});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final filament = ref.watch(filamentByIdProvider(id));
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(id)),
       body: SafeArea(
-        child: filament.when(
-          data: (data) => data == null
-              ? Center(
-                  child: Text(
-                    'Filamento indisponível',
-                    style: Theme.of(context).textTheme.bodyMedium!.apply(
-                      color: Theme.of(context).colorScheme.onSurface,
+        child: Consumer(
+          builder: (context, ref, child) {
+            final filament = ref.watch(filamentByIdProvider(id));
+            return filament.when(
+              data: (data) => data == null
+                  ? Center(
+                      child: Text(
+                        'Filamento indisponível',
+                        style: Theme.of(context).textTheme.bodyMedium!.apply(
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                    )
+                  : Column(
+                      children: [
+                        Text(data.name),
+                        const Divider(),
+                        Text(data.color.label),
+                        const Divider(),
+                        Text(data.weightInGrams.label),
+                      ],
                     ),
-                  ),
-                )
-              : Column(
-                  children: [
-                    Text(data.name),
-                    const Divider(),
-                    Text(data.color.label),
-                    const Divider(),
-                    Text(data.weightInGrams.label),
-                  ],
-                ),
-          error: (err, stack) => ErrorMessageView(error: err),
-          loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, stack) => ErrorMessageView(error: err),
+              loading: () => const Center(child: CircularProgressIndicator()),
+            );
+          },
         ),
       ),
     );
