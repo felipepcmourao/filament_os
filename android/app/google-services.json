@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "778303398420",
+    "project_id": "filamentos-2a6cf",
+    "storage_bucket": "filamentos-2a6cf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778303398420:android:3b31c9753538d4d43dbd01",
+        "android_client_info": {
+          "package_name": "com.example.filament_os"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC98oHY9dGMkPu1I-sxpOpeefccXrJLJ2c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
