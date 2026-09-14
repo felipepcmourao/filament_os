@@ -29,7 +29,10 @@ class PrintsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Impressões'),  scrolledUnderElevation: 0,),
+      appBar: AppBar(
+        title: const Text('Impressões'),
+        scrolledUnderElevation: 0,
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -85,7 +88,7 @@ class PrintsPage extends StatelessWidget {
                                   printTime: 1.25,
                                   dateTime: DateTime.now(),
                                 );
-            
+
                             ref.invalidate(printsListProvider);
                             ref.invalidate(filamentsListProvider);
                           },
