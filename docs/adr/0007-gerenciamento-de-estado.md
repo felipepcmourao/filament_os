@@ -43,10 +43,14 @@ A regra adotada: **`autoDispose` é para provider cujo argumento cresce sem limi
 
 Provider "de tela", parametrizado por algo que o usuário navega, leva. `filamentByIdProvider` (`Provider.autoDispose.family<AsyncValue<Filament?>, String>`) é o único caso do projeto: cada `id` de filamento visitado criava uma entrada nova que nunca era liberada, mesmo depois de a `FilamentDetailsPage` correspondente sair da tela — `autoDispose` descarta essa entrada assim que nenhum widget mais observa aquele `id`.
 
-### Granularidade de rebuild: `Consumer` isolado, não `ConsumerWidget` inteiro
+### Granularidade de rebuild: `Consumer` isolado onde há `watch`
 `FilamentsPage` é `StatelessWidget`, não `ConsumerWidget`, e só a parte da árvore que lê `filamentsListProvider` fica dentro de um `Consumer`. Com `ConsumerWidget`, o método `build` inteiro reconstrói a cada mudança do provider — inclusive `Scaffold` e `AppBar`, que não dependem de nenhum estado. Isolando o `ref.watch` num `Consumer` menor, só aquele trecho reconstrói.
 
-Aplicado só em `FilamentsPage` até aqui — `HomePage`, `FilamentDetailsPage` e `PrintsPage` continuam `ConsumerWidget` inteiras. Não é regra geral retroativa ainda, é o padrão a seguir quando essas telas forem revisitadas.
+A regra tem uma condição que a primeira versão desta seção não explicitava: **só `ref.watch` inscreve o widget no provider.** `ref.read` lê o valor uma vez, no momento da chamada, e não provoca rebuild nenhum. Isolar em `Consumer` só tem efeito onde existe `watch`. Revisitadas na Sessão 7, as outras três telas ficaram assim:
+
+* **`FilamentDetailsPage`** virou `StatelessWidget`. A `AppBar` mostra o `id` recebido pelo construtor, que não muda, e só o `body` — que faz `watch` de `filamentByIdProvider(id)` — fica dentro do `Consumer`.
+* **`PrintsPage`** virou `StatelessWidget` com **dois** `Consumer`, um por provider. Antes, os dois `watch` no topo do `build` faziam uma mudança na lista de filamentos reconstruir também a lista de impressões, e vice-versa. O botão de registrar continua atualizando as duas porque invalida os dois providers explicitamente, não porque compartilha o `build`. Detalhe de layout que o `analyze` não pega: o `Expanded` precisa ser filho direto da `Column`, então ele fica **por fora** do `Consumer`, sempre presente, e o `when` escolhe só o que vai dentro dele — com o `Consumer` entre os dois, o Flutter lança `Incorrect use of ParentDataWidget` em runtime.
+* **`HomePage`** continua `ConsumerWidget` inteira, por decisão. Ela não tem nenhum `watch`: os três `ref.read(themeModeProvider.notifier)` estão dentro de `onPressed`, então a tela não reconstrói quando o tema muda e o `ConsumerWidget` não custa rebuild algum. Envolver só os três botões num `Consumer` também funcionaria, mas não ganharia nada em desempenho e acrescentaria um nível de aninhamento à tela; o `ref` do `build`, único e disponível para a tela toda, lê melhor.
 
 ## Consequências
 
