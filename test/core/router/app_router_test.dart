@@ -30,8 +30,7 @@ void main() {
   testWidgets('Tocar em Filamentos leva a Filaments Pages', (
     WidgetTester tester,
   ) async {
-    final container = ProviderContainer();
-    addTearDown(container.dispose);
+    final container = ProviderContainer.test();
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
@@ -46,8 +45,7 @@ void main() {
   testWidgets('Roteador novo não herda a navegação do anterior', (
     WidgetTester tester,
   ) async {
-    ProviderContainer container = ProviderContainer();
-    addTearDown(container.dispose);
+    ProviderContainer container = ProviderContainer.test();
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
@@ -68,8 +66,7 @@ void main() {
     // `flutter test` mudar de critério, pra proteção sumir sem ninguém notar.
     // Verificado: trocando `createRouter()` por `AppRouter.router`, este teste
     // (e só ele) falha.
-    container = ProviderContainer();
-    addTearDown(container.dispose);
+    container = ProviderContainer.test();
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
@@ -83,8 +80,7 @@ void main() {
   testWidgets('Clicar na Navigation Bar leva para a tela correta', (
     WidgetTester tester,
   ) async {
-    final container = ProviderContainer();
-    addTearDown(container.dispose);
+    final container = ProviderContainer.test();
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
@@ -99,10 +95,9 @@ void main() {
   testWidgets(
     'Direcionamento para LoginPage caso o usuário não esteja logado.',
     (WidgetTester tester) async {
-      final container = ProviderContainer(
+      final container = ProviderContainer.test(
         overrides: [authProvider.overrideWith(LoggedOutNotifier.new)],
       );
-      addTearDown(container.dispose);
       await tester.pumpWidget(
         UncontrolledProviderScope(
           container: container,
@@ -119,10 +114,9 @@ void main() {
   testWidgets('Deslogado consegue chegar na tela de login', (
     WidgetTester tester,
   ) async {
-    final container = ProviderContainer(
+    final container = ProviderContainer.test(
       overrides: [authProvider.overrideWith(LoggedOutNotifier.new)],
     );
-    addTearDown(container.dispose);
     final router = container.read(routerProvider);
     await tester.pumpWidget(
       UncontrolledProviderScope(
@@ -138,8 +132,7 @@ void main() {
   testWidgets('Alternar o authProvider muda o comportamento da navegação', (
     WidgetTester tester,
   ) async {
-    final container = ProviderContainer();
-    addTearDown(container.dispose);
+    final container = ProviderContainer.test();
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,

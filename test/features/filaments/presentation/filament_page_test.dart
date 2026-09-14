@@ -16,14 +16,13 @@ void main() {
   testWidgets('Filaments Page apresenta erro ao listar Filamentos', (
     WidgetTester tester,
   ) async {
-    final container = ProviderContainer(
+    final container = ProviderContainer.test(
       overrides: [
         filamentsRepositoryProvider.overrideWith(
           (ref) => FilamentRepositoryForTest1(),
         ),
       ],
     );
-    addTearDown(container.dispose);
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
@@ -40,14 +39,13 @@ void main() {
   testWidgets(
     'Filaments Page apresenta lista sem apertar em Adicionar Filamento',
     (WidgetTester tester) async {
-      final container = ProviderContainer(
+      final container = ProviderContainer.test(
         overrides: [
           filamentsRepositoryProvider.overrideWith(
             (ref) => FilamentRepositoryForTest2(),
           ),
         ],
       );
-      addTearDown(container.dispose);
       await tester.pumpWidget(
         UncontrolledProviderScope(
           container: container,
