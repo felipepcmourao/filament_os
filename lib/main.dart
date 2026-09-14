@@ -3,8 +3,25 @@ import 'package:filament_os/core/theme/app_theme.dart';
 import 'package:filament_os/core/theme/theme_mode_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:filament_os/firebase_options.dart';
 
-void main() {
+/// Ponto de entrada: liga o Firebase e só então sobe o app.
+///
+/// `main` é `async` porque `Firebase.initializeApp` precisa terminar antes do
+/// `runApp` — qualquer tela que consulte autenticação no primeiro frame
+/// encontraria o Firebase ainda desligado.
+///
+/// `WidgetsFlutterBinding.ensureInitialized()` é o passo a mais que isso
+/// exige. O binding é a ponte entre o Dart e o engine do Flutter, e é ele que
+/// cria os platform channels por onde o `initializeApp` fala com o SDK nativo
+/// do Firebase. Normalmente o próprio `runApp` o cria por dentro, mas aqui o
+/// `await` roda antes do `runApp`: sem esta linha o canal ainda não existe, e
+/// o app quebra na inicialização pedindo exatamente essa chamada (verificado
+/// comentando a linha).
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const ProviderScope(child: MyApp()));
 }
 
