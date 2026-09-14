@@ -23,65 +23,79 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// gera dois `Print` com o mesmo id, porque nem `Print` nem
 /// `PrintsRepositoryFakeImpl.add()` barram isso. Sai quando existir um
 /// formulário de verdade.
-class PrintsPage extends ConsumerWidget {
+class PrintsPage extends StatelessWidget {
   const PrintsPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final filaments = ref.watch(filamentsListProvider);
-    final prints = ref.watch(printsListProvider);
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Impressões')),
+      appBar: AppBar(title: const Text('Impressões'),  scrolledUnderElevation: 0,),
       body: SafeArea(
         child: Column(
           children: [
-            prints.when(
-              data: (data) => data.isEmpty
-                  ? const Center(child: Text('Sem impressões registradas'))
-                  : Expanded(
-                      child: ListView.builder(
-                        itemCount: data.length,
-                        itemBuilder: (context, index) {
-                          final print = data[index];
-                          return ListTile(title: Text(print.name));
-                        },
-                      ),
-                    ),
-              error: (err, stack) => ErrorMessageView(error: err),
-              loading: () => const Center(child: CircularProgressIndicator()),
+            Expanded(
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final prints = ref.watch(printsListProvider);
+                  return prints.when(
+                    data: (data) => data.isEmpty
+                        ? const Center(
+                            child: Text('Sem impressões registradas'),
+                          )
+                        : ListView.builder(
+                            itemCount: data.length,
+                            itemBuilder: (context, index) {
+                              final print = data[index];
+                              return ListTile(title: Text(print.name));
+                            },
+                          ),
+                    error: (err, stack) => ErrorMessageView(error: err),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                  );
+                },
+              ),
             ),
-            filaments.when(
-              data: (data) => data.isEmpty
-                  ? const Center(
-                      child: Text('Adicione um filamento para imprimir'),
-                    )
-                  : ElevatedButton(
-                      onPressed: () async {
-                        await ref
-                            .read(registerPrintProvider)
-                            .call(
-                              printId: '0000001',
-                              ownerId: '000001',
-                              status: PrintStatus.printing,
-                              name: 'Chaveiro Flamengo',
-                              filamentUsage: [
-                                (
-                                  filamentId: '00003',
-                                  usedGrams: Weight(weightInMiligrams: 30000),
-                                ),
-                              ],
-                              finalWeight: Weight(weightInMiligrams: 30000),
-                              printTime: 1.25,
-                              dateTime: DateTime.now(),
-                            );
-
-                        ref.invalidate(printsListProvider);
-                        ref.invalidate(filamentsListProvider);
-                      },
-                      child: const Text('Registrar Impressão'),
-                    ),
-              error: (err, stack) => ErrorMessageView(error: err),
-              loading: () => const Center(child: CircularProgressIndicator()),
+            Consumer(
+              builder: (context, ref, child) {
+                final filaments = ref.watch(filamentsListProvider);
+                return filaments.when(
+                  data: (data) => data.isEmpty
+                      ? const Center(
+                          child: Text('Adicione um filamento para imprimir'),
+                        )
+                      : ElevatedButton(
+                          onPressed: () async {
+                            await ref
+                                .read(registerPrintProvider)
+                                .call(
+                                  printId: '0000001',
+                                  ownerId: '000001',
+                                  status: PrintStatus.printing,
+                                  name: 'Chaveiro Flamengo',
+                                  filamentUsage: [
+                                    (
+                                      filamentId: '00003',
+                                      usedGrams: Weight(
+                                        weightInMiligrams: 30000,
+                                      ),
+                                    ),
+                                  ],
+                                  finalWeight: Weight(weightInMiligrams: 30000),
+                                  printTime: 1.25,
+                                  dateTime: DateTime.now(),
+                                );
+            
+                            ref.invalidate(printsListProvider);
+                            ref.invalidate(filamentsListProvider);
+                          },
+                          child: const Text('Registrar Impressão'),
+                        ),
+                  error: (err, stack) => ErrorMessageView(error: err),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                );
+              },
             ),
           ],
         ),
