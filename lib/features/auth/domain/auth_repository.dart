@@ -34,10 +34,12 @@ abstract class AuthRepository {
   Stream<AppUser?> authStatus();
 
   Future<void> signIn({required String email, required String password});
+
   /// Cria a conta e já deixa o usuário logado: o `authStatus()` emite o
   /// usuário novo, igual a um `signIn`. Por isso os dois têm o mesmo retorno.
   Future<void> signUp({required String email, required String password});
   Future<void> signOut();
+
   /// Envia o e-mail de redefinição de senha.
   ///
   /// **Termina do mesmo jeito exista ou não uma conta com esse e-mail.** Se o
