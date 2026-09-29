@@ -14,15 +14,9 @@
 /// tempo de compilação vale mais do que a posse, num domínio deste tamanho.
 /// A alternativa descartada era uma `abstract class` comum, que preservava a
 /// posse mas deixava passar exceção sem texto até o runtime.
-///
-/// Não carrega campo `message`. Texto de tela é decisão de apresentação e
-/// mora na extension da `presentation`; para diagnóstico, cada subtipo já
-/// tem o seu `toString()`.
 sealed class AppException implements Exception {
   const AppException();
 }
-
-// ------------------------- FILAMENT EXCEPTION --------------------------------
 
 /// Erro lançado quando um `filamentId` referenciado (ex: dentro de um
 /// `FilamentUsage`, ao registrar uma impressão) não corresponde a nenhum
@@ -57,9 +51,7 @@ class FilamentNotRemovedException extends AppException {
   }
 }
 
-/// Erro lançado quando se pede pra atualizar (`update`) um `Filament` cujo
-/// `id` não existe no repositório — mesma categoria do
-/// `FilamentNotRemovedException`, só que pro caminho de atualização.
+/// O `id` pedido para atualização não existe no repositório.
 class FilamentNotUpdatedException extends AppException {
   final String id;
 
@@ -71,15 +63,10 @@ class FilamentNotUpdatedException extends AppException {
   }
 }
 
-// ------------------------- PRINT EXCEPTION --------------------------------
-
-/// Erro lançado quando se pede pra remover (`remove`) um `Print` cujo `id`
-/// não existe no repositório — mesma categoria do
-/// `PrintNotUpdatedException`, só que pro caminho de remoção.
+/// O `id` pedido para remoção não existe no repositório.
 ///
-/// Existe porque `removeWhere` não avisa quando não removeu nada: sem esta
-/// exceção, pedir a remoção de um id inexistente seria indistinguível de uma
-/// remoção bem-sucedida.
+/// Sem ela, remover um id inexistente seria indistinguível de sucesso, porque
+/// `removeWhere` não avisa quando não remove nada.
 class PrintNotRemovedException extends AppException {
   final String printId;
 
@@ -109,8 +96,6 @@ class PrintNotUpdatedException extends AppException {
     return 'Não foi possível atualizar a impressão de ID: $printId';
   }
 }
-
-// ------------------------- CURRENCY EXCEPTION --------------------------------
 
 /// Erro lançado quando dois `Money` de moedas diferentes são combinados
 /// (ex: somar BRL com EUR).
