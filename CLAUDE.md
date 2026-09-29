@@ -72,6 +72,8 @@ Código que se explica; o "porquê" das decisões mora nos ADRs (docs/adr/).
 - **Mantenha**, em no máximo 1–2 linhas, o que explica um porquê que o código não mostra.
 - **Justificativa longa vai para o ADR da decisão**, e o código fica só com a referência (`Ver ADR 0005.`). Se o ADR ainda não tiver o raciocínio, acrescente lá — não crie ADR novo só para isso.
 - **Doc-comment de API pública** (classe, factories) fica, mas curto: uma frase do que é + a invariante, se houver.
+- **Não repita o nome** do método ou da classe no doc-comment (`Weight.zero()` já diz "peso zerado").
+- **Não comente o que não existe** ("não há `isNegative` porque..."): a invariante documentada já explica.
 - Em português, no estilo do arquivo, com `dart format` limpo.
 
 Referência: lib/shared/domain/weight.dart (PR #3)
