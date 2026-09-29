@@ -58,7 +58,9 @@ O `ColorScheme` é escrito à mão (não `fromSeed`) por decisão deliberada —
 
 ## Commits
 
-Conventional Commits com **descrição em português** (o tipo — `feat`, `fix`, `refactor` — fica em inglês, é parte da spec). Rode `git log --oneline -5` para conferir o tom antes de escrever.
+Conventional Commits **inteiramente em inglês**, tipo e descrição (ex.: `refactor(shared): trim comments in Weight`). Título e descrição de PR também em inglês, e a descrição segue o formato da skill `/pr-description`. Commits antigos em português ficam como estão — não reescreva o histórico. Rode `git log --oneline -5` para conferir o tom antes de escrever.
+
+Comentários de código e ADRs continuam em português.
 
 Separe commits por assunto: correção de dívida técnica não vai junto com feature nova.
 
