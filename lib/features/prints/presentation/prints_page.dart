@@ -9,20 +9,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Lista de impressões, alcançada por `/prints`.
 ///
-/// O botão "Registrar Impressão" chama `RegisterPrint` (via
-/// `registerPrintProvider`), que escreve direto nos repositórios de `Print` e
-/// `Filament` — não passa pelos notifiers. Por isso, depois do `await`, o
-/// `onPressed` invalida `printsListProvider` **e** `filamentsListProvider` na
-/// mão: sem isso, os dois ficariam com o estado antigo em cache, mesmo com o
-/// dado já persistido. É o que faz a impressão nova aparecer aqui e o estoque
-/// debitado aparecer na `FilamentsPage`, sem reiniciar o app nem recarregar
-/// nada manualmente.
+/// O botão invalida os dois providers na mão porque o `RegisterPrint` escreve
+/// direto nos repositórios, sem passar pelos notifiers.
 ///
-/// `printId`/`filamentUsage` fixos no botão são andaime deliberado (mesmo
-/// espírito de `addedFilament1/2/3` na `FilamentsPage`): clicar duas vezes
-/// gera dois `Print` com o mesmo id, porque nem `Print` nem
-/// `PrintsRepositoryFakeImpl.add()` barram isso. Sai quando existir um
-/// formulário de verdade.
+/// `printId` e `filamentUsage` fixos são andaime até existir um formulário:
+/// clicar duas vezes gera dois `Print` com o mesmo id.
 class PrintsPage extends StatelessWidget {
   const PrintsPage({super.key});
 
