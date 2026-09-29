@@ -8,6 +8,16 @@ Foi construído um sistema de tema em `lib/core/theme/` (`AppColors`, `AppSpacin
 ### ColorScheme manual em vez de `ColorScheme.fromSeed`
 A primeira tentativa foi gerar a paleta a partir de uma cor semente (`#C94A0C`) usando `ColorScheme.fromSeed`. O resultado ficou com tons pastéis/dessaturados, que não combinavam com a identidade visual pretendida para o app — mais saturada, de alto contraste, com uma pegada "tecnológica". Por isso, os papéis `primary`, `secondary`, `error` e `surface` do `ColorScheme` foram definidos manualmente, com instâncias separadas para os brightnesses claro e escuro (`#FF6A1A`/`#E85A0F`). Os demais papéis do `ColorScheme` (`primaryContainer`, `tertiary`, `outline`, `surfaceContainer*` etc.) continuam derivados automaticamente, e só serão definidos manualmente quando algum componente concreto precisar deles.
 
+O `fromSeed` resolve o contraste sozinho, mas devolve tons que ninguém escolheu: o laranja da marca sai do algoritmo diferente do que entrou. Aqui a identidade visual vem antes da conveniência, e o custo é assumir a responsabilidade pelo contraste, que nenhum algoritmo garante mais.
+
+### Cores de domínio num `ThemeExtension`, em pares
+O `ColorScheme` cobre papéis genéricos (`primary`, `error`, `surface`), mas não sabe o que é "estoque baixo" ou "impressão falhou". Essas cores moram em `AppColors`, um `ThemeExtension`, e não em `static const` lidos direto do widget: constante estática não sabe se o app está em tema claro ou escuro, e pelo tema o Flutter entrega a paleta certa sem nenhum `if` no widget.
+
+Toda cor aparece em par, `x`/`xContainer` (conteúdo e fundo), na mesma convenção do Material (`primary`/`primaryContainer`). As duas nascem juntas porque a informação que importa está no **contraste entre elas**: um badge legível é um par calibrado, não duas cores escolhidas em momentos diferentes. Os pares invertem de papel entre os temas (no claro, fundo claro e conteúdo escuro; no escuro, o oposto) e não são as mesmas cores com brilho ajustado: são duas paletas escolhidas à mão, pela mesma decisão que rejeitou o `fromSeed`.
+
+### Tipografia: duas fontes, papéis separados
+**Space Grotesk** nos tamanhos grandes (`display`, `headline`, `title`) e **Inter** nos pequenos (`body`, `label`). A Space Grotesk é geométrica e tem personalidade nos cortes das letras: aparece em título e some em texto corrido. A Inter foi desenhada para tela em corpo pequeno, onde legibilidade importa mais que caráter. Usar uma só nos dois papéis sacrificaria um dos lados. Tamanhos e pesos são os do Material; só a família muda.
+
 ### Cores de domínio isoladas da camada de presentation
 Enums de domínio como `FilamentColor` e `StockStatus` não têm nenhuma dependência do Flutter — carregam só os dados/labels necessários pras regras de negócio. A tradução desses enums para `Color` (valores concretos do Material) fica em extensions dedicadas na camada de presentation (`FilamentColorMaterial`, `StockStatusMaterial`), usando `switch` exaustivo sem `default`. Isso garante que, se um novo valor for adicionado ao enum sem que exista o mapeamento de cor correspondente, o projeto simplesmente não compila — o erro é pego em tempo de build, não em runtime.
 
