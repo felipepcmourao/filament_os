@@ -85,29 +85,9 @@ class RegisterPrint {
       totalCost: totalCost!,
     );
 
-    // Passada 3, só agora persiste: só chega aqui se a validação (passada
-    // 1) e o cálculo (passada 2) terminaram sem lançar nada.
-    //
-    // O `Print` é gravado ANTES das baixas de estoque, e a ordem não é
-    // acidental. As duas escritas não são atômicas — não há transação por
-    // trás delas — então uma pode falhar depois da outra ter sido gravada,
-    // e a escolha aqui é sobre QUAL das duas inconsistências sobra:
-    //
-    // - Print gravado, baixas não: o estoque fica alto demais, mas o
-    //   `filamentUsage` do Print diz exatamente quais filamentos e quantos
-    //   gramas — dá pra refazer a baixa a partir dele.
-    // - Baixas gravadas, Print não: sumiu material do estoque e não existe
-    //   nada no app explicando pra onde foi. O nome, o tempo e o custo da
-    //   impressão não estão em lugar nenhum — não há como reconstruir.
-    //
-    // O `Print` é o evento (o fato que aconteceu); o estoque é estado
-    // derivado dele. Grava-se o evento primeiro, porque só ele reconstrói
-    // o outro lado. Não inverta sem reler isto.
-    //
-    // O conserto de verdade é fazer as duas escritas numa única operação
-    // atômica (transação/batch do Firestore, equivalente no Hive). Enquanto
-    // os repositórios forem listas em memória, escolher a ordem é tudo o
-    // que dá pra fazer.
+    // Passada 3, só agora persiste.
+    // O `Print` vai antes das baixas: se a segunda escrita falhar, só ele
+    // permite reconstruir o estoque. Não inverta. Ver ADR 0002.
     await printsRepository.add(newPrint);
 
     for (var e in listFilamentAfterUse) {
