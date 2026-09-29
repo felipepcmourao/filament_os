@@ -50,7 +50,7 @@ class FilamentDetailsPage extends StatelessWidget {
                         const Divider(),
                         Text(data.color.label),
                         const Divider(),
-                        Text(data.weightInGrams.label),
+                        Text(data.weight.label),
                       ],
                     ),
               error: (err, stack) => ErrorMessageView(error: err),

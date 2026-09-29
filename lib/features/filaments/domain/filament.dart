@@ -25,7 +25,7 @@ class Filament extends Equatable {
   final FilamentColor color;
   final FilamentType type;
   final double diameterInMms;
-  final Weight weightInGrams;
+  final Weight weight;
   final Money totalCost;
 
   /// Construtor privado: só guarda os valores, sem validar nada — quem
@@ -37,7 +37,7 @@ class Filament extends Equatable {
     required this.color,
     required this.type,
     required this.diameterInMms,
-    required this.weightInGrams,
+    required this.weight,
     required this.totalCost,
   });
 
@@ -104,7 +104,7 @@ class Filament extends Equatable {
       color: color,
       type: type,
       diameterInMms: diameterInMms,
-      weightInGrams: weightInGrams,
+      weight: weightInGrams,
       totalCost: totalCost,
     );
   }
@@ -124,7 +124,7 @@ class Filament extends Equatable {
       color: color,
       type: type,
       diameterInMms: diameterInMms,
-      weightInGrams: weightInGrams - usedWeight,
+      weightInGrams: weight - usedWeight,
       totalCost: totalCost,
     );
   }
@@ -140,7 +140,7 @@ class Filament extends Equatable {
     color,
     type,
     diameterInMms,
-    weightInGrams,
+    weight,
     totalCost,
   ];
 

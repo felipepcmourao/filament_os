@@ -47,7 +47,7 @@ extension WeightLabel on Weight {
     String weightLabel;
     if (isZero) {
       return 'Sem estoque';
-    } else if (weightInMiligrams % 1000 == 0) {
+    } else if (weightInMilligrams % 1000 == 0) {
       weightLabel = toGrams.toStringAsFixed(0);
     } else {
       weightLabel = toGrams.toStringAsFixed(2).replaceAll('.', ',');

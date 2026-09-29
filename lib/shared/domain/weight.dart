@@ -10,11 +10,11 @@ import 'package:equatable/equatable.dart';
 /// É imutável: toda operação (`+`, `-`) devolve uma instância NOVA, nunca
 /// modifica a atual.
 class Weight extends Equatable {
-  final int weightInMiligrams;
+  final int weightInMilligrams;
 
   /// Construtor privado: só guarda o valor, sem validar — quem valida é
   /// sempre o `factory` abaixo.
-  const Weight._({required this.weightInMiligrams});
+  const Weight._({required this.weightInMilligrams});
 
   /// Único jeito público de criar um `Weight`. Um peso negativo não existe
   /// fisicamente, então essa é a única invariante — zero é permitido (ex:
@@ -27,7 +27,7 @@ class Weight extends Equatable {
         'O peso não pode ser negativo.',
       );
     }
-    return Weight._(weightInMiligrams: weightInMiligrams);
+    return Weight._(weightInMilligrams: weightInMiligrams);
   }
 
   /// Atalho pra um `Weight` zerado, útil pra comparações (ex: `isZero`).
@@ -44,7 +44,7 @@ class Weight extends Equatable {
 
   Weight operator +(Weight other) {
     return Weight(
-      weightInMiligrams: weightInMiligrams + other.weightInMiligrams,
+      weightInMiligrams: weightInMilligrams + other.weightInMilligrams,
     );
   }
 
@@ -53,38 +53,38 @@ class Weight extends Equatable {
   // o erro — quem chama não precisa checar isso antes de subtrair.
   Weight operator -(Weight other) {
     return Weight(
-      weightInMiligrams: weightInMiligrams - other.weightInMiligrams,
+      weightInMiligrams: weightInMilligrams - other.weightInMilligrams,
     );
   }
 
   bool operator >(Weight other) {
-    return weightInMiligrams > other.weightInMiligrams;
+    return weightInMilligrams > other.weightInMilligrams;
   }
 
   bool operator <(Weight other) {
-    return weightInMiligrams < other.weightInMiligrams;
+    return weightInMilligrams < other.weightInMilligrams;
   }
 
   bool operator <=(Weight other) {
-    return weightInMiligrams <= other.weightInMiligrams;
+    return weightInMilligrams <= other.weightInMilligrams;
   }
 
   bool operator >=(Weight other) {
-    return weightInMiligrams >= other.weightInMiligrams;
+    return weightInMilligrams >= other.weightInMilligrams;
   }
 
   // Volta pra gramas (a unidade que faz sentido mostrar na tela). Divisão
   // de int por int com `/` já devolve `double` em Dart, sem precisar de
   // nenhuma conversão extra.
-  double get toGrams => weightInMiligrams / 1000;
+  double get toGrams => weightInMilligrams / 1000;
 
   // Não existe `isNegative`: o `factory` já impede um Weight negativo de
   // existir, então esse getter nunca teria utilidade real.
-  bool get isPositive => weightInMiligrams > 0;
-  bool get isZero => weightInMiligrams == 0;
+  bool get isPositive => weightInMilligrams > 0;
+  bool get isZero => weightInMilligrams == 0;
 
   @override
-  List<Object?> get props => [weightInMiligrams];
+  List<Object?> get props => [weightInMilligrams];
 
   @override
   bool? get stringify => true;
