@@ -22,7 +22,7 @@ void main() {
         color: FilamentColor.blue,
         type: FilamentType.pla,
         diameterInMms: 1.75,
-        weightInGrams: Weight(weightInMiligrams: 2000),
+        weightInGrams: Weight(weightInMilligrams: 2000),
         totalCost: Money(amountInCents: 200, currency: 'EUR'),
       ),
     );
@@ -34,7 +34,7 @@ void main() {
         color: FilamentColor.blue,
         type: FilamentType.pla,
         diameterInMms: 1.75,
-        weightInGrams: Weight(weightInMiligrams: 2000),
+        weightInGrams: Weight(weightInMilligrams: 2000),
         totalCost: Money(amountInCents: 300, currency: 'EUR'),
       ),
     );
@@ -48,10 +48,10 @@ void main() {
           status: PrintStatus.successful,
           name: 'name',
           filamentUsage: [
-            (filamentId: 'a12', usedGrams: Weight(weightInMiligrams: 1000)),
-            (filamentId: 'b23', usedGrams: Weight(weightInMiligrams: 1000)),
+            (filamentId: 'a12', usedGrams: Weight(weightInMilligrams: 1000)),
+            (filamentId: 'b23', usedGrams: Weight(weightInMilligrams: 1000)),
           ],
-          finalWeight: Weight(weightInMiligrams: 3000),
+          finalWeight: Weight(weightInMilligrams: 3000),
           printTime: 1.2,
           dateTime: DateTime.now(),
         );
@@ -76,10 +76,10 @@ void main() {
             status: PrintStatus.successful,
             name: 'name',
             filamentUsage: [
-              (filamentId: 'a12', usedGrams: Weight(weightInMiligrams: 1000)),
-              (filamentId: 'b23', usedGrams: Weight(weightInMiligrams: 1000)),
+              (filamentId: 'a12', usedGrams: Weight(weightInMilligrams: 1000)),
+              (filamentId: 'b23', usedGrams: Weight(weightInMilligrams: 1000)),
             ],
-            finalWeight: Weight(weightInMiligrams: 3000),
+            finalWeight: Weight(weightInMilligrams: 3000),
             printTime: 1.2,
             dateTime: DateTime.now(),
           ),
@@ -99,7 +99,7 @@ void main() {
         color: FilamentColor.blue,
         type: FilamentType.pla,
         diameterInMms: 1.75,
-        weightInGrams: Weight(weightInMiligrams: 2000),
+        weightInGrams: Weight(weightInMilligrams: 2000),
         totalCost: Money(amountInCents: 200, currency: 'EUR'),
       ),
     );
@@ -111,7 +111,7 @@ void main() {
         color: FilamentColor.blue,
         type: FilamentType.pla,
         diameterInMms: 1.75,
-        weightInGrams: Weight(weightInMiligrams: 2000),
+        weightInGrams: Weight(weightInMilligrams: 2000),
         totalCost: Money(amountInCents: 300, currency: 'EUR'),
       ),
     );
