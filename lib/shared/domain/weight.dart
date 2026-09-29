@@ -22,7 +22,6 @@ class Weight extends Equatable {
     return Weight._(weightInMilligrams: weightInMilligrams);
   }
 
-  /// Atalho pra um `Weight` zerado.
   factory Weight.zero() {
     return Weight(weightInMilligrams: 0);
   }
