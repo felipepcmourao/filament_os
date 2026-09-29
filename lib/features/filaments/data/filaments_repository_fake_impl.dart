@@ -2,9 +2,8 @@ import 'package:filament_os/features/filaments/domain/filament.dart';
 import 'package:filament_os/features/filaments/domain/filaments_repository.dart';
 import 'package:filament_os/shared/domain/app_exception.dart';
 
-/// Implementação "fake" do `FilamentsRepository`: guarda tudo numa lista em
-/// memória, só pra desenvolver/testar sem precisar de um banco de dados de
-/// verdade ainda. Os dados somem quando o app fecha.
+/// Guarda tudo numa lista em memória, que some quando o app fecha.
+/// Ver ADR 0004.
 class FilamentsRepositoryFakeImpl implements FilamentsRepository {
   final List<Filament> _filamentList = [];
 
@@ -18,9 +17,6 @@ class FilamentsRepositoryFakeImpl implements FilamentsRepository {
     _filamentList.add(filament);
   }
 
-  // Encontra o item pelo `id` e substitui pela versão nova. `indexWhere`
-  // devolve `-1` quando não encontra nada — é esse cenário que a exceção
-  // cobre (ex: tentar atualizar um Filament que já foi removido).
   @override
   Future<void> update(Filament filament) async {
     final index = _filamentList.indexWhere((e) => e.id == filament.id);
@@ -28,9 +24,7 @@ class FilamentsRepositoryFakeImpl implements FilamentsRepository {
     _filamentList[index] = filament;
   }
 
-  // `removeWhere` não avisa se não removeu nada — por isso a checagem de
-  // tamanho antes/depois, pra detectar "pediram pra remover um id que não
-  // existe" e não falhar silenciosamente.
+  // `removeWhere` não avisa se não removeu nada; daí a comparação de tamanho.
   @override
   Future<void> remove(String id) async {
     final currentLength = _filamentList.length;

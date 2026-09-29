@@ -23,22 +23,11 @@ import 'package:go_router/go_router.dart';
 
 /// Lista o estoque de filamentos, alcançada por `/filaments`.
 ///
-/// `StatelessWidget`, não `ConsumerWidget`: quem guarda o estado é o
-/// `FilamentsListNotifier`, via `filamentsListProvider`, e só a parte da
-/// árvore que lê esse provider (`ref.watch`) precisa reconstruir a cada
-/// mudança. Um `Consumer` isolado em volta da lista cumpre isso — `Scaffold`
-/// e `AppBar` ficam fora do rebuild, que um `ConsumerWidget` na classe
-/// inteira não evitaria. Dentro do `Consumer`, trata os três estados
-/// (`loading`, `error`, `data`) do `AsyncValue<List<Filament>>` com `.when`.
+/// Só a lista fica num `Consumer`, para `Scaffold` e `AppBar` não
+/// reconstruírem a cada mudança. Ver ADR 0007.
 ///
-/// Cada `ListTile` mostra a mesma informação três vezes em linguagens
-/// diferentes, e isso é de propósito: o swatch colorido, o nome da cor escrito
-/// e o badge de estoque. Cor sozinha não informa quem não a distingue, e por
-/// isso nenhuma informação depende só dela aqui.
-///
-/// Adicionar e remover filamento chamam métodos do notifier
-/// (`addFilament`/`removeFilament`), nunca o repositório direto — a tela não
-/// conhece `FilamentsRepository`, só o provider que já expõe a lista pronta.
+/// Cada item mostra a cor também escrita e o estoque num badge: nenhuma
+/// informação depende só de cor, para quem não a distingue.
 class FilamentsPage extends StatelessWidget {
   const FilamentsPage({super.key});
 
@@ -75,13 +64,6 @@ class FilamentsPage extends StatelessWidget {
                         final status = StockStatus.fromWeight(filament.weight);
                         final color = Theme.of(context).extension<AppColors>();
                         return ListTile(
-                          // Navega por NOME, não por path: esta tela não sabe
-                          // que a URL do detalhe é `/filaments/<id>`, só que
-                          // existe um destino chamado `filamentDetails`.
-                          //
-                          // E passa o `id`, não o `filament`. A tela de destino
-                          // busca sozinha — é o que faz ela funcionar também
-                          // quando aberta por link, sem esta tela no caminho.
                           onTap: () => context.goNamed(
                             AppRouteNames.filamentDetails,
                             pathParameters: {AppPaths.idParam: filament.id},
@@ -119,11 +101,6 @@ class FilamentsPage extends StatelessWidget {
                               ),
                             ],
                           ),
-                          // O nome da cor aparece aqui como texto, e não só
-                          // como o quadradinho colorido do `leading`: quem não
-                          // distingue cores não recebe informação nenhuma de um
-                          // swatch sozinho. Texto ao lado resolve pra todo
-                          // mundo, sem depender de leitor de tela.
                           subtitle: Row(
                             children: [
                               Text(filament.type.label),
@@ -133,15 +110,8 @@ class FilamentsPage extends StatelessWidget {
                               Text(filament.color.label),
                             ],
                           ),
-                          // Swatch puramente decorativo — a informação que ele
-                          // carrega já está escrita no `subtitle`.
-                          //
-                          // A borda vem de `colorScheme.outline` porque a cor
-                          // do filamento é dado do produto e não se adapta ao
-                          // tema (ver `FilamentColorMaterial`): sem contorno,
-                          // um amarelo some no fundo claro e um cinza escuro
-                          // some no escuro. O contraste mora na borda, que o
-                          // tema controla, não na cor, que ele não deve tocar.
+                          // Borda no `outline` porque a cor do filamento não
+                          // muda com o tema: sem ela, o amarelo some no claro.
                           leading: Container(
                             decoration: BoxDecoration(
                               border: BoxBorder.all(
@@ -174,17 +144,10 @@ class FilamentsPage extends StatelessWidget {
   }
 }
 
-// Dados de demonstração, presos no arquivo enquanto não existe persistência.
-// O botão "Adicionar Filamento" despeja os três de uma vez só pra tela sair do
-// estado vazio — não é feature, é andaime.
+// Andaime até existir persistência: o botão "Adicionar Filamento" os usa.
 //
-// Os pesos não são arbitrários: 0g, 80g e 450g dão um filamento de cada
-// `StockStatus` (`exhausted`, `low` e `healthy`, com o limiar de 100g que o
-// `StockStatus.fromWeight` aplica). É o que permite ver os três badges lado a
-// lado sem mexer em nada. Mudar esses números apaga essa cobertura em silêncio.
-//
-// Saem daqui quando os dados vierem do Hive/Firestore. Enquanto isso, ficam
-// fora da classe de propósito: são fixture, não estado da tela.
+// Os pesos 0g, 80g e 450g dão um filamento de cada `StockStatus`; mudá-los
+// apaga essa cobertura em silêncio.
 final addedFilament1 = Filament(
   id: '00001',
   name: 'BambuLab PLA Silk',

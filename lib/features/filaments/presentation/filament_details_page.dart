@@ -7,20 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Detalhe de um filamento, alcançada por `/filaments/<id>`.
 ///
-/// Recebe o `id` e busca o filamento sozinha — não recebe um `Filament`
-/// pronto da tela anterior. É o que torna deep link viável: uma URL carrega
-/// texto, não objeto, então uma tela que só funciona quando a anterior lhe
-/// entrega a entidade quebra ao ser aberta de fora do app. O custo é ter que
-/// lidar com carregamento e com id inexistente, que é o que o `.when` abaixo
-/// faz, tratando `null` (id não encontrado na lista) como um caso de `data`,
-/// não de `error`.
-///
-/// `ConsumerWidget` que observa `filamentByIdProvider(id)` — um provider
-/// derivado de `filamentsListProvider`, não uma busca independente. Por
-/// isso um filamento adicionado na `FilamentsPage` aparece aqui: as duas
-/// telas leem a mesma lista, vinda da mesma instância de
-/// `FilamentsRepository`, em vez de cada uma instanciar a própria (o
-/// problema que existia antes da Sessão 6).
+/// Recebe o `id`, e não o `Filament`, para funcionar por deep link. Id
+/// inexistente chega como `null` em `data`: não achar não é falha.
+/// Ver ADR 0006.
 class FilamentDetailsPage extends StatelessWidget {
   final String id;
 
