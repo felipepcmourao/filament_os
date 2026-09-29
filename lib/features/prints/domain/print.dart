@@ -5,32 +5,17 @@ import 'package:filament_os/shared/domain/weight.dart';
 
 /// Um par (filamento usado + quantos gramas) dentro de uma impressão.
 ///
-/// É um Record (recurso do Dart 3), não uma classe própria — serve só pra
-/// agrupar esses dois valores relacionados sem risco de desincronização.
-/// Antes, isso era duas listas separadas (`usedFilamentIds` e
-/// `quantityInGramsPerFilament`) que precisavam ficar do mesmo tamanho e na
-/// mesma ordem manualmente; com o Record dentro de uma lista, cada item já
-/// carrega os dois valores juntos.
+/// Record, e não duas listas paralelas, para os dois valores não se
+/// desencontrarem.
 typedef FilamentUsage = ({String filamentId, Weight usedGrams});
 
 /// Uma impressão feita, podendo usar mais de um filamento (multi-material).
 ///
-/// Pertence a um usuário (`ownerId`) e referencia os filamentos usados só
-/// pelo `id` (não guarda o `Filament` inteiro) — assim, se o preço de um
-/// filamento mudar depois no estoque, o custo de impressões antigas não é
-/// afetado retroativamente. `totalCost` é o custo já calculado (proporcional
-/// ao quanto foi usado de cada filamento), montado por quem cria o `Print`
-/// (ex: `RegisterPrint`), não recalculado aqui.
-///
-/// Mesmo padrão de `factory` + construtor privado do resto do domínio.
+/// `totalCost` chega calculado por quem cria o `Print` e nunca é recalculado:
+/// mudar o preço de um filamento depois não altera impressões antigas.
 class Print extends Equatable {
   final String id;
   final String name;
-
-  // String solta, não uma referência a uma entity `User` — o domínio de
-  // usuário foi removido (existia sem invariantes, sem factory e com
-  // campos que nada no app usava). Volta como entity de verdade quando a
-  // autenticação for implementada.
   final String ownerId;
   final List<FilamentUsage> filamentUsage;
 
@@ -43,8 +28,6 @@ class Print extends Equatable {
   final Weight finalWeight;
   final Money totalCost;
 
-  /// Construtor privado: só guarda os valores. A validação já aconteceu
-  /// no `factory` antes de chegar aqui.
   const Print._({
     required this.id,
     required this.name,
@@ -57,7 +40,6 @@ class Print extends Equatable {
     required this.totalCost,
   });
 
-  /// Único jeito público de criar um `Print`. Cada `if` é uma invariante.
   factory Print({
     required String id,
     required String name,
@@ -77,7 +59,6 @@ class Print extends Equatable {
       );
     }
 
-    // Nome é o identificador legível da impressão.
     if (name.trim().isEmpty) {
       throw ArgumentError.value(
         name,
@@ -86,7 +67,6 @@ class Print extends Equatable {
       );
     }
 
-    // Multi-usuário: toda impressão precisa pertencer a um dono.
     if (ownerId.trim().isEmpty) {
       throw ArgumentError.value(
         ownerId,
@@ -95,8 +75,6 @@ class Print extends Equatable {
       );
     }
 
-    // Uma impressão sem nenhum filamento usado não representa uma
-    // impressão real — precisa de pelo menos um item na lista.
     if (filamentUsage.isEmpty) {
       throw ArgumentError.value(
         filamentUsage,
@@ -105,8 +83,7 @@ class Print extends Equatable {
       );
     }
 
-    // O próprio `Weight` já impede valor negativo na criação; falta só
-    // barrar zero, que também não representa uma peça impressa real.
+    // Negativo o `Weight` já barra; aqui falta só o zero.
     if (finalWeight.isZero) {
       throw ArgumentError.value(
         finalWeight,
@@ -115,7 +92,6 @@ class Print extends Equatable {
       );
     }
 
-    // Tempo de impressão zero ou negativo não faz sentido fisicamente.
     if (printTime <= 0) {
       throw ArgumentError.value(
         printTime,
@@ -124,9 +100,8 @@ class Print extends Equatable {
       );
     }
 
-    // Mesmo raciocínio do Filament/Sale: Money permite negativo de
-    // propósito (serve pra prejuízo em Sale), então essa checagem é
-    // responsabilidade do Print, não do Money em si.
+    // `Money` aceita negativo de propósito (prejuízo de uma `Sale`), então
+    // quem proíbe custo negativo é o `Print`.
     if (totalCost.isNegative) {
       throw ArgumentError.value(
         totalCost,

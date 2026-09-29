@@ -2,9 +2,8 @@ import 'package:filament_os/features/prints/domain/print_status.dart';
 
 /// Nome exibido de cada estado de impressão.
 ///
-/// Mesmo padrão de `FilamentColorLabel`. Os três são substantivos ('Falha',
-/// não 'Falhou'): rotulam o estado atual da impressão, não o evento que a
-/// colocou nele.
+/// Substantivos ('Falha', não 'Falhou'): rotulam o estado atual da
+/// impressão, não o evento que a colocou nele.
 extension PrintStatusLabel on PrintStatus {
   String get label {
     switch (this) {
