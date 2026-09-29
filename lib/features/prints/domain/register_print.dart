@@ -101,8 +101,8 @@ class RegisterPrint {
       // entre o quanto foi usado e o quanto o filamento tinha ANTES de
       // consumir.
       final cost = filament.totalCost.scaleByRatio(
-        e.usedGrams.weightInMiligrams,
-        filament.weightInGrams.weightInMiligrams,
+        e.usedGrams.weightInMilligrams,
+        filament.weightInGrams.weightInMilligrams,
       );
       totalCost = totalCost == null ? cost : totalCost + cost;
     }
