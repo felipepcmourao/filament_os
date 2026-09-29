@@ -7,7 +7,7 @@ Built with Flutter, Clean Architecture, Riverpod and GoRouter. Every structural 
 ![Flutter](https://img.shields.io/badge/Flutter-3.44-02569B?logo=flutter)
 ![Dart](https://img.shields.io/badge/Dart-3.11-0175C2?logo=dart)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green)
-<!-- CI badge goes here after the GitHub Actions workflow is added -->
+[![CI](https://github.com/felipepcmourao/filament_os/actions/workflows/ci.yml/badge.svg)](https://github.com/felipepcmourao/filament_os/actions/workflows/ci.yml)
  
 ## Why
  
