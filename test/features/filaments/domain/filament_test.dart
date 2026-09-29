@@ -116,11 +116,11 @@ void main() {
         color: FilamentColor.blue,
         type: FilamentType.petg,
         diameterInMms: 1.75,
-        weight: Weight.fromGrams(weight: 200),
+        weight: Weight.fromGrams(weightInGrams: 200),
         totalCost: Money(amountInCents: 10000, currency: 'EUR'),
       );
       final filament2 = filament1.consumeGrams(
-        Weight.fromGrams(weight: 100),
+        Weight.fromGrams(weightInGrams: 100),
       );
       expect(filament1 == filament2, false);
     },

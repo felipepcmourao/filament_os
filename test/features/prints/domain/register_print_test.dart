@@ -129,14 +129,14 @@ void main() {
             filamentUsage: [
               (
                 filamentId: 'idErrada',
-                usedGrams: Weight.fromGrams(weight: 100),
+                usedGrams: Weight.fromGrams(weightInGrams: 100),
               ),
               (
                 filamentId: 'b23',
-                usedGrams: Weight.fromGrams(weight: 100),
+                usedGrams: Weight.fromGrams(weightInGrams: 100),
               ),
             ],
-            finalWeight: Weight.fromGrams(weight: 200),
+            finalWeight: Weight.fromGrams(weightInGrams: 200),
             printTime: 1.2,
             dateTime: DateTime.now(),
           ),

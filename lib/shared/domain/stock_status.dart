@@ -24,7 +24,7 @@ enum StockStatus {
   /// `Filament` — ou preferência do dono — quando essa feature existir.
   factory StockStatus.fromWeight(Weight weight) {
     if (weight.isZero) return StockStatus.exhausted;
-    if (weight < Weight.fromGrams(weight: 100)) return StockStatus.low;
+    if (weight < Weight.fromGrams(weightInGrams: 100)) return StockStatus.low;
     return StockStatus.healthy;
   }
 }
