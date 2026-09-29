@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 /// Texto para falha que o app não reconhece, ou que o usuário não resolve:
 /// não promete que repetir resolve, nem afirma uma causa.
 ///
-/// Mora aqui, e não no arquivo da extension, porque o dono dele é o caso "não
-/// é uma exceção minha", que só este widget conhece; a extension o usa
-/// emprestado.
+/// Mora aqui, e não na extension, porque é o texto do caso "não é exceção
+/// minha", que só este widget conhece.
 const String generalErrorMessage =
     'Algo deu errado. Se continuar, avise o suporte';
 
