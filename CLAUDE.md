@@ -64,6 +64,18 @@ Comentários de código e ADRs continuam em português.
 
 Separe commits por assunto: correção de dívida técnica não vai junto com feature nova.
 
+## Comentários
+
+Código que se explica; o "porquê" das decisões mora nos ADRs (docs/adr/).
+
+- **Remova** o comentário que diz o que o código faz, quando o código já deixa isso claro.
+- **Mantenha**, em no máximo 1–2 linhas, o que explica um porquê que o código não mostra.
+- **Justificativa longa vai para o ADR da decisão**, e o código fica só com a referência (`Ver ADR 0005.`). Se o ADR ainda não tiver o raciocínio, acrescente lá — não crie ADR novo só para isso.
+- **Doc-comment de API pública** (classe, factories) fica, mas curto: uma frase do que é + a invariante, se houver.
+- Em português, no estilo do arquivo, com `dart format` limpo.
+
+Referência: lib/shared/domain/weight.dart (PR #3)
+
 ## Estado atual
 
 O projeto segue um roadmap de sessões progressivas que vive no Notion (`myDesk → studies → projetos → FilamentOS → Roadmap`). Cada sessão traz teoria, exercícios e um checklist de aprovação.
