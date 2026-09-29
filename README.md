@@ -1,7 +1,3 @@
-
-
-
-Readme · MD
 # FilamentOS
  
 **Stock, cost-per-print and sales tracker for 3D printing makers.**
@@ -28,6 +24,7 @@ FilamentOS registers the filament you buy, debits what each print uses, and calc
 - **Navigation decoupled from screens.** Screens navigate by route name, detail pages receive only an id, and the selected tab is derived from the URL. Deep links and unknown routes (404) work. See [ADR 0006](docs/adr/0006-navegacao.md).
 - **Presentation rules out of the domain.** Language, unit, decimal separator and formatting live in `*Label` extensions in the presentation layer, never in the domain.
 - **A hand-built design system.** Light and dark themes with color pairs from a `ThemeExtension`, instead of `ColorScheme.fromSeed`. See [ADR 0003](docs/adr/0003-design-system.md).
+
 ## Architecture
  
 Feature-first folders, each split into layers:
@@ -133,6 +130,7 @@ I use Claude to:
 - Explain concepts behind each decision (architecture, invariants, testing)
 - Review my code before I merge it
 - Draft code comments, commit messages and pull request descriptions
+
 About half of the commits carry `Co-Authored-By: Claude`. In those, the code is mine; the trailer marks that Claude drafted the commit message or comments, or reviewed the change.
  
 The comment cleanup PRs (#3, #5, #9 to #13) were executed by Claude Code, following comment guidelines I set in `CLAUDE.md`, and I reviewed each one before merging. Those commits don't carry the trailer, so this section is the record of that work.
