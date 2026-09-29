@@ -73,7 +73,7 @@ class FilamentsPage extends StatelessWidget {
                       itemBuilder: (context, int index) {
                         final filament = data[index];
                         final status = StockStatus.fromWeight(
-                          filament.weightInGrams,
+                          filament.weight,
                         );
                         final color = Theme.of(context).extension<AppColors>();
                         return ListTile(
@@ -130,7 +130,7 @@ class FilamentsPage extends StatelessWidget {
                             children: [
                               Text(filament.type.label),
                               const VerticalDivider(),
-                              Text(filament.weightInGrams.label),
+                              Text(filament.weight.label),
                               const VerticalDivider(),
                               Text(filament.color.label),
                             ],

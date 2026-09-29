@@ -102,7 +102,7 @@ class RegisterPrint {
       // consumir.
       final cost = filament.totalCost.scaleByRatio(
         e.usedGrams.weightInMilligrams,
-        filament.weightInGrams.weightInMilligrams,
+        filament.weight.weightInMilligrams,
       );
       totalCost = totalCost == null ? cost : totalCost + cost;
     }
