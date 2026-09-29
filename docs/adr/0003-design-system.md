@@ -24,6 +24,8 @@ Enums de domínio como `FilamentColor` e `StockStatus` não têm nenhuma depend�
 ### Cor como dado do produto vs. cor como decisão visual
 As duas extensions de cor seguem regras opostas, de propósito. Em `StockStatusMaterial` a cor **é** decisão visual: estoque baixo não é amarelo no mundo físico, é amarelo porque o design system decidiu que alerta é amarelo, e essa decisão muda com o tema. Por isso ela lê os tokens de `AppColors` (o par `x`/`xContainer`) em vez de `Colors.amber`. Em `FilamentColorMaterial` é o contrário: a cor de um filamento é dado do produto, não muda com o tema, e por isso vem da paleta bruta do Material.
 
+O custo dessa escolha é não controlar o contraste: `Colors.yellow` sobre a `surface` clara quase desaparece, e um cinza escuro some no tema escuro. A saída não é distorcer o dado, e sim dar contraste em volta dele: o swatch da `FilamentsPage` tem borda em `colorScheme.outline`, que o tema controla. E, como reforço que não depende de cor, o nome da cor aparece escrito ao lado, então quem não distingue cores não depende do swatch.
+
 ## Consequências
 
 ### Positivas

@@ -3,22 +3,8 @@ import 'package:flutter/material.dart';
 
 /// Cor visível de cada `FilamentColor`.
 ///
-/// Devolve a paleta bruta do Material (`Colors.blue`, `Colors.yellow`), e não
-/// tokens do `AppColors`, **de propósito** — é a exceção deliberada à regra
-/// "nunca use valor de cor direto no widget".
-///
-/// A razão: aqui a cor não é uma decisão visual, é um dado do produto. O
-/// plástico na bobina é amarelo no mundo físico, e continua amarelo com o
-/// app no tema claro ou escuro. Um token que se adapta ao brightness estaria
-/// mentindo sobre o material — é o oposto do que `StockStatusMaterial` faz,
-/// onde a cor É decisão visual e por isso vem do design system.
-///
-/// O custo dessa escolha é não controlar o contraste: `Colors.yellow` sobre
-/// a `surface` clara quase desaparece. A saída não é distorcer o dado, e sim
-/// dar contraste em volta dele — o swatch da lista de filamentos usa uma
-/// borda em `colorScheme.outline` para isso. E, como reforço independente de
-/// cor, o nome do filamento também aparece escrito (ver `FilamentColorLabel`),
-/// então quem não distingue cores não depende deste swatch.
+/// Vem da paleta bruta do Material, e não de tokens, de propósito: cor de
+/// filamento é dado do produto, não decisão visual. Ver ADR 0003.
 extension FilamentColorMaterial on FilamentColor {
   Color toMaterial() {
     switch (this) {
