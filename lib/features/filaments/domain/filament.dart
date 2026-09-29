@@ -50,7 +50,7 @@ class Filament extends Equatable {
     required FilamentColor color,
     required FilamentType type,
     required double diameterInMms,
-    required Weight weightInGrams,
+    required Weight weight,
     required Money totalCost,
   }) {
     if (id.trim().isEmpty) {
@@ -104,7 +104,7 @@ class Filament extends Equatable {
       color: color,
       type: type,
       diameterInMms: diameterInMms,
-      weight: weightInGrams,
+      weight: weight,
       totalCost: totalCost,
     );
   }
@@ -124,7 +124,7 @@ class Filament extends Equatable {
       color: color,
       type: type,
       diameterInMms: diameterInMms,
-      weightInGrams: weight - usedWeight,
+      weight: weight - usedWeight,
       totalCost: totalCost,
     );
   }

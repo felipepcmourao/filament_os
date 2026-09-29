@@ -88,7 +88,7 @@ class FilamentRepositoryForTest2 implements FilamentsRepository {
         color: FilamentColor.blue,
         type: FilamentType.pla,
         diameterInMms: 1.75,
-        weightInGrams: Weight(weightInMilligrams: 10000000),
+        weight: Weight(weightInMilligrams: 10000000),
         totalCost: Money(amountInCents: 5000, currency: 'EUR'),
       ),
     ];

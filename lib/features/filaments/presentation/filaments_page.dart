@@ -194,7 +194,7 @@ final addedFilament1 = Filament(
   type: FilamentType.plaSilk,
   diameterInMms: 1.75,
   color: FilamentColor.yellow,
-  weightInGrams: Weight.fromGrams(weightInGrams: 0),
+  weight: Weight.fromGrams(weight: 0),
   totalCost: Money(amountInCents: 1000, currency: 'EUR'),
 );
 
@@ -205,7 +205,7 @@ final addedFilament2 = Filament(
   type: FilamentType.plaSilk,
   diameterInMms: 1.75,
   color: FilamentColor.pink,
-  weightInGrams: Weight.fromGrams(weightInGrams: 80),
+  weight: Weight.fromGrams(weight: 80),
   totalCost: Money(amountInCents: 1000, currency: 'EUR'),
 );
 
@@ -216,6 +216,6 @@ final addedFilament3 = Filament(
   type: FilamentType.plaSilk,
   diameterInMms: 1.75,
   color: FilamentColor.blue,
-  weightInGrams: Weight.fromGrams(weightInGrams: 450),
+  weight: Weight.fromGrams(weight: 450),
   totalCost: Money(amountInCents: 1000, currency: 'EUR'),
 );

@@ -38,8 +38,8 @@ class Weight extends Equatable {
   /// Converte um valor em gramas (a unidade real, digitada pelo usuário ou
   /// lida de uma balança) pro miligramas internos. Centraliza essa conta
   /// aqui pra não repetir `* 1000` em cada lugar que recebe gramas.
-  factory Weight.fromGrams({required double weightInGrams}) {
-    return Weight(weightInMilligrams: (weightInGrams * 1000).round());
+  factory Weight.fromGrams({required double weight}) {
+    return Weight(weightInMilligrams: (weight * 1000).round());
   }
 
   Weight operator +(Weight other) {
