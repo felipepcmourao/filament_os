@@ -58,9 +58,25 @@ O `ColorScheme` é escrito à mão (não `fromSeed`) por decisão deliberada —
 
 ## Commits
 
-Conventional Commits com **descrição em português** (o tipo — `feat`, `fix`, `refactor` — fica em inglês, é parte da spec). Rode `git log --oneline -5` para conferir o tom antes de escrever.
+Conventional Commits **inteiramente em inglês**, tipo e descrição (ex.: `refactor(shared): trim comments in Weight`). Título e descrição de PR também em inglês, e a descrição tem três seções: What, Why e How to verify. Commits antigos em português ficam como estão — não reescreva o histórico. Rode `git log --oneline -5` para conferir o tom antes de escrever.
+
+Comentários de código e ADRs continuam em português.
 
 Separe commits por assunto: correção de dívida técnica não vai junto com feature nova.
+
+## Comentários
+
+Código que se explica; o "porquê" das decisões mora nos ADRs (docs/adr/).
+
+- **Remova** o comentário que diz o que o código faz, quando o código já deixa isso claro.
+- **Mantenha**, em no máximo 1–2 linhas, o que explica um porquê que o código não mostra.
+- **Justificativa longa vai para o ADR da decisão**, e o código fica só com a referência (`Ver ADR 0005.`). Se o ADR ainda não tiver o raciocínio, acrescente lá — não crie ADR novo só para isso.
+- **Doc-comment de API pública** (classe, factories) fica se disser algo além do nome, e curto: uma frase do que é + a invariante, se houver.
+- **Não repita o nome** do método ou da classe no doc-comment (`Weight.zero()` já diz "peso zerado").
+- **Não comente o que não existe** ("não há `isNegative` porque..."): a invariante documentada já explica.
+- Em português, no estilo do arquivo, com `dart format` limpo.
+
+Referência: lib/shared/domain/weight.dart (PR #3)
 
 ## Estado atual
 

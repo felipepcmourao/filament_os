@@ -72,9 +72,7 @@ class FilamentsPage extends StatelessWidget {
                       itemCount: data.length,
                       itemBuilder: (context, int index) {
                         final filament = data[index];
-                        final status = StockStatus.fromWeight(
-                          filament.weight,
-                        );
+                        final status = StockStatus.fromWeight(filament.weight);
                         final color = Theme.of(context).extension<AppColors>();
                         return ListTile(
                           // Navega por NOME, não por path: esta tela não sabe

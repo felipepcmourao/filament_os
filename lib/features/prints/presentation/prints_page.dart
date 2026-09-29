@@ -84,7 +84,9 @@ class PrintsPage extends StatelessWidget {
                                       ),
                                     ),
                                   ],
-                                  finalWeight: Weight(weightInMilligrams: 30000),
+                                  finalWeight: Weight(
+                                    weightInMilligrams: 30000,
+                                  ),
                                   printTime: 1.25,
                                   dateTime: DateTime.now(),
                                 );
