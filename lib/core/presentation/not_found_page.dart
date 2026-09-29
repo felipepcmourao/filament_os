@@ -5,30 +5,14 @@ import 'package:go_router/go_router.dart';
 
 /// Tela mostrada quando a URL não corresponde a rota nenhuma.
 ///
-/// Mora em `core/`, e não numa feature, porque não pertence a nenhuma: um
-/// caminho inválido não é assunto de filamentos nem de impressões. E fica em
-/// `core/presentation/`, separada de `core/router/`, porque é um widget — a
-/// pasta do roteador guarda configuração, não tela.
+/// Não é "filamento não encontrado": `/filaments/id-inexistente` casa com a
+/// rota `:id`, e quem trata a ausência é a `FilamentDetailsPage`.
 ///
-/// **Não confundir com "filamento não encontrado".** São dois erros em
-/// camadas diferentes: `/filamentos` (em português) não casa com rota alguma
-/// e cai aqui; já `/filaments/id-inexistente` casa perfeitamente com a rota
-/// `:id` — ali o roteador acertou, e quem trata a ausência é a própria
-/// `FilamentDetailsPage`, depois de consultar o repositório.
+/// Mostra a URL tentada para ajudar a depurar, mas como detalhe, abaixo da
+/// explicação: quem lê quer primeiro saber o que houve.
 ///
-/// Exibe a URL tentada porque "não encontrado" sem dizer *o quê* não ajuda
-/// ninguém a depurar — mas em `bodyMedium`, abaixo da explicação em
-/// `titleMedium`: quem lê quer primeiro saber o que houve, o resto é detalhe.
-///
-/// Não exibe o erro do roteador. A `message` da `GoException` é texto do
-/// go_router, em inglês, e diz o mesmo que a linha de cima ("no routes for
-/// location: /x") — repetir a URL em vocabulário de biblioteca não informa
-/// nem orienta ninguém.
-///
-/// O botão para a home não é enfeite. Esta tela costuma ser alcançada por URL
-/// direta, sem tela anterior na pilha, então sem ele o usuário fica num beco
-/// sem saída. Usa `go` porque não há para onde voltar — é substituição de
-/// caminho, não empilhamento.
+/// O botão para a home evita um beco sem saída, porque esta tela costuma
+/// chegar por URL direta, sem nada na pilha; por isso `go`, e não `push`.
 class NotFoundPage extends StatelessWidget {
   final String uri;
   const NotFoundPage({super.key, required this.uri});

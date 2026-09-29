@@ -12,36 +12,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-/// Onde a aplicação é montada: o único arquivo que conhece todas as telas.
+/// Onde a aplicação é montada: o único arquivo que conhece todas as telas, e
+/// por isso não é uma feature. Ver ADR 0006.
 ///
-/// Isso pode parecer violar a regra "nenhuma feature importa a presentation
-/// de outra", mas não viola — ele não é uma feature. É o papel que o
-/// `main.dart` tinha antes: existe para conhecer todo mundo, justamente para
-/// que as features não precisem se conhecer entre si.
-///
-/// Expõe duas coisas, e a diferença entre elas é o ponto:
-///
-/// - `createRouter(ref)` monta um `GoRouter` **novo** a cada chamada — é o
-///   que os testes usam, cada um com seu próprio `ProviderContainer`, pra não
-///   herdar posição de navegação uns dos outros (mesma armadilha da lista
-///   `static` que foi revertida no repositório fake).
-/// - `routerProvider`, declarado fora da classe (top-level, como todo
-///   provider deste projeto), é quem a produção usa. `Provider<GoRouter>`
-///   computa `createRouter(ref)` uma vez só por container e guarda o
-///   resultado — o mesmo mecanismo de cache que já protege
-///   `filamentsRepositoryProvider` contra recriar o repositório a cada
-///   rebuild, aplicado aqui pro roteador. Antes da Sessão 6, essa garantia
-///   vinha de um campo `static final router` nesta classe; saiu quando o
-///   `redirect` passou a depender de `ref` (roteador reativo a
-///   `authProvider`), porque `static` não tem de onde pegar um `ref` de
-///   dentro do `ProviderScope`.
-///
-/// `createRouter` continua `static` mesmo assim: não guarda estado nenhum
-/// (recebe `ref` de fora), então não precisa de instância de `AppRouter` pra
-/// existir. Não é a `factory` do Dart, e não poderia ser: aquela palavra-chave
-/// só devolve a própria classe, e o que se fabrica aqui é um `GoRouter`, não
-/// um `AppRouter`. Esta classe nunca é instanciada — é só o nome que agrupa a
-/// fábrica.
+/// `createRouter` fabrica um `GoRouter` novo a cada chamada, e é o que todo
+/// teste deve usar; a produção usa o `routerProvider`. Ver ADR 0007.
 class AppRouter {
   static GoRouter createRouter(Ref ref) {
     final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -61,20 +36,11 @@ class AppRouter {
       refreshListenable: goRouterRefreshNotifier,
       navigatorKey: rootNavigatorKey,
       initialLocation: AppPaths.home,
-      // Rede de segurança para URLs que não casam com nenhuma rota. Só pega
-      // erro de roteamento: `/filaments/id-inexistente` NÃO passa por aqui,
-      // porque casa com a rota `:id` — aquela ausência é tratada dentro da
-      // `FilamentDetailsPage`, depois de consultar o repositório.
+      // Nada aqui pode lançar: daí `toString()`, e não `toFilePath()`, que
+      // lança com query string ou fragmento, justo a URL torta que chega aqui.
       //
-      // Nada aqui dentro pode lançar. Este é o tratador de erros: se ele
-      // quebrar, o app fecha justamente enquanto tentava explicar o problema.
-      // Daí `toString()` em vez de `toFilePath()` — este último lança quando
-      // a URI tem query string ou fragmento, que é exatamente o tipo de URL
-      // torta que chega aqui.
-      //
-      // `state.error` existe e é ignorado de propósito: a mensagem dele vem
-      // do go_router, em inglês e em vocabulário de biblioteca, e só repete
-      // a URL que a `NotFoundPage` já mostra.
+      // `state.error` é ignorado: vem do go_router, em inglês, e só repete a
+      // URL que a `NotFoundPage` já mostra.
       errorBuilder: (context, state) {
         final uri = state.uri.toString();
         return NotFoundPage(uri: uri);
@@ -103,14 +69,8 @@ class AppRouter {
               path: AppPaths.filaments,
               builder: (context, state) => const FilamentsPage(),
               name: AppRouteNames.filaments,
-              // O detalhe é FILHA de /filaments, e isso não é organização de
-              // arquivo: `go` reconstrói a pilha a partir da árvore, então navegar
-              // pro detalhe empilha a lista embaixo e o botão de voltar leva de
-              // volta a ela sem uma linha de código pra isso.
-              //
-              // O path da filha é relativo (`:id`, sem barra na frente) — com barra
-              // o go_router o trataria como caminho absoluto e o aninhamento não
-              // aconteceria.
+              // Path relativo, sem barra na frente: com barra o go_router o
+              // trata como absoluto e o aninhamento some. Ver ADR 0006.
               routes: [
                 GoRoute(
                   path: AppPaths.idSegm,
@@ -133,10 +93,6 @@ class AppRouter {
             ),
           ],
         ),
-        // Início, filamentos e impressões são irmãs de propósito: são áreas
-        // paralelas do app, não telas empilhadas. A consequência é que `go`
-        // entre elas não deixa botão de voltar — o que passa a fazer sentido
-        // quando a barra de navegação persistente entrar.
       ],
     );
   }

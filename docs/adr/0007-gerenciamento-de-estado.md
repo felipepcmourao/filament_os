@@ -38,6 +38,13 @@ Criar `di/` como pasta irmã de `domain/`, `data/` e `presentation/` resolve as 
 
 Escopo da mudança, explícito porque não é tudo que mexeu: **só os providers de injeção** (repositório, use case) foram pra `di/`. Os de estado de tela (`filamentsListProvider`, `filamentByIdProvider`) continuam em `presentation/`, e os cross-cutting (`authProvider`, `themeModeProvider`, `routerProvider`) continuam em `core/<área>`.
 
+### O roteador como provider
+`AppRouter` expõe duas coisas, e a diferença entre elas é o ponto. `AppRouter.createRouter(ref)` monta um `GoRouter` **novo** a cada chamada: é o que os testes usam, cada um com seu `ProviderContainer`, para não herdar posição de navegação uns dos outros (a mesma armadilha da lista `static` revertida no repositório fake). `routerProvider`, top-level como todo provider do projeto, é o que a produção usa: `Provider<GoRouter>` computa `createRouter(ref)` uma vez por container e guarda o resultado, o mesmo cache que impede `filamentsRepositoryProvider` de recriar o repositório a cada rebuild.
+
+Antes desta sessão, a instância única vinha de um campo `static final router` em `AppRouter`. Saiu quando o `redirect` passou a depender de `ref` para reagir a `authProvider`, porque um campo `static` não tem de onde pegar um `ref` de dentro do `ProviderScope`.
+
+`createRouter` continua `static`: não guarda estado (recebe `ref` de fora), então não precisa de instância. Não é a `factory` do Dart, e não poderia ser, porque aquela palavra-chave só devolve a própria classe, e aqui se fabrica um `GoRouter`. `AppRouter` nunca é instanciada; é só o nome que agrupa a fábrica.
+
 ### Regra para `autoDispose`
 A regra adotada: **`autoDispose` é para provider cujo argumento cresce sem limite ao longo de uma sessão de uso e cujo valor não precisa sobreviver a quem o pediu.** Provider "de infraestrutura" — repositório, serviço, autenticação, tema, roteador — nunca leva `autoDispose`, porque precisa viver pelo tempo de vida inteiro do app: é literalmente o requisito de "instância única" da sessão, e descartá-lo assim que o último `ref.watch` saísse da árvore quebraria essa garantia na próxima tela que precisasse dele. É por isso que `filamentsRepositoryProvider`, `printsRepositoryProvider`, `registerPrintProvider`, `authProvider`, `themeModeProvider`, `routerProvider` e `filamentsListProvider` não usam.
 

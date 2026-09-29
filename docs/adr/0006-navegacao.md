@@ -21,6 +21,15 @@ Registrado por honestidade: o `go_router` veio dado pelo roadmap do projeto e j�
 
 O efeito é que nenhuma tela conhece o formato das URLs: mudar `/filaments/:id` para outra coisa é uma linha no roteador e zero widget tocado. Isso não é só intenção documentada — nenhuma tela importa `AppPaths` hoje, e o compilador confirma.
 
+Os caminhos ficam todos em `core/`, e não cada um na sua feature, pelo mesmo motivo: uma feature que precisasse do path de outra teria que importá-la. De quebra, ver o espaço de URLs inteiro num arquivo só torna visível uma colisão de path que ficaria escondida se cada feature declarasse a sua.
+
+### A barra de navegação tem uma fonte só, e a aba acesa é derivada
+`NavBarOptions.all` guarda ícone, rótulo, nome de rota e ordem juntos num Record (`NavigationBarOption`), e o `AppShell` deriva dela as `destinations`, a aba acesa e o destino do toque. Já foram duas listas paralelas — nomes de rota no `AppRouteNames`, ícones e rótulos no `AppShell` — alinhadas à mão, sem nada no compilador verificando. Medido: naquele desenho, reordenar só uma delas deixava a suíte vermelha; com a lista única, reordenar mantém tudo verde, porque não há segunda lista para discordar. É o mesmo motivo que fez `FilamentUsage` virar um Record no domínio: valores que precisam andar juntos andam juntos. A lista guarda `IconData`, e não `Icon`, porque o primeiro é dado e o segundo é widget; o `Icon` nasce no `build` do `AppShell`, onde tamanho e cor são decididos.
+
+A aba acesa é **derivada** da URL a cada build, nunca guardada num campo, e por isso o `AppShell` é `StatelessWidget`. Guardar um índice criaria uma segunda fonte de verdade, que desincronizaria na primeira navegação que não viesse da barra: um botão da `HomePage` ou um deep link direto em `/prints` mudariam a tela sem passar pelo `onDestinationSelected`, e a barra ficaria acesa na aba errada. É a mesma ideia do `StockStatus`, calculado a partir do peso em vez de viver no `Filament`.
+
+Quando a rota atual não é nenhuma aba, a busca devolve -1, e a `NavigationBar` estoura uma assertion com índice fora da faixa — uma tela que quebra por causa da própria decoração é pior que uma aba acesa errada. O fallback é a Home, alinhado ao `initialLocation`: se o app assume a Home quando não há URL, a barra assume o mesmo quando não reconhece a URL. As duas saídas são mentira, porque a `NavigationBar` não aceita "nenhuma aba selecionada"; escolhe-se a menos surpreendente. O índice da Home é procurado na lista, não escrito à mão, para que reordenar `NavBarOptions.all` não mude em silêncio para onde o fallback aponta.
+
 ### Telas de detalhe recebem id, nunca a entity
 Esta é a decisão com mais consequência. Uma tela de detalhe recebe o **identificador** e busca o dado no repositório; nunca recebe o objeto de domínio pronto da tela anterior.
 
