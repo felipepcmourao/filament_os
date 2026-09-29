@@ -14,6 +14,16 @@ Como este é um projeto de estudo, eles também favorecem a prática de conceito
 
 Além disso, uma organização previsível e consistente facilita a leitura e a manutenção do código, tanto por pessoas quanto por ferramentas de apoio ao desenvolvimento.
 
+### Ordem das escritas no `RegisterPrint`
+O `RegisterPrint` grava o `Print` **antes** das baixas de estoque, e a ordem não é acidental. As duas escritas não são atômicas (não há transação por trás delas), então uma pode falhar depois de a outra ter sido gravada. A escolha é sobre qual das duas inconsistências sobra:
+
+- **`Print` gravado, baixas não:** o estoque fica alto demais, mas o `filamentUsage` do `Print` diz exatamente quais filamentos e quantos gramas, e dá para refazer a baixa a partir dele.
+- **Baixas gravadas, `Print` não:** sumiu material do estoque e nada no app explica para onde foi. O nome, o tempo e o custo da impressão não estão em lugar nenhum, e não há como reconstruir.
+
+O `Print` é o evento, o fato que aconteceu; o estoque é estado derivado dele. Grava-se o evento primeiro porque só ele reconstrói o outro lado.
+
+O conserto de verdade é fazer as duas escritas numa única operação atômica (transação ou batch do Firestore, ou o equivalente no Hive). Enquanto os repositórios forem listas em memória, escolher a ordem é tudo o que dá para fazer.
+
 ## Consequências
 
 A adoção dessa estrutura aumenta a quantidade inicial de arquivos, abstrações e configurações. Para funcionalidades pequenas, isso pode representar um custo adicional e até resultar em complexidade desnecessária.
