@@ -19,32 +19,32 @@ class Weight extends Equatable {
   /// Único jeito público de criar um `Weight`. Um peso negativo não existe
   /// fisicamente, então essa é a única invariante — zero é permitido (ex:
   /// um Filament pode ficar sem estoque sem deixar de existir).
-  factory Weight({required int weightInMiligrams}) {
-    if (weightInMiligrams < 0) {
+  factory Weight({required int weightInMilligrams}) {
+    if (weightInMilligrams < 0) {
       throw ArgumentError.value(
-        weightInMiligrams,
-        'weightInMiligrams',
+        weightInMilligrams,
+        'weightInMilligrams',
         'O peso não pode ser negativo.',
       );
     }
-    return Weight._(weightInMilligrams: weightInMiligrams);
+    return Weight._(weightInMilligrams: weightInMilligrams);
   }
 
   /// Atalho pra um `Weight` zerado, útil pra comparações (ex: `isZero`).
   factory Weight.zero() {
-    return Weight(weightInMiligrams: 0);
+    return Weight(weightInMilligrams: 0);
   }
 
   /// Converte um valor em gramas (a unidade real, digitada pelo usuário ou
   /// lida de uma balança) pro miligramas internos. Centraliza essa conta
   /// aqui pra não repetir `* 1000` em cada lugar que recebe gramas.
   factory Weight.fromGrams({required double weightInGrams}) {
-    return Weight(weightInMiligrams: (weightInGrams * 1000).round());
+    return Weight(weightInMilligrams: (weightInGrams * 1000).round());
   }
 
   Weight operator +(Weight other) {
     return Weight(
-      weightInMiligrams: weightInMilligrams + other.weightInMilligrams,
+      weightInMilligrams: weightInMilligrams + other.weightInMilligrams,
     );
   }
 
@@ -53,7 +53,7 @@ class Weight extends Equatable {
   // o erro — quem chama não precisa checar isso antes de subtrair.
   Weight operator -(Weight other) {
     return Weight(
-      weightInMiligrams: weightInMilligrams - other.weightInMilligrams,
+      weightInMilligrams: weightInMilligrams - other.weightInMilligrams,
     );
   }
 

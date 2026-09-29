@@ -17,7 +17,7 @@ import 'package:filament_os/shared/domain/weight.dart';
 /// acompanha o `Weight` — que é compartilhado, pelos motivos da ADR 0005.
 /// Mesmo formato de `StockStatusLabel` e `FilamentColorLabel`: getter `label`,
 /// não método `toLabel()`, porque não recebe argumento — a chamada fica
-/// `filament.weightInGrams.label`, idêntica às vizinhas no mesmo `Row`.
+/// `filament.weight.label`, idêntica às vizinhas no mesmo `Row`.
 ///
 /// Três decisões de apresentação estão tomadas aqui, e nenhuma delas se
 /// reconstrói lendo o código:

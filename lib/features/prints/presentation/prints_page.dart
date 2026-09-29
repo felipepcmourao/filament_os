@@ -80,11 +80,11 @@ class PrintsPage extends StatelessWidget {
                                     (
                                       filamentId: '00003',
                                       usedGrams: Weight(
-                                        weightInMiligrams: 30000,
+                                        weightInMilligrams: 30000,
                                       ),
                                     ),
                                   ],
-                                  finalWeight: Weight(weightInMiligrams: 30000),
+                                  finalWeight: Weight(weightInMilligrams: 30000),
                                   printTime: 1.25,
                                   dateTime: DateTime.now(),
                                 );
