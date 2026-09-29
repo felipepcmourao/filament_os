@@ -11,6 +11,9 @@ A primeira tentativa foi gerar a paleta a partir de uma cor semente (`#C94A0C`) 
 ### Cores de domínio isoladas da camada de presentation
 Enums de domínio como `FilamentColor` e `StockStatus` não têm nenhuma dependência do Flutter — carregam só os dados/labels necessários pras regras de negócio. A tradução desses enums para `Color` (valores concretos do Material) fica em extensions dedicadas na camada de presentation (`FilamentColorMaterial`, `StockStatusMaterial`), usando `switch` exaustivo sem `default`. Isso garante que, se um novo valor for adicionado ao enum sem que exista o mapeamento de cor correspondente, o projeto simplesmente não compila — o erro é pego em tempo de build, não em runtime.
 
+### Cor como dado do produto vs. cor como decisão visual
+As duas extensions de cor seguem regras opostas, de propósito. Em `StockStatusMaterial` a cor **é** decisão visual: estoque baixo não é amarelo no mundo físico, é amarelo porque o design system decidiu que alerta é amarelo, e essa decisão muda com o tema. Por isso ela lê os tokens de `AppColors` (o par `x`/`xContainer`) em vez de `Colors.amber`. Em `FilamentColorMaterial` é o contrário: a cor de um filamento é dado do produto, não muda com o tema, e por isso vem da paleta bruta do Material.
+
 ## Consequências
 
 ### Positivas
